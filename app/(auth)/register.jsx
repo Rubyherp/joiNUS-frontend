@@ -40,7 +40,7 @@ export default function Login() {
                 <Spacer height={20} />
 
 
-                <ThemedLink href={'/register'} text={'Register'} style={{ width: "60px" }} />
+                <ThemedLink href={'/login'} text={'Sign Up!'} style={{ width: "60px" }} />
                 <Spacer height={10} />
 
                 <Text>
