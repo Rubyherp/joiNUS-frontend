@@ -1,7 +1,6 @@
 import { View, Image, Text, Pressable } from 'react-native';
 import Logo from '../assets/images/logo2.png';
 import Spacer from "@/components/themedComponents/spacer";
-import { Link } from 'expo-router';
 import ThemedLink from '@/components/themedComponents/themedLink';
 
 
