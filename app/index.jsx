@@ -2,6 +2,7 @@ import { View, Image, Text, Pressable } from 'react-native';
 import Logo from '../assets/images/logo2.png';
 import Spacer from "@/components/themedComponents/spacer";
 import { Link } from 'expo-router';
+import ThemedLink from '@/components/themedComponents/themedLink';
 
 
 export default function Home() {
@@ -27,18 +28,10 @@ export default function Home() {
             </Text>
             <Spacer />
 
-            <Link href='/login' asChild>
-                <Pressable className='border border-red-500 rounded-3xl p-4 active:opacity-70 bg-black w-80'>
-                    <Text className='font-semibold text-center text-2xl text-white'>Log In</Text>
-                </Pressable>
-            </Link>
+            <ThemedLink href={'/login'} text={'Log In'} />
             <Spacer height={20} />
 
-            <Link href='/register' asChild>
-                <Pressable className='border border-red-500 rounded-3xl p-4 active:opacity-70 bg-black w-80'>
-                    <Text className='font-semibold text-center text-2xl text-white'>Register</Text>
-                </Pressable>
-            </Link>
+            <ThemedLink href={'/register'} text={'Register'} />
 
         </View >
     )
