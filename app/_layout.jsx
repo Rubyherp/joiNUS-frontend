@@ -14,14 +14,14 @@ export default function RootLayout() {
 
             <Stack
                 screenOptions={{
-                    headerStyle: { backgroundColor: theme.navBackground },
-                    headerTintColor: theme.title,
+                    headerShown: false,
+                    // headerStyle: { backgroundColor: theme.navBackground },
+                    // headerTintColor: theme.title,
                 }}
             >
                 <Stack.Screen name="index" options={
                     {
                         title: "Home",
-                        headerShown: false,
                     }
                 } />
 
