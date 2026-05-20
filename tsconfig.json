@@ -1,15 +1,17 @@
 {
-  "compilerOptions": {
-    "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "tailwind.config": [
-        "./tailwind.config.js"
-      ]
-    }
-  },
-  "exclude": [
-    "node_modules"
-  ]
+    "compilerOptions": {
+        "jsx": "react-native",
+        "paths": {
+            "@/*": [
+                "./*"
+            ],
+            "tailwind.config": [
+                "./tailwind.config.js"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "extends": "expo/tsconfig.base"
 }
