@@ -1,19 +1,38 @@
-import { View, Text, Image } from "react-native";
+//TODO: Maybe add forget password or smt?
+
+import { View, Text, Image, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
 import Logo from '../../assets/images/logo2.png';
+import { Link, useRouter } from "expo-router";
+import { useContext, useState } from "react";
+import { UserContext } from "@/context/userContext";
 
 // themed imports
 import Spacer from "@/components/themedComponents/spacer";
 import ThemedInput from "@/components/themedComponents/themedInput";
-import ThemedLink from "@/components/themedComponents/themedLink";
-import { Link } from "expo-router";
+import { Keyboard } from "react-native";
 
-//TODO: Maybe add forget password or smt?
 
-export default function Login() {
+export default function Register() {
+    const { login } = useContext(UserContext);
+    const [loginDetail, setLoginDetail] = useState({ email: '', password: '' });
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
+    const handleSubmit = async () => {
+        setLoading(true);
+
+        try {
+            await login(loginDetail);
+            router.replace('/profile');
+        } catch (error) {
+            Alert.alert('Error', error.message);
+        }
+        setLoading(false);
+    }
 
     return (
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View className="flex flex-1 justify-center items-center">
 
                 <View
@@ -26,30 +45,46 @@ export default function Login() {
                     />
                 </View>
                 <Spacer height={60} />
-                <Text className="text-4xl font-extrabold text-center">Log-in to your Account</Text>
+                <Text className="text-4xl font-extrabold text-center">Sign Up!</Text>
                 <Spacer />
 
                 <ThemedInput
                     className="text-lg border border-black rounded-2xl p-4 w-[80%]"
                     placeholder="EMAIL"
+                    value={loginDetail.email}
+                    onChangeText={(text) => setLoginDetail(prev => ({ ...prev, email: text }))}
                 />
                 <Spacer height={10} />
 
                 <ThemedInput
                     className="text-lg border border-black rounded-2xl p-4 w-[80%]"
                     placeholder="PASSWORD"
+                    secureTextEntry={true}
+                    value={loginDetail.password}
+                    onChangeText={(text) => setLoginDetail(prev => ({ ...prev, password: text }))}
                 />
                 <Spacer height={20} />
 
-                <ThemedLink href={'/profile'} text={'Log In'} style={{ width: "60px" }} />
+                <TouchableOpacity
+                    onPress={handleSubmit}
+                    disabled={loading}
+                    activeOpacity={0.7} // Control the fade opacity when tapped
+                    className={`w-[80%] py-3 rounded-xl justify-center items-center ${loading ? 'bg-blue-400' : 'bg-blue-600'
+                        }`}
+                >
+                    {loading ? (
+                        <ActivityIndicator color="#fff" />
+                    ) : (
+                        <Text className="text-white font-semibold text-sm">Submit</Text>
+                    )}
+                </TouchableOpacity>
                 <Spacer height={10} />
 
                 <Text>
-                    Don't have an Account? Register
+                    Don't have an Account?
                     <Link href={'/register'} className="font-bold text-red-500">
-                        {/* this looks kinda stupid. can't rmb how to do this */}
                         <Spacer height={0} width="4" />
-                        here!
+                        Sign Up!
                     </Link>
                 </Text>
                 <Spacer />
