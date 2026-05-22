@@ -70,7 +70,7 @@ export default function Register() {
 
                 <ThemedInput
                     className="text-lg text-white border border-white rounded-2xl p-4 w-[80%]"
-                    placeholder="EMAIL"
+                    placeholder="e_______@u.nus.edu"
                     value={registerDetail.email}
                     onChangeText={(text) => setRegisterDetail(prev => ({ ...prev, email: text }))}
                     style={!emailError ? null : { borderColor: 'red', borderWidth: 2 }}
