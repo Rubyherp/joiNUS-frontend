@@ -1,37 +1,64 @@
 import { View, Image, Text, Pressable } from 'react-native';
-import Logo from '../assets/images/logo2.png';
+import Logo from '../assets/images/logo-gold.png';
 import Spacer from "@/components/themedComponents/spacer";
 import ThemedLink from '@/components/themedComponents/themedLink';
+import { LinearGradient } from '@/components/ui/linear-gradient';
+import { Link } from 'expo-router';
 
 
 export default function Home() {
     return (
-        <View className='flex flex-1 justify-center items-center bg-white'>
-            <View
-                className="rounded-2xl overflow-hidden border border-red-500 self-center bg-black px-6 py-3"
-            >
-                <Image
-                    source={Logo}
-                    className="w-80 h-40"
-                    resizeMode="contain"
-                />
-            </View>
-            <Spacer height={60} />
+        <LinearGradient
+            className="flex-1 items-center justify-center px-8 py-12"
+            colors={['#F58529', '#DD2A7B', '#8134AF', '#515BD4']}
+            start={[0, 0]}
+            end={[1, 1]}
+        >
+            <Image
+                source={Logo}
+                className="w-92 h-56"
+                resizeMode="contain"
+            />
 
-            <Text className='text-2xl text-center font-semibold text-neutral-800'>
-                Your <Text className='text-red-500 italic font-extrabold'>Smartest Team</Text> Formation Platform
+            <Text className='text-2xl text-center font-semibold text-white leading-9'>
+                Your{' '}
+                <Text className='text-red-300 italic font-extrabold'>Smartest Team</Text>
+                {' '}Formation Platform.{'\n'}
+                <Text className='italic font-extrabold text-yellow-300'>Effortlessly </Text>
+                <Text className='font-semibold text-white'>Connect.</Text>
             </Text>
 
-            <Text className='text-2xl text-center italic font-extrabold text-red-500'>
-                Effortlessly <Text className='text-black not-italic font-semibold'> Connect.</Text>
-            </Text>
-            <Spacer />
+            <Spacer height={48} />
 
-            <ThemedLink href={'/login'} text={'Log In'} />
+            <Link href='/login' asChild>
+                <Pressable className='active:opacity-70 w-80' >
+                    <LinearGradient
+                        className="w-full border border-white rounded-full items-center py-2"
+                        colors={['#8637CF', '#0F55A1']}
+                        start={[0, 1]}
+                        end={[1, 0]}
+                    >
+                        <Text className='text-2xl text-center font-semibold text-white leading-9'>Log In!</Text>
+                    </LinearGradient>
+                </Pressable>
+            </Link>
+
             <Spacer height={20} />
 
-            <ThemedLink href={'/register'} text={'Register'} />
+            <Link href='/register' asChild>
+                <Pressable className='active:opacity-70 w-80' >
+                    <LinearGradient
+                        className="w-full border border-white rounded-full items-center py-2"
+                        colors={['#8637CF', '#0F55A1']}
+                        start={[0, 1]}
+                        end={[1, 0]}
+                    >
+                        <Text className='text-2xl text-center font-semibold text-white leading-9'>Sign Up!</Text>
+                    </LinearGradient>
+                </Pressable>
+            </Link>
 
-        </View >
+
+        </LinearGradient>
     )
 }

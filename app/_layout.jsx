@@ -3,29 +3,28 @@ import { Stack } from "expo-router";
 import { StatusBar, useColorScheme } from "react-native";
 import { Colors } from "@/assets/colors/Colors";
 import { UserProvider } from "@/context/userContext";
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
     const theme = Colors[colorScheme] ?? Colors.light;
 
     return (
-        <UserProvider>
-            <StatusBar value="auto"></StatusBar>
+        <GluestackUIProvider>
+            <UserProvider>
+                <StatusBar value="auto"></StatusBar>
+                <Stack
+                    screenOptions={{
+                        headerShown: false
+                    }}
+                >
+                    <Stack.Screen name="index" options={{
+                        title: "Home"
+                    }}
+                    />
 
-            <Stack
-                screenOptions={{
-                    headerShown: false,
-                    // headerStyle: { backgroundColor: theme.navBackground },
-                    // headerTintColor: theme.title,
-                }}
-            >
-                <Stack.Screen name="index" options={
-                    {
-                        title: "Home",
-                    }
-                } />
-
-            </Stack>
-        </UserProvider>
+                </Stack>
+            </UserProvider>
+        </GluestackUIProvider>
     )
 }
