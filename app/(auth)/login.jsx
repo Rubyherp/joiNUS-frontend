@@ -68,17 +68,19 @@ export default function Register() {
                 <Spacer />
 
                 <ThemedInput
-                    className="text-lg border border-black rounded-2xl p-4 w-[80%]"
+                    className="text-lg border border-black rounded-2xl w-[80%] h-16 px-4"
                     placeholder="e_______@u.nus.edu"
                     value={loginDetail.email}
                     onChangeText={(text) => setLoginDetail(prev => ({ ...prev, email: text }))}
                     style={!emailError ? null : { borderColor: 'red', borderWidth: 2 }}
                     autoCapitalize="none"
+                    KeyboardType="email-address"
+                    autoCorrect={false}
                 />
                 <Spacer height={10} />
 
                 <ThemedInput
-                    className="text-lg border border-black rounded-2xl p-4 w-[80%]"
+                    className="text-lg border border-black rounded-2xl w-[80%] px-4 h-16"
                     placeholder="PASSWORD"
                     secureTextEntry={true}
                     value={loginDetail.password}
