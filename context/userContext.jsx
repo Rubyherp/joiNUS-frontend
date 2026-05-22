@@ -23,13 +23,13 @@ export function UserProvider({ children }) {
     async function register(details = initialState) {
         const { email, password } = details;
 
-        if (!password) {
-            throw new EmptyPasswordError();
-        }
         if (!validEmail(email)) {
             throw new EmailError();
         }
 
+        if (!password) {
+            throw new EmptyPasswordError();
+        }
         try {
             const response = await fetch(`${API_URL}/register`, {
                 method: 'POST',
@@ -55,11 +55,12 @@ export function UserProvider({ children }) {
 
         const { email, password } = details;
 
-        if (!password) {
-            throw new EmptyPasswordError();
-        }
         if (!validEmail(email)) {
             throw new EmailError();
+        }
+
+        if (!password) {
+            throw new EmptyPasswordError();
         }
 
         try {
