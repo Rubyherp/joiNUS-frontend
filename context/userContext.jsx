@@ -19,6 +19,7 @@ const validEmail = (email) => {
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
+    const [showProfileSetup, setShowProfileSetup] = useState(false);
 
     async function register(details = initialState) {
         const { email, password } = details;
@@ -76,6 +77,10 @@ export function UserProvider({ children }) {
                 throw new Error(data.error || 'Login failed');
             }
 
+            if (!data.hasProfile) {
+                setShowProfileSetup(true);
+            }
+
             setUser(data.user);
             setToken(data.token);
             return data;
@@ -91,8 +96,33 @@ export function UserProvider({ children }) {
         setToken(null);
     }
 
+    async function profileCreation(payload) {
+        try {
+            const response = await fetch(`${API_URL}/profileCreation`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(payload)
+            })
+            console.log('token: ', token);
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Profile creation failed')
+            }
+
+            setShowProfileSetup(false);
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return (
-        <UserContext.Provider value={{ user, token, register, login, logout }}>
+        <UserContext.Provider value={{ user, token, register, login, logout, showProfileSetup, profileCreation }}>
             {children}
         </UserContext.Provider>
     )
