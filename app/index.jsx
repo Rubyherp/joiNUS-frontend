@@ -1,7 +1,6 @@
 import { View, Image, Text, Pressable } from 'react-native';
 import Logo from '../assets/images/logo-gold.png';
 import Spacer from "@/components/themedComponents/spacer";
-import ThemedLink from '@/components/themedComponents/themedLink';
 import { LinearGradient } from '@/components/ui/linear-gradient';
 import { Link } from 'expo-router';
 
