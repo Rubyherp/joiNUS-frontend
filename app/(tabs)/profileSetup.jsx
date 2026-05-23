@@ -58,7 +58,7 @@ export default function ProfileSetup() {
                         <Text className="text-4xl font-black tracking-tight text-gray-900">Set Up Your</Text>
                         <Text className="text-4xl font-black tracking-tight text-gray-900">Profile ✦</Text>
                         <Spacer height={6} />
-                        <Text className="text-xs font-bold tracking-widest uppercase text-gray-500">Step {step + 1} of 2</Text>
+                        <Text className="text-xs font-bold tracking-widest uppercase text-gray-700">Step {step + 1} of 2</Text>
 
                         <Spacer height={14} />
                         <View className="h-1.5 bg-black/10 rounded-full overflow-hidden">
@@ -75,7 +75,7 @@ export default function ProfileSetup() {
                         >
                             {step === 0 ? (
                                 <>
-                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-400">Username</Text>
+                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Username</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
                                         className="text-base bg-white border border-black/10 rounded-2xl w-full h-14 px-4"
@@ -87,7 +87,7 @@ export default function ProfileSetup() {
                                     />
 
                                     <Spacer height={20} />
-                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-400">Major</Text>
+                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Major</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
                                         className="text-base bg-white border border-black/10 rounded-2xl w-full h-14 px-4"
@@ -99,7 +99,7 @@ export default function ProfileSetup() {
                                     />
 
                                     <Spacer height={20} />
-                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-400">Year</Text>
+                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Year</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
                                         className="text-base bg-white border border-black/10 rounded-2xl w-full h-14 px-4"
@@ -111,7 +111,7 @@ export default function ProfileSetup() {
                                 </>
                             ) : (
                                 <>
-                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-400">Contact</Text>
+                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Contact</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
                                         className="text-base bg-white border border-black/10 rounded-2xl w-full h-14 px-4"
@@ -123,7 +123,7 @@ export default function ProfileSetup() {
                                     />
 
                                     <Spacer height={20} />
-                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-400">About Me</Text>
+                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">About Me</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
                                         className="text-base bg-white border border-black/10 rounded-2xl w-full px-4 pt-4"
@@ -137,7 +137,7 @@ export default function ProfileSetup() {
                                     />
 
                                     <Spacer height={20} />
-                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-400">Skills</Text>
+                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Skills</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
                                         className="text-base bg-white border border-black/10 rounded-2xl w-full px-4 pt-4"
