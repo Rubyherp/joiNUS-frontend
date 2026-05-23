@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import { Text, Image, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
 import Logo from '../../assets/images/logo-gold.png';
 import { Link, useRouter } from "expo-router";
