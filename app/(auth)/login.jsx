@@ -16,7 +16,7 @@ import ThemedInput from "@/components/themedComponents/themedInput";
 import { Keyboard } from "react-native";
 
 
-export default function Register() {
+export default function Login() {
     const { login } = useContext(UserContext);
     const [loginDetail, setLoginDetail] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
@@ -38,8 +38,12 @@ export default function Register() {
         setEmailError(null);
         setPasswordError(null);
         try {
-            await login(loginDetail);
-            router.replace('/profile');
+            const data = await login(loginDetail);
+            if (!data.hasProfile) {
+                router.replace('/profileSetup');
+            } else {
+                router.replace('/profile');
+            }
         } catch (error) {
             Alert.alert(error.message);
             handleError(error);
@@ -68,7 +72,7 @@ export default function Register() {
                 <Spacer />
 
                 <ThemedInput
-                    className="text-lg border border-black rounded-2xl w-[80%] h-16 px-4"
+                    className="text-lg bg-white border border-black rounded-2xl w-[80%] h-16 px-4"
                     placeholder="e_______@u.nus.edu"
                     value={loginDetail.email}
                     onChangeText={(text) => setLoginDetail(prev => ({ ...prev, email: text }))}
@@ -80,7 +84,7 @@ export default function Register() {
                 <Spacer height={10} />
 
                 <ThemedInput
-                    className="text-lg border border-black rounded-2xl w-[80%] px-4 h-16"
+                    className="text-lg bg-white border border-black rounded-2xl w-[80%] px-4 h-16"
                     placeholder="PASSWORD"
                     secureTextEntry={true}
                     value={loginDetail.password}
@@ -110,9 +114,6 @@ export default function Register() {
                     </LinearGradient>
                 </TouchableOpacity>
                 <Spacer height={10} />
-
-
-
 
                 <Text>
                     Don't have an Account?
