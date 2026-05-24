@@ -20,6 +20,7 @@ export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [showProfileSetup, setShowProfileSetup] = useState(false);
+    const [profile, setProfile] = useState(null);
 
     async function register(details = initialState) {
         const { email, password } = details;
@@ -27,25 +28,22 @@ export function UserProvider({ children }) {
         if (!validEmail(email)) {
             throw new EmailError();
         }
-
         if (!password) {
             throw new EmptyPasswordError();
         }
+
         try {
             const response = await fetch(`${API_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(details)
             });
-
             const data = await response.json();
 
             if (!response.ok) {
                 throw new Error(data.error || 'Registration failed');
             }
-
             return data;
-
         } catch (error) {
             throw error;
         }
@@ -53,13 +51,11 @@ export function UserProvider({ children }) {
     }
 
     async function login(details = initialState) {
-
         const { email, password } = details;
 
         if (!validEmail(email)) {
             throw new EmailError();
         }
-
         if (!password) {
             throw new EmptyPasswordError();
         }
@@ -70,13 +66,11 @@ export function UserProvider({ children }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(details)
             });
-
             const data = await response.json();
 
             if (!response.ok) {
                 throw new Error(data.error || 'Login failed');
             }
-
             if (!data.hasProfile) {
                 setShowProfileSetup(true);
             }
@@ -84,7 +78,6 @@ export function UserProvider({ children }) {
             setUser(data.user);
             setToken(data.token);
             return data;
-
         } catch (error) {
             throw error;
         }
@@ -109,11 +102,10 @@ export function UserProvider({ children }) {
             console.log('token: ', token);
 
             const data = await response.json();
-
             if (!response.ok) {
                 throw new Error(data.error || 'Profile creation failed')
             }
-
+            await fetchProfile();
             setShowProfileSetup(false);
             return true;
         } catch (error) {
@@ -121,8 +113,37 @@ export function UserProvider({ children }) {
         }
     }
 
+    async function fetchProfile() {
+        try {
+            //fking hell this header pural took me 30 mins to find
+            const response = await fetch(`${API_URL}/profile`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to fetch User Profile');
+            }
+
+            console.log(data);
+            setProfile(data);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return (
-        <UserContext.Provider value={{ user, token, register, login, logout, showProfileSetup, profileCreation }}>
+        <UserContext.Provider
+            value={{
+                user,
+                token,
+                register,
+                login,
+                logout,
+                showProfileSetup,
+                profileCreation,
+                fetchProfile,
+                profile,
+            }}>
             {children}
         </UserContext.Provider>
     )
