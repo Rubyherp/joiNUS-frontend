@@ -1,19 +1,22 @@
 import { View, Text, Button, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 //Custom imports
 import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 import Spacer from "@/components/themedComponents/spacer";
 import { Divider } from "@/components/ui/divider";
+import { UserContext } from "@/context/userContext";
 
 export default function Profile() {
     const [tab, setTab] = useState(0);
+    const { profile } = useContext(UserContext);
+    console.log(profile);
 
     return (
         <SafeAreaView className="flex-1 items-center px-4">
-            <Text>Profile Page</Text>
-            <Spacer height={20} />
+            <Text className="text-3xl font-bold self-start">Profile</Text>
+            <Spacer height={10} />
 
             <View className="w-full justify-center items-center">
                 <View className="flex flex-row border border-black rounded-lg p-4 w-full">
