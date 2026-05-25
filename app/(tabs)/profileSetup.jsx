@@ -14,14 +14,16 @@ export default function ProfileSetup() {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
     const [profileDetails, setProfileDetails] = useState({
-        username: '',
         avatar: '',
+        username: '',
         major: '',
         year: '',
-        modules: [],
+        modules: '',
         contact: '',
+        email: '',
         about: '',
         skills: '',
+        experiences: '',
     });
 
     const handleSubmit = async () => {
@@ -58,13 +60,13 @@ export default function ProfileSetup() {
                         <Text className="text-4xl font-black tracking-tight text-gray-900">Set Up Your</Text>
                         <Text className="text-4xl font-black tracking-tight text-gray-900">Profile ✦</Text>
                         <Spacer height={6} />
-                        <Text className="text-xs font-bold tracking-widest uppercase text-gray-700">Step {step + 1} of 2</Text>
+                        <Text className="text-xs font-bold tracking-widest uppercase text-gray-700">Step {step + 1} of 3</Text>
 
                         <Spacer height={14} />
                         <View className="h-1.5 bg-black/10 rounded-full overflow-hidden">
                             <View
                                 className="h-full bg-purple-600 rounded-full"
-                                style={{ width: step === 0 ? '50%' : '100%' }}
+                                style={{ width: step === 0 ? '33%' : step === 1 ? '66%' : '100%' }}
                             />
                         </View>
 
@@ -78,7 +80,7 @@ export default function ProfileSetup() {
                                     <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Username</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
-                                        className="text-base bg-white border border-black/10 rounded-2xl w-full h-14 px-4"
+                                        className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
                                         placeholder="Brainrotting-67"
                                         value={profileDetails.username}
                                         onChangeText={(text) => setProfileDetails(prev => ({ ...prev, username: text }))}
@@ -90,7 +92,7 @@ export default function ProfileSetup() {
                                     <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Major</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
-                                        className="text-base bg-white border border-black/10 rounded-2xl w-full h-14 px-4"
+                                        className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
                                         placeholder="Bachelor of Computing in Computer Science..."
                                         value={profileDetails.major}
                                         onChangeText={(text) => setProfileDetails(prev => ({ ...prev, major: text }))}
@@ -102,62 +104,110 @@ export default function ProfileSetup() {
                                     <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Year</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
-                                        className="text-base bg-white border border-black/10 rounded-2xl w-full h-14 px-4"
+                                        className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
                                         placeholder="1 / 2 / 3 / 4"
                                         value={profileDetails.year}
                                         onChangeText={(text) => setProfileDetails(prev => ({ ...prev, year: text }))}
                                         keyboardType="numeric"
                                     />
-                                </>
-                            ) : (
-                                <>
-                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Contact</Text>
+
+                                    <Spacer height={20} />
+                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Modules</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
-                                        className="text-base bg-white border border-black/10 rounded-2xl w-full h-14 px-4"
-                                        placeholder="@username (Telegram)"
-                                        value={profileDetails.contact}
-                                        onChangeText={(text) => setProfileDetails(prev => ({ ...prev, contact: text }))}
+                                        className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
+                                        placeholder="CS2030S CS2040S MA1521 MA1522 CS3231"
+                                        value={profileDetails.modules}
+                                        onChangeText={(text) => setProfileDetails(prev => ({ ...prev, modules: text }))}
                                         autoCapitalize="none"
                                         autoCorrect={false}
                                     />
-
                                     <Spacer height={20} />
-                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">About Me</Text>
-                                    <Spacer height={8} />
-                                    <ThemedInput
-                                        className="text-base bg-white border border-black/10 rounded-2xl w-full px-4 pt-4"
-                                        style={{ height: 110 }}
-                                        placeholder="I am a year 4 CS student who loves..."
-                                        value={profileDetails.about}
-                                        onChangeText={(text) => setProfileDetails(prev => ({ ...prev, about: text }))}
-                                        autoCorrect={false}
-                                        multiline={true}
-                                        textAlignVertical="top"
-                                    />
 
-                                    <Spacer height={20} />
-                                    <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Skills</Text>
-                                    <Spacer height={8} />
-                                    <ThemedInput
-                                        className="text-base bg-white border border-black/10 rounded-2xl w-full px-4 pt-4"
-                                        style={{ height: 110 }}
-                                        placeholder="JavaScript, React Native, Node.js..."
-                                        value={profileDetails.skills}
-                                        onChangeText={(text) => setProfileDetails(prev => ({ ...prev, skills: text }))}
-                                        autoCorrect={false}
-                                        multiline={true}
-                                        textAlignVertical="top"
-                                    />
                                 </>
-                            )}
+                            ) : step === 1
+                                ? (
+                                    <>
+                                        <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Contact</Text>
+                                        <Spacer height={8} />
+                                        <ThemedInput
+                                            className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
+                                            placeholder="@username (Telegram)"
+                                            value={profileDetails.contact}
+                                            onChangeText={(text) => setProfileDetails(prev => ({ ...prev, contact: text }))}
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                        />
+
+                                        <Spacer height={20} />
+                                        <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Email</Text>
+                                        <Spacer height={8} />
+                                        <ThemedInput
+                                            className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
+                                            placeholder="example123@gmail.com / e1234567@u.nus.edu"
+                                            value={profileDetails.email}
+                                            onChangeText={(text) => setProfileDetails(prev => ({ ...prev, email: text }))}
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                        />
+
+                                        <Spacer height={20} />
+                                        <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">About Me</Text>
+                                        <Spacer height={8} />
+                                        <ThemedInput
+                                            className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full px-4 pt-4"
+                                            style={{ height: 110 }}
+                                            placeholder="I am a year 4 CS student who loves..."
+                                            value={profileDetails.about}
+                                            onChangeText={(text) => setProfileDetails(prev => ({ ...prev, about: text }))}
+                                            autoCorrect={false}
+                                            multiline={true}
+                                            textAlignVertical="top"
+                                        />
+                                        <Spacer height={20} />
+                                    </>
+                                ) : (
+                                    <>
+
+                                        <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Skills</Text>
+                                        <Spacer height={8} />
+                                        <ThemedInput
+                                            className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full px-4 pt-4"
+                                            style={{ height: 110 }}
+                                            placeholder="JavaScript, React Native, Node.js..."
+                                            value={profileDetails.skills}
+                                            onChangeText={(text) => setProfileDetails(prev => ({ ...prev, skills: text }))}
+                                            autoCorrect={false}
+                                            multiline={true}
+                                            textAlignVertical="top"
+                                        />
+
+                                        <Spacer height={20} />
+                                        <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Experiences</Text>
+                                        <Spacer height={8} />
+                                        <ThemedInput
+                                            className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full px-4 pt-4"
+                                            style={{ height: 110 }}
+                                            placeholder="Intern at Google... AI Enginner at Nvidia..."
+                                            value={profileDetails.experiences}
+                                            onChangeText={(text) => setProfileDetails(prev => ({ ...prev, experiences: text }))}
+                                            autoCorrect={false}
+                                            multiline={true}
+                                            textAlignVertical="top"
+                                        />
+
+                                    </>
+
+                                )
+                            }
                         </View>
 
+                        <Spacer height={28} />
                         <Spacer height={28} />
                         <View className="flex-row gap-3 items-center">
                             {step > 0 && (
                                 <TouchableOpacity
-                                    onPress={() => setStep(0)}
+                                    onPress={step === 1 ? () => setStep(0) : step === 2 ? () => setStep(1) : null}
                                     activeOpacity={0.7}
                                     className="px-5 py-4 rounded-2xl border border-black/10"
                                     style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}
@@ -167,7 +217,7 @@ export default function ProfileSetup() {
                             )}
 
                             <TouchableOpacity
-                                onPress={step === 0 ? () => setStep(1) : handleSubmit}
+                                onPress={step === 0 ? () => setStep(1) : step === 1 ? () => setStep(2) : handleSubmit}
                                 disabled={loading}
                                 activeOpacity={0.7}
                                 className="flex-1"
@@ -182,7 +232,7 @@ export default function ProfileSetup() {
                                         <ActivityIndicator color="#fff" />
                                     ) : (
                                         <Text className="text-white font-bold text-base">
-                                            {step === 0 ? 'Next →' : 'Finish Setup 🎉'}
+                                            {step === 2 ? 'Finish Setup 🎉' : 'Next →'}
                                         </Text>
                                     )}
                                 </LinearGradient>
@@ -193,6 +243,7 @@ export default function ProfileSetup() {
                         <View className="flex-row justify-center gap-2">
                             <View className={`h-2 rounded-full ${step === 0 ? 'w-6 bg-purple-600' : 'w-2 bg-black/15'}`} />
                             <View className={`h-2 rounded-full ${step === 1 ? 'w-6 bg-purple-600' : 'w-2 bg-black/15'}`} />
+                            <View className={`h-2 rounded-full ${step === 2 ? 'w-6 bg-purple-600' : 'w-2 bg-black/15'}`} />
                         </View>
 
                     </ScrollView>

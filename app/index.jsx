@@ -57,7 +57,7 @@ export default function Home() {
                 </Pressable>
             </Link>
 
-            <Link href='/profile' asChild>
+            <Link href='/profileSetup' asChild>
                 <Pressable className='active:opacity-70 w-80' >
                     <LinearGradient
                         className="w-full border border-white rounded-full items-center py-2"
