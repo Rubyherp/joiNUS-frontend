@@ -121,7 +121,6 @@ export function UserProvider({ children }) {
 
     async function fetchProfile(access_token) {
         try {
-            //fking hell this header pural took me 30 mins to find
             const response = await fetch(`${API_URL}/profile`, {
                 headers: { 'Authorization': `Bearer ${access_token ?? token}` }
             })
@@ -129,7 +128,6 @@ export function UserProvider({ children }) {
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to fetch User Profile');
             }
-
             console.log(data);
             setProfile(data);
         } catch (error) {
