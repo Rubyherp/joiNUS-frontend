@@ -58,8 +58,6 @@ export default function Register() {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            {/* <View className="flex flex-1 justify-center items-center"> */}
-
 
             <LinearGradient
                 className="flex-1 items-center justify-center px-8 py-12"
@@ -133,7 +131,6 @@ export default function Register() {
                 <Spacer />
 
             </LinearGradient>
-            {/* </View> */}
         </TouchableWithoutFeedback>
     )
 }
