@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 import EmptyPasswordError from "@/customError/emptyPasswordError";
 import EmailError from "@/customError/emailError";
+import * as ImagePicker from "expo-image-picker";
 
 export const UserContext = createContext();
 
@@ -75,7 +76,6 @@ export function UserProvider({ children }) {
             setUser(data.user);
             setToken(data.token);
 
-            //FIX: fixed fetch only when profile exists
             if (!data.hasProfile) {
                 setShowProfileSetup(true);
             } else {
@@ -105,7 +105,6 @@ export function UserProvider({ children }) {
                 },
                 body: JSON.stringify(payload)
             })
-            console.log('token from creation: ', token);
 
             const data = await response.json();
             if (!response.ok) {
@@ -135,6 +134,47 @@ export function UserProvider({ children }) {
         }
     }
 
+    async function changeAvatar() {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.8,
+        });
+
+        if (result.canceled) {
+            return;
+        }
+
+        console.log('Image Picker: ', result);
+        const image = result.assets[0];
+        const formData = new FormData();
+        formData.append("avatar", {
+            uri: image.uri,
+            name: `${user.id}.jpg`,
+            type: "image/jpeg"
+        });
+
+        try {
+            const response = await fetch(`${API_URL}/changeAvatar`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: formData,
+            })
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to change Avatar");
+            }
+            await fetchProfile();
+        } catch (error) {
+            throw error;
+        }
+
+    }
+
     return (
         <UserContext.Provider
             value={{
@@ -147,6 +187,7 @@ export function UserProvider({ children }) {
                 profileCreation,
                 fetchProfile,
                 profile,
+                changeAvatar,
             }}>
             {children}
         </UserContext.Provider>
