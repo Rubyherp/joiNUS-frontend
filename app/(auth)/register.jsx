@@ -1,12 +1,14 @@
-import { View, Text, Image, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import { Text, Image, TouchableOpacity, ActivityIndicator, Alert, useColorScheme } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
-import Logo from '../../assets/images/logo-gold.png';
+import LogoLight from '../../assets/images/logo-white.png';
+import LogoDark from '../../assets/images/logo-gold.png';
 import { Link, useRouter } from "expo-router";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context/userContext";
 import EmailError from "@/customError/emailError";
 import EmptyPasswordError from "@/customError/emptyPasswordError";
 import { LinearGradient } from "@/components/ui/linear-gradient";
+import { Colors } from "@/assets/colors/Colors";
 
 // themed imports
 import Spacer from "@/components/themedComponents/spacer";
@@ -15,6 +17,13 @@ import { Keyboard } from "react-native";
 
 
 export default function Register() {
+    const colorScheme = useColorScheme();
+    const theme = colorScheme ?? 'light';
+    const Logo = theme === 'light' ? LogoLight : LogoDark;
+    const colors = Colors[theme].gradient;
+    const BWColor = theme === 'dark' ? 'white' : 'black';
+    const inputBGColor = theme == 'dark' ? 'bg-sky-900' : 'bg-white';
+
     const { register } = useContext(UserContext);
     const [registerDetail, setRegisterDetail] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
@@ -49,12 +58,10 @@ export default function Register() {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            {/* <View className="flex flex-1 justify-center items-center"> */}
-
 
             <LinearGradient
                 className="flex-1 items-center justify-center px-8 py-12"
-                colors={['#0F2027', '#203A43', '#2C5364']}
+                colors={colors}
                 start={[0, 0]}
                 end={[1, 1]}
             >
@@ -65,11 +72,13 @@ export default function Register() {
                     resizeMode="contain"
                 />
 
-                <Text className="text-4xl font-extrabold text-center text-yellow-200">Sign Up!</Text>
+                <Text
+                    className={`text-4xl font-extrabold text-center text-${BWColor}`}
+                >Sign Up!</Text>
                 <Spacer />
 
                 <ThemedInput
-                    className="text-lg bg-white border border-white rounded-2xl w-[80%] px-4 h-16"
+                    className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
                     placeholder="e_______@u.nus.edu"
                     value={registerDetail.email}
                     onChangeText={(text) => setRegisterDetail(prev => ({ ...prev, email: text }))}
@@ -81,7 +90,7 @@ export default function Register() {
                 <Spacer height={10} />
 
                 <ThemedInput
-                    className="text-lg bg-white border border-white rounded-2xl w-[80%] px-4 h-16"
+                    className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
                     placeholder="PASSWORD"
                     secureTextEntry={true}
                     value={registerDetail.password}
@@ -106,13 +115,13 @@ export default function Register() {
                         {loading ? (
                             <ActivityIndicator color="#fff" />
                         ) : (
-                            <Text className="text-lg text-white font-semibold ">Submit</Text>
+                            <Text className="text-lg text-white font-semibold ">Register</Text>
                         )}
                     </LinearGradient>
                 </TouchableOpacity>
                 <Spacer height={10} />
 
-                <Text className="text-white">
+                <Text className={`text-${BWColor}`}>
                     Already have an Account?
                     <Link href={'/login'} className="font-bold text-red-500">
                         <Spacer height={0} width="4" />
@@ -122,7 +131,6 @@ export default function Register() {
                 <Spacer />
 
             </LinearGradient>
-            {/* </View> */}
         </TouchableWithoutFeedback>
     )
 }

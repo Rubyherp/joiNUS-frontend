@@ -1,14 +1,16 @@
 //TODO: Maybe add forget password or smt?
 
-import { View, Text, Image, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import { View, Text, Image, TouchableOpacity, ActivityIndicator, Alert, useColorScheme } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
-import Logo from '../../assets/images/logo-white.png';
+import LogoLight from '../../assets/images/logo-white.png';
+import LogoDark from '../../assets/images/logo-gold.png';
 import { Link, useRouter } from "expo-router";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context/userContext";
 import EmailError from "@/customError/emailError";
 import EmptyPasswordError from "@/customError/emptyPasswordError";
 import { LinearGradient } from "@/components/ui/linear-gradient";
+import { Colors } from "@/assets/colors/Colors.js";
 
 // themed imports
 import Spacer from "@/components/themedComponents/spacer";
@@ -16,7 +18,14 @@ import ThemedInput from "@/components/themedComponents/themedInput";
 import { Keyboard } from "react-native";
 
 
-export default function Register() {
+export default function Login() {
+    const colorScheme = useColorScheme();
+    const theme = colorScheme ?? 'light';
+    const Logo = theme === 'light' ? LogoLight : LogoDark;
+    const colors = Colors[theme].gradient;
+    const BWColor = theme === 'dark' ? 'white' : 'black';
+    const inputBGColor = theme == 'dark' ? 'bg-sky-900' : 'bg-white';
+
     const { login } = useContext(UserContext);
     const [loginDetail, setLoginDetail] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
@@ -38,8 +47,12 @@ export default function Register() {
         setEmailError(null);
         setPasswordError(null);
         try {
-            await login(loginDetail);
-            router.replace('/profile');
+            const data = await login(loginDetail);
+            if (!data.hasProfile) {
+                router.replace('/profileSetup');
+            } else {
+                router.replace('/profile');
+            }
         } catch (error) {
             Alert.alert(error.message);
             handleError(error);
@@ -53,7 +66,7 @@ export default function Register() {
 
             <LinearGradient
                 className="flex-1 items-center justify-center px-8 py-12"
-                colors={['#FF6B6B', '#FFE66D']}
+                colors={colors}
                 start={[0, 0]}
                 end={[1, 1]}
             >
@@ -64,11 +77,13 @@ export default function Register() {
                     resizeMode="contain"
                 />
 
-                <Text className="text-4xl font-extrabold text-center">Log In to your Account</Text>
+                <Text
+                    className={`text-4xl font-extrabold text-center text-${BWColor}`}
+                >Log In to your Account</Text>
                 <Spacer />
 
                 <ThemedInput
-                    className="text-lg border border-black rounded-2xl w-[80%] h-16 px-4"
+                    className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
                     placeholder="e_______@u.nus.edu"
                     value={loginDetail.email}
                     onChangeText={(text) => setLoginDetail(prev => ({ ...prev, email: text }))}
@@ -79,8 +94,9 @@ export default function Register() {
                 />
                 <Spacer height={10} />
 
+
                 <ThemedInput
-                    className="text-lg border border-black rounded-2xl w-[80%] px-4 h-16"
+                    className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
                     placeholder="PASSWORD"
                     secureTextEntry={true}
                     value={loginDetail.password}
@@ -111,10 +127,7 @@ export default function Register() {
                 </TouchableOpacity>
                 <Spacer height={10} />
 
-
-
-
-                <Text>
+                <Text className={`text-${BWColor}`}>
                     Don't have an Account?
                     <Link href={'/register'} className="font-bold text-red-500">
                         <Spacer height={0} width="4" />
@@ -126,6 +139,6 @@ export default function Register() {
 
                 {/* </View> */}
             </LinearGradient>
-        </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback >
     )
 }

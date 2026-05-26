@@ -11,6 +11,7 @@ export const Colors = {
         iconColor: "#737373",
         iconColorFocused: "#f5f5f5",
         uiBackground: "#1c1c1c",
+        gradient: ['#0F2027', '#203A43', '#2C5364'],
     },
     light: {
         text: "#737373",
@@ -20,5 +21,6 @@ export const Colors = {
         iconColor: "#8e8e8e",
         iconColorFocused: "#000000",
         uiBackground: "#efefef",
+        gradient: ['#FF6B6B', '#FFE66D'],
     },
 }

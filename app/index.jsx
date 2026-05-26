@@ -1,7 +1,6 @@
 import { View, Image, Text, Pressable } from 'react-native';
 import Logo from '../assets/images/logo-gold.png';
 import Spacer from "@/components/themedComponents/spacer";
-import ThemedLink from '@/components/themedComponents/themedLink';
 import { LinearGradient } from '@/components/ui/linear-gradient';
 import { Link } from 'expo-router';
 
@@ -54,6 +53,19 @@ export default function Home() {
                         end={[1, 0]}
                     >
                         <Text className='text-2xl text-center font-semibold text-white leading-9'>Sign Up!</Text>
+                    </LinearGradient>
+                </Pressable>
+            </Link>
+
+            <Link href='/profileSetup' asChild>
+                <Pressable className='active:opacity-70 w-80' >
+                    <LinearGradient
+                        className="w-full border border-white rounded-full items-center py-2"
+                        colors={['#8637CF', '#0F55A1']}
+                        start={[0, 1]}
+                        end={[1, 0]}
+                    >
+                        <Text className='text-2xl text-center font-semibold text-white leading-9'>Temp ProfileSetup </Text>
                     </LinearGradient>
                 </Pressable>
             </Link>
