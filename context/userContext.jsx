@@ -80,7 +80,6 @@ export function UserProvider({ children }) {
                 setShowProfileSetup(true);
             } else {
                 await fetchProfile(data.token);
-
             }
 
             return data;
@@ -129,6 +128,7 @@ export function UserProvider({ children }) {
             }
             console.log(data);
             setProfile(data);
+            return data;
         } catch (error) {
             throw error;
         }
@@ -168,7 +168,8 @@ export function UserProvider({ children }) {
             if (!response.ok) {
                 throw new Error(data.error || "Failed to change Avatar");
             }
-            await fetchProfile();
+            const newProfile = await fetchProfile();
+            return newProfile;
         } catch (error) {
             throw error;
         }

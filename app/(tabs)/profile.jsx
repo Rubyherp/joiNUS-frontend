@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 //Custom imports
 import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
@@ -12,6 +12,7 @@ import ThemedProfileSection from "@/components/themedComponents/themedProfileSec
 export default function Profile() {
     const [tab, setTab] = useState(0);
     const { profile, changeAvatar } = useContext(UserContext);
+    const [profileUri, setProfileUri] = useState('');
 
     const username = profile.username ?? '';
     const year = profile.year ?? '';
@@ -23,6 +24,22 @@ export default function Profile() {
     const skills = profile.skills ?? '';
     const experiences = profile.experiences ?? '';
 
+    //FIX: fix dynamically loaded avatar on registration and login
+    useEffect(() => {
+        if (profile?.avatar) {
+            setProfileUri(`${profile.avatar}?t=${Date.now()}`);
+        } else {
+            setProfileUri('');
+        }
+    }, [profile?.avatar]);
+
+    const handleAvatarChange = async () => {
+        const newAvatar = await changeAvatar();
+        if (newAvatar?.avatar) {
+            setProfileUri(`${newAvatar.avatar}?t=${Date.now()}`);
+        }
+    }
+
     return (
         <SafeAreaView className="flex-1 items-center px-4 bg-slate-400">
             <Text className="text-3xl font-bold self-start">Profile</Text>
@@ -32,7 +49,7 @@ export default function Profile() {
                 <View className="flex border border-slate-500 bg-white shadow-sm rounded-2xl px-5 py-5 w-full">
                     <View className="flex flex-row">
                         <TouchableOpacity
-                            onPress={changeAvatar}
+                            onPress={handleAvatarChange}
                             className="flex justify-center"
                         >
                             <View className="rounded-full bg-slate-500 p-1 self-center">
@@ -42,7 +59,7 @@ export default function Profile() {
                                     </AvatarFallbackText>
                                     <AvatarImage
                                         source={{
-                                            uri: profile.avatar ? `${profile.avatar}?t=${Date.now()}` : ''
+                                            uri: profileUri
                                         }}
                                     />
                                 </Avatar>
