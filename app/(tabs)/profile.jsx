@@ -7,6 +7,7 @@ import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from "@/componen
 import Spacer from "@/components/themedComponents/spacer";
 import { Divider } from "@/components/ui/divider";
 import { UserContext } from "@/context/userContext";
+import ThemedProfileSection from "@/components/themedComponents/themedProfileSection";
 
 export default function Profile() {
     const [tab, setTab] = useState(0);
@@ -23,19 +24,19 @@ export default function Profile() {
     const experiences = profile.experiences ?? '';
 
     return (
-        <SafeAreaView className="flex-1 items-center px-4">
+        <SafeAreaView className="flex-1 items-center px-4 bg-slate-400">
             <Text className="text-3xl font-bold self-start">Profile</Text>
             <Spacer height={10} />
 
             <View className="w-full justify-center items-center">
-                <View className="flex border border-black rounded-lg p-4 w-full">
-                    <View className="flex flex-row border">
+                <View className="flex border border-slate-500 bg-white shadow-sm rounded-2xl px-5 py-5 w-full">
+                    <View className="flex flex-row">
                         <TouchableOpacity
                             onPress={changeAvatar}
                             className="flex justify-center"
                         >
-                            <View className="border border-black rounded-full self-center">
-                                <Avatar size="lg">
+                            <View className="rounded-full bg-slate-500 p-1 self-center">
+                                <Avatar size="xl">
                                     <AvatarFallbackText className="font-bold">
                                         {username}
                                     </AvatarFallbackText>
@@ -50,38 +51,34 @@ export default function Profile() {
                         <Spacer width={20} height={0} />
 
                         <View className="flex flex-1 justify-center">
-                            <Text className="text-2xl font-bold">{username}</Text>
-                            <Text className="text-xl">{major}</Text>
+                            <Text className="text-2xl font-bold text-slate-700">{username}</Text>
+                            <Text className="text-base text-slate-500 mt-1">{major}</Text>
                         </View>
                     </View>
+                    <Spacer height={10} />
 
-                    <Spacer height={20} />
                     <View className="flex ">
                         <View className="gap-1 px-4 w-full">
                             <View className="flex-row items-center">
-                                <Text className="text-xl font-bold w-28">Contacts</Text>
-                                <Text className="text-lg text-gray-700">{contact}</Text>
+                                <Text className="text-xl font-meduim text-slate-800 w-28">Contacts</Text>
+                                <Text className="text-base text-gray-700 flex-1">{contact}</Text>
                             </View>
                             <View className="flex-row items-center">
-                                <Text className="text-xl font-bold w-28">Email</Text>
-                                <Text className="text-lg text-gray-700">{email}</Text>
+                                <Text className="text-xl font-medium text-slate-800 w-28">Email</Text>
+                                <Text className="text-base text-gray-700 flex-1">{email}</Text>
                             </View>
                         </View>
-                        <Spacer height={10} />
 
                     </View>
                 </View>
             </View>
             <Spacer height={10} />
 
-            <Divider />
 
-            <Spacer height={10} />
-
-            <View className="flex-1 w-full border border-black rounded-lg">
+            <View className="flex-1 w-full border border-black rounded-lg bg-white">
                 <View className="flex-row ">
                     <TouchableOpacity
-                        className="flex-1 items-center py-3 justify-center"
+                        className={`flex-1 items-center py-3 border-b-2 justify-center ${tab === 0 ? "border-red-500" : "border-transparent"}`}
                         onPress={() => setTab(0)}
                     >
                         <Text
@@ -94,7 +91,7 @@ export default function Profile() {
                     <View className="w-px bg-gray-300 my-2" />
 
                     <TouchableOpacity
-                        className="flex-1 items-center py-3 justify-center"
+                        className={`flex-1 items-center py-3 border-b-2 justify-center ${tab === 1 ? "border-red-500" : "border-transparent"}`}
                         onPress={() => setTab(1)}
                     >
                         <Text
@@ -107,7 +104,7 @@ export default function Profile() {
                     <View className="w-px bg-gray-300 my-2" />
 
                     <TouchableOpacity
-                        className="flex-1 items-center py-3 justify-center"
+                        className={`flex-1 items-center py-3 border-b-2 justify-center ${tab === 2 ? "border-red-500" : "border-transparent"}`}
                         onPress={() => setTab(2)}
                     >
                         <Text
@@ -128,34 +125,33 @@ export default function Profile() {
                             showsVerticalScrollIndicator={true}
                             indicatorStyle="black"
                         >
-                            <Text className="text-xl font-semibold">Major: </Text>
-                            <Text className="text-lg">{major}</Text>
-                            <Spacer height={20} />
+                            <ThemedProfileSection title="Major">
+                                {major}
+                            </ThemedProfileSection>
 
-                            <Text className="text-xl font-semibold">Year of Study: </Text>
-                            <Text className="text-lg">{year}</Text>
-                            <Spacer height={20} />
+                            <ThemedProfileSection title="Year of Study">
+                                {year}
+                            </ThemedProfileSection>
 
-                            <Text className="text-xl font-semibold">Modules: </Text>
-                            <Text className="text-lg">{modules}</Text>
-                            <Spacer height={20} />
+                            <ThemedProfileSection title="Modules">
+                                {modules}
+                            </ThemedProfileSection>
 
-                            <Text className="text-xl font-semibold">Desciption: </Text>
-                            <Text className="text-lg">{about}</Text>
-
-                            <Spacer height={20} />
-
+                            <ThemedProfileSection title="Description">
+                                {about}
+                            </ThemedProfileSection>
 
                         </ScrollView>
                         : tab === 1
                             ?
                             <ScrollView>
-                                <Text className="text-xl font-semibold">Skills: </Text>
-                                <Text className="text-lg">{skills}</Text>
-                                <Spacer height={20} />
+                                <ThemedProfileSection title="Skills">
+                                    {skills}
+                                </ThemedProfileSection>
 
-                                <Text className="text-xl font-semibold">Experiences: </Text>
-                                <Text className="text-lg">{experiences}</Text>
+                                <ThemedProfileSection title="Experiences">
+                                    {experiences}
+                                </ThemedProfileSection>
                             </ScrollView>
                             :
                             <ScrollView>
