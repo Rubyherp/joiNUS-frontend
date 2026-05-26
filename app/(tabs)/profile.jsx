@@ -10,7 +10,7 @@ import { UserContext } from "@/context/userContext";
 
 export default function Profile() {
     const [tab, setTab] = useState(0);
-    const { profile } = useContext(UserContext);
+    const { profile, changeAvatar } = useContext(UserContext);
 
     const username = profile.username ?? '';
     const year = profile.year ?? '';
@@ -28,37 +28,48 @@ export default function Profile() {
             <Spacer height={10} />
 
             <View className="w-full justify-center items-center">
-                <View className="flex flex-row border border-black rounded-lg p-4 w-full">
-                    <View className="border border-black rounded-full self-center">
-                        <Avatar size="lg">
-                            <AvatarFallbackText className="font-bold">
-                                {username}
-                            </AvatarFallbackText>
-                            <AvatarImage
-                                source={{
-                                    uri: ''
-                                }}
-                            />
-                        </Avatar>
-                    </View>
-                    <Spacer width={20} height={0} />
+                <View className="flex border border-black rounded-lg p-4 w-full">
+                    <View className="flex flex-row border">
+                        <TouchableOpacity
+                            onPress={changeAvatar}
+                            className="flex justify-center"
+                        >
+                            <View className="border border-black rounded-full self-center">
+                                <Avatar size="lg">
+                                    <AvatarFallbackText className="font-bold">
+                                        {username}
+                                    </AvatarFallbackText>
+                                    <AvatarImage
+                                        source={{
+                                            uri: profile.avatar ? `${profile.avatar}?t=${Date.now()}` : ''
+                                        }}
+                                    />
+                                </Avatar>
+                            </View>
+                        </TouchableOpacity>
+                        <Spacer width={20} height={0} />
 
-                    <View className="flex-1 justify-center">
-                        <Text className="text-2xl font-bold">{username}</Text>
-                        <Text className="text-xl">{major}</Text>
+                        <View className="flex flex-1 justify-center">
+                            <Text className="text-2xl font-bold">{username}</Text>
+                            <Text className="text-xl">{major}</Text>
+                        </View>
                     </View>
-                </View>
-            </View>
-            <Spacer height={10} />
 
-            <View className="gap-1 px-4 w-full">
-                <View className="flex-row items-center">
-                    <Text className="text-xl font-bold w-28">Contacts</Text>
-                    <Text className="text-lg text-gray-700">{contact}</Text>
-                </View>
-                <View className="flex-row items-center">
-                    <Text className="text-xl font-bold w-28">Email</Text>
-                    <Text className="text-lg text-gray-700">{email}</Text>
+                    <Spacer height={20} />
+                    <View className="flex ">
+                        <View className="gap-1 px-4 w-full">
+                            <View className="flex-row items-center">
+                                <Text className="text-xl font-bold w-28">Contacts</Text>
+                                <Text className="text-lg text-gray-700">{contact}</Text>
+                            </View>
+                            <View className="flex-row items-center">
+                                <Text className="text-xl font-bold w-28">Email</Text>
+                                <Text className="text-lg text-gray-700">{email}</Text>
+                            </View>
+                        </View>
+                        <Spacer height={10} />
+
+                    </View>
                 </View>
             </View>
             <Spacer height={10} />
