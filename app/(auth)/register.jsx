@@ -79,6 +79,7 @@ export default function Register() {
 
                 <ThemedInput
                     className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
+                    testID="email-input"
                     placeholder="e_______@u.nus.edu"
                     value={registerDetail.email}
                     onChangeText={(text) => setRegisterDetail(prev => ({ ...prev, email: text }))}
@@ -91,6 +92,7 @@ export default function Register() {
 
                 <ThemedInput
                     className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
+                    testID="password-input"
                     placeholder="PASSWORD"
                     secureTextEntry={true}
                     value={registerDetail.password}
@@ -103,7 +105,7 @@ export default function Register() {
                 <TouchableOpacity
                     onPress={handleSubmit}
                     disabled={loading}
-                    activeOpacity={0.7} // Control the fade opacity when tapped
+                    activeOpacity={0.7}
                     className="w-[80%]"
                 >
                     <LinearGradient
