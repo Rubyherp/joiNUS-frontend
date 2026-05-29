@@ -28,7 +28,6 @@ export default function ProfileSetup() {
 
     const handleSubmit = async () => {
         setLoading(true);
-        // TODO: submit profileDetails to backend
         try {
             await profileCreation({
                 ...profileDetails,
@@ -57,65 +56,80 @@ export default function ProfileSetup() {
                     >
                         <Spacer height={20} />
 
+                        {/* header */}
                         <Text className="text-4xl font-black tracking-tight text-gray-900">Set Up Your</Text>
                         <Text className="text-4xl font-black tracking-tight text-gray-900">Profile ✦</Text>
                         <Spacer height={6} />
-                        <Text className="text-xs font-bold tracking-widest uppercase text-gray-700">Step {step + 1} of 3</Text>
 
+                        {/* progress bar */}
+                        <Text className="text-xs font-bold tracking-widest uppercase text-gray-700">Step {step + 1} of 3</Text>
                         <Spacer height={14} />
+
                         <View className="h-1.5 bg-black/10 rounded-full overflow-hidden">
                             <View
                                 className="h-full bg-purple-600 rounded-full"
                                 style={{ width: step === 0 ? '33%' : step === 1 ? '66%' : '100%' }}
                             />
                         </View>
-
                         <Spacer height={28} />
+
+                        {/* pages */}
                         <View
                             className="rounded-3xl p-6"
                             style={{ backgroundColor: 'rgba(255,255,255,0.75)', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 16, elevation: 4 }}
                         >
                             {step === 0 ? (
                                 <>
+                                    {/* username */}
                                     <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Username</Text>
                                     <Spacer height={8} />
                                     <ThemedInput
                                         className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
+                                        testID="username-input"
                                         placeholder="Brainrotting-67"
                                         value={profileDetails.username}
                                         onChangeText={(text) => setProfileDetails(prev => ({ ...prev, username: text }))}
                                         autoCapitalize="none"
                                         autoCorrect={false}
                                     />
-
                                     <Spacer height={20} />
+
+                                    {/* major */}
                                     <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Major</Text>
                                     <Spacer height={8} />
+
                                     <ThemedInput
                                         className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
+                                        testID="major-input"
                                         placeholder="Bachelor of Computing in Computer Science..."
                                         value={profileDetails.major}
                                         onChangeText={(text) => setProfileDetails(prev => ({ ...prev, major: text }))}
                                         autoCapitalize="words"
                                         autoCorrect={false}
                                     />
-
                                     <Spacer height={20} />
+
+                                    {/* year */}
                                     <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Year</Text>
                                     <Spacer height={8} />
+
                                     <ThemedInput
                                         className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
+                                        testID="year-input"
                                         placeholder="1 / 2 / 3 / 4"
                                         value={profileDetails.year}
                                         onChangeText={(text) => setProfileDetails(prev => ({ ...prev, year: text }))}
                                         keyboardType="numeric"
                                     />
-
                                     <Spacer height={20} />
+
+                                    {/* modules */}
                                     <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Modules</Text>
                                     <Spacer height={8} />
+
                                     <ThemedInput
                                         className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
+                                        testID="modules-input"
                                         placeholder="CS2030S CS2040S MA1521 MA1522 CS3231"
                                         value={profileDetails.modules}
                                         onChangeText={(text) => setProfileDetails(prev => ({ ...prev, modules: text }))}
@@ -128,34 +142,43 @@ export default function ProfileSetup() {
                             ) : step === 1
                                 ? (
                                     <>
+                                        {/* contact */}
                                         <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Contact</Text>
                                         <Spacer height={8} />
+
                                         <ThemedInput
                                             className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
+                                            testID="contact-input"
                                             placeholder="@username (Telegram)"
                                             value={profileDetails.contact}
                                             onChangeText={(text) => setProfileDetails(prev => ({ ...prev, contact: text }))}
                                             autoCapitalize="none"
                                             autoCorrect={false}
                                         />
-
                                         <Spacer height={20} />
+
+                                        {/* email */}
                                         <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Email</Text>
                                         <Spacer height={8} />
+
                                         <ThemedInput
                                             className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full h-14 px-4"
+                                            testID="email-input"
                                             placeholder="example123@gmail.com / e1234567@u.nus.edu"
                                             value={profileDetails.email}
                                             onChangeText={(text) => setProfileDetails(prev => ({ ...prev, email: text }))}
                                             autoCapitalize="none"
                                             autoCorrect={false}
                                         />
-
                                         <Spacer height={20} />
+
+                                        {/* about */}
                                         <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">About Me</Text>
                                         <Spacer height={8} />
+
                                         <ThemedInput
                                             className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full px-4 pt-4"
+                                            testID="about-input"
                                             style={{ height: 110 }}
                                             placeholder="I am a year 4 CS student who loves..."
                                             value={profileDetails.about}
@@ -165,14 +188,18 @@ export default function ProfileSetup() {
                                             textAlignVertical="top"
                                         />
                                         <Spacer height={20} />
+
                                     </>
                                 ) : (
                                     <>
 
+                                        {/* skills */}
                                         <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Skills</Text>
                                         <Spacer height={8} />
+
                                         <ThemedInput
                                             className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full px-4 pt-4"
+                                            testID="skills-input"
                                             style={{ height: 110 }}
                                             placeholder="JavaScript, React Native, Node.js..."
                                             value={profileDetails.skills}
@@ -181,12 +208,15 @@ export default function ProfileSetup() {
                                             multiline={true}
                                             textAlignVertical="top"
                                         />
-
                                         <Spacer height={20} />
+
+                                        {/* experiences */}
                                         <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Experiences</Text>
                                         <Spacer height={8} />
+
                                         <ThemedInput
                                             className="text-base text-white bg-slate-700 border border-black/10 rounded-2xl w-full px-4 pt-4"
+                                            testID="experiences-input"
                                             style={{ height: 110 }}
                                             placeholder="Intern at Google... AI Enginner at Nvidia..."
                                             value={profileDetails.experiences}
@@ -201,9 +231,9 @@ export default function ProfileSetup() {
                                 )
                             }
                         </View>
+                        <Spacer height={56} />
 
-                        <Spacer height={28} />
-                        <Spacer height={28} />
+                        {/* page control */}
                         <View className="flex-row gap-3 items-center">
                             {step > 0 && (
                                 <TouchableOpacity
@@ -238,8 +268,8 @@ export default function ProfileSetup() {
                                 </LinearGradient>
                             </TouchableOpacity>
                         </View>
-
                         <Spacer height={20} />
+
                         <View className="flex-row justify-center gap-2">
                             <View className={`h-2 rounded-full ${step === 0 ? 'w-6 bg-purple-600' : 'w-2 bg-black/15'}`} />
                             <View className={`h-2 rounded-full ${step === 1 ? 'w-6 bg-purple-600' : 'w-2 bg-black/15'}`} />

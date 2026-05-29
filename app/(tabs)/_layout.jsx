@@ -38,12 +38,12 @@ export default function TabLayout() {
                             width: 48,
                             height: 48,
                             borderRadius: 26,
-                            backgroundColor: 'black',
+                            backgroundColor: focused ? 'black' : 'white',
                             justifyContent: 'center',
                             alignItems: 'center',
                             marginBottom: 20,
                         }}>
-                            <Ionicons name="add" size={30} color={focused ? 'pink' : 'white'} />
+                            <Ionicons name="add" size={30} color={focused ? 'white' : 'black'} />
                         </View>
                     ),
                 }}

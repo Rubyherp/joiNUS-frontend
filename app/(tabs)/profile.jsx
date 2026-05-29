@@ -72,6 +72,7 @@ export default function Profile() {
             >
                 <View className="flex-row items-center">
                     <TouchableOpacity
+                        testID="avatar-button"
                         onPress={handleAvatarChange}
                     >
                         <View
@@ -80,7 +81,9 @@ export default function Profile() {
                         >
                             <View className="rounded-full p-[2px] bg-white">
                                 <Avatar size="xl">
-                                    <AvatarFallbackText className="font-bold">
+                                    <AvatarFallbackText
+                                        className="font-bold"
+                                    >
                                         {username}
                                     </AvatarFallbackText>
                                     <AvatarImage source={{ uri: profileUri }} />
