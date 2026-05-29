@@ -28,7 +28,6 @@ export default function ProfileSetup() {
 
     const handleSubmit = async () => {
         setLoading(true);
-        // TODO: submit profileDetails to backend
         try {
             await profileCreation({
                 ...profileDetails,
