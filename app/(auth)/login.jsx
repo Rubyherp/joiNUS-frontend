@@ -84,6 +84,7 @@ export default function Login() {
 
                 <ThemedInput
                     className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
+                    testID="email-input"
                     placeholder="e_______@u.nus.edu"
                     value={loginDetail.email}
                     onChangeText={(text) => setLoginDetail(prev => ({ ...prev, email: text }))}
@@ -97,6 +98,7 @@ export default function Login() {
 
                 <ThemedInput
                     className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
+                    testID="password-input"
                     placeholder="PASSWORD"
                     secureTextEntry={true}
                     value={loginDetail.password}
@@ -109,7 +111,7 @@ export default function Login() {
                 <TouchableOpacity
                     onPress={handleSubmit}
                     disabled={loading}
-                    activeOpacity={0.7} // Control the fade opacity when tapped
+                    activeOpacity={0.7}
                     className="w-[80%]"
                 >
                     <LinearGradient
