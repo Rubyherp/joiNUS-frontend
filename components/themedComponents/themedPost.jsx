@@ -9,6 +9,7 @@ export default function ThemedPost({ data, children }) {
     const image = Logo
 
     return (
+        //TODO: Link to actual post
         <View className="w-full bg-white border border-gray-200 rounded-2xl overflow-hidden mb-3 shadow-sm">
 
             <View className="flex-row items-center gap-2 px-4 pt-4 pb-2">
@@ -23,7 +24,7 @@ export default function ThemedPost({ data, children }) {
                 <Text className="text-base text-gray-600 font-medium">{user}</Text>
 
             </View>
-            <Text className="text-base font-bold text-gray-900 px-4 pb-2">{title}</Text>
+            <Text className="text-lg font-bold text-gray-900 px-4 pb-2">{title}</Text>
             {text ? (
                 <Text className="text-sm text-gray-600 px-4 pb-3 leading-5" numberOfLines={3}>
                     {text}
