@@ -57,7 +57,7 @@ export default function Home() {
                 </Pressable>
             </Link>
 
-            <Link href='/profileSetup' asChild>
+            <Link href='/landing' asChild>
                 <Pressable className='active:opacity-70 w-80' >
                     <LinearGradient
                         className="w-full border border-white rounded-full items-center py-2"
@@ -65,7 +65,7 @@ export default function Home() {
                         start={[0, 1]}
                         end={[1, 0]}
                     >
-                        <Text className='text-2xl text-center font-semibold text-white leading-9'>Temp ProfileSetup </Text>
+                        <Text className='text-2xl text-center font-semibold text-white leading-9'>Teleport to Landing</Text>
                     </LinearGradient>
                 </Pressable>
             </Link>
