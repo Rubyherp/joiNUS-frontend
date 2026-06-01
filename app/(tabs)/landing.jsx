@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../../assets/images/logo-gold.png";
+import Logo from "../../assets/images/logo-white.png";
 import { useState } from "react";
 
 import ThemedInput from "../../components/themedComponents/themedInput";
@@ -25,17 +25,16 @@ export default function Landing() {
                             start={[0, 1]}
                             end={[1, 0]}
                         >
-                            <View className="bg-black rounded-3xl h-14 justify-center">
+                            <View className="bg-white rounded-3xl h-14 justify-center">
                                 {query === "" && (
-                                    <View className="absolute left-4 z-10 flex-row items-center gap-8 pointer-events-none">
+                                    <View className="absolute left-4 z-10 gap-8 flex-row items-center pointer-events-none">
                                         <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
+                                        <Text className="text-black/40 text-xl">Search joiNUS</Text>
                                     </View>
                                 )}
 
                                 <ThemedInput
-                                    className="text-xl text-white bg-black border border-black/10 rounded-3xl w-full h-14 px-12 text-center"
-                                    placeholder="Search joiNUS"
-                                    placeholderTextColor="transparent"
+                                    className="text-xl text-black bg-white border border-black/10 rounded-3xl w-full h-14 px-4"
                                     value={query}
                                     onChangeText={setQuery}
                                     autoCapitalize="none"
