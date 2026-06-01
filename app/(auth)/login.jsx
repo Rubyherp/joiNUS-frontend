@@ -33,6 +33,8 @@ export default function Login() {
     const [emailError, setEmailError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
 
+    //TODO: use gluestack alert instead of default alert and add error handling for wrong password and email not found
+
     const handleError = (error) => {
         if (error instanceof EmailError) {
             setEmailError(true);
