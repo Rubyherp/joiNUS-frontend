@@ -1,0 +1,87 @@
+import { useState, useCallback } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import {
+    Actionsheet,
+    ActionsheetBackdrop,
+    ActionsheetContent,
+    ActionsheetDragIndicator,
+    ActionsheetDragIndicatorWrapper,
+    ActionsheetItem,
+    ActionsheetItemText,
+    ActionsheetFlatList,
+} from '@/components/ui/actionsheet';
+import { Button, ButtonText } from '@/components/ui/button';
+
+const communities = [
+    { id: '1', name: 'SGExams' },
+    { id: '2', name: 'NUS' },
+    { id: '3', name: 'joiNUS' },
+];
+
+const getInitials = (name) => name.slice(0, 2).toUpperCase();
+
+const getColor = (name) => {
+    const colors = ['#8637CF', '#F97316', '#EC4899', '#06B6D4', '#10B981'];
+    return colors[name.charCodeAt(0) % colors.length];
+}
+
+export default function CommunityPicker({ onSelect }) {
+    const [showActionsheet, setShowActionsheet] = useState(false);
+    const [selected, setSelected] = useState(communities[0]);
+
+    const handleClose = () => setShowActionsheet(false);
+
+    const handleSelect = (community) => {
+        setSelected(community);
+        onSelect(community);
+        handleClose();
+    }
+
+    const Item = useCallback(({ item }) => (
+        <ActionsheetItem onPress={() => handleSelect(item)} className="flex-row items-center gap-3">
+            <View
+                className="w-8 h-8 rounded-full items-center justify-center"
+                style={{ backgroundColor: getColor(item.name) }}
+            >
+                <Text className="text-white text-xs font-bold">{getInitials(item.name)}</Text>
+            </View>
+            <ActionsheetItemText className="font-medium">{item.name}</ActionsheetItemText>
+            {selected.id === item.id && (
+                <Text className="ml-auto text-purple-400">✓</Text>
+            )}
+        </ActionsheetItem>
+    ), [selected]);
+
+    return (
+        <>
+            <TouchableOpacity
+                onPress={() => setShowActionsheet(true)}
+                className="flex-row items-center gap-2 bg-gray-800 rounded-full px-3 py-2 self-start"
+            >
+                <View
+                    className="w-10 h-10 rounded-full items-center justify-center"
+                    style={{ backgroundColor: getColor(selected.name) }}
+                >
+                    <Text className="text-white text-xs font-bold">{getInitials(selected.name)}</Text>
+                </View>
+                <Text className="text-white font-semibold">c/{selected.name}</Text>
+                <Text className="text-gray-400">⌃</Text>
+            </TouchableOpacity>
+
+            <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
+                <ActionsheetBackdrop />
+                <ActionsheetContent>
+                    <ActionsheetDragIndicatorWrapper>
+                        <ActionsheetDragIndicator />
+                    </ActionsheetDragIndicatorWrapper>
+                    <ActionsheetFlatList
+                        data={communities}
+                        renderItem={({ item }) => <Item item={item} />}
+                        keyExtractor={(item) => item.id}
+                    />
+                </ActionsheetContent>
+            </Actionsheet>
+
+        </>
+    );
+}
