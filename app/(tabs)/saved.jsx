@@ -5,7 +5,6 @@ import Logo from "../../assets/images/logo-white.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import ThemedInput from "@/components/themedComponents/themedInput";
-import Spacer from "@/components/themedComponents/spacer";
 import { Divider } from "@/components/ui/divider";
 
 //TODO: flatlist mapped as linked to backend data, currently hardcoded for UI purposes
