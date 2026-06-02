@@ -4,6 +4,7 @@ import { StatusBar, useColorScheme } from "react-native";
 import { Colors } from "@/assets/colors/Colors";
 import { UserProvider } from "@/context/userContext";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { PostProvider } from "@/context/postContext";
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
@@ -12,18 +13,20 @@ export default function RootLayout() {
     return (
         <GluestackUIProvider>
             <UserProvider>
-                <StatusBar value="auto"></StatusBar>
-                <Stack
-                    screenOptions={{
-                        headerShown: false
-                    }}
-                >
-                    <Stack.Screen name="index" options={{
-                        title: "Home"
-                    }}
-                    />
+                <PostProvider>
+                    <StatusBar value="auto"></StatusBar>
+                    <Stack
+                        screenOptions={{
+                            headerShown: false
+                        }}
+                    >
+                        <Stack.Screen name="index" options={{
+                            title: "Home"
+                        }}
+                        />
 
-                </Stack>
+                    </Stack>
+                </PostProvider>
             </UserProvider>
         </GluestackUIProvider>
     )
