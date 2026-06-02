@@ -1,12 +1,10 @@
 import { View, Text, Image } from "react-native";
 import Logo from "../../assets/images/logo-gold.png";
+import { useEffect, useState } from "react";
 
-export default function ThemedPost({ data, children }) {
-    const user = "Xiang Neng"
-    const community = "Projects"
-    const title = "Looking for Orbital teammates"
-    const text = "Hey everyone! I'm looking for teammates to join my Orbital project. If you're interested in working on an exciting project and want to collaborate, please reach out to me. Let's create something amazing together!"
-    const image = Logo
+export default function ThemedPost({ data }) {
+
+    const { username, community, title, text, image } = data || {};
 
     return (
         //TODO: Link to actual post
@@ -21,7 +19,7 @@ export default function ThemedPost({ data, children }) {
                 <View className="bg-purple-100 rounded-full w-8 h-8 items-center justify-center">
                     <Text className="text-orange-800 text-base font-bold">u/</Text>
                 </View>
-                <Text className="text-base text-gray-600 font-medium">{user}</Text>
+                <Text className="text-base text-gray-600 font-medium">{username}</Text>
 
             </View>
             <Text className="text-lg font-bold text-gray-900 px-4 pb-2">{title}</Text>
