@@ -17,7 +17,6 @@ import Spacer from "@/components/themedComponents/spacer";
 import ThemedInput from "@/components/themedComponents/themedInput";
 import { Keyboard } from "react-native";
 
-
 export default function Login() {
     const colorScheme = useColorScheme();
     const theme = colorScheme ?? 'light';

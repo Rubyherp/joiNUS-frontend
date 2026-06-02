@@ -13,7 +13,7 @@ export default function Landing() {
     const [query, setQuery] = useState("");
 
     return (
-        <SafeAreaView className="flex-1">
+        <SafeAreaView className="flex-1 px-4">
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View className="justify-center items-center">
 
@@ -45,6 +45,7 @@ export default function Landing() {
                     </View>
                     <Spacer height={10} />
                     <Divider className="w-full" />
+                    <Spacer height={10} />
                 </View>
             </TouchableWithoutFeedback>
 
