@@ -2,7 +2,6 @@ import { View, Text, Image } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/context/userContext";
 
-//TODO: add user avatar
 //TODO: fix text overflow
 //TODO: Link to actual post
 export default function ThemedPost({ data }) {
@@ -35,13 +34,13 @@ export default function ThemedPost({ data }) {
     return (
         <View className="w-full bg-white border border-gray-200 rounded-2xl overflow-hidden mb-3 shadow-sm">
 
-            <View className="flex-row items-center gap-2 px-4 pt-4 pb-2">
+            <View className="flex-row items-center w-full gap-2 px-4 pt-4 pb-2">
                 <View className="rounded-full w-8 h-8 items-center justify-center" style={{ backgroundColor: getColor(communityName) }}>
                     <Text className="text-white text-base font-bold">{getInitials(communityName)}</Text>
                 </View>
-                <Text className="text-base font-semibold text-purple-600">{communityName}</Text>
-                <Text className="text-base text-gray-500">• posted by</Text>
+                <Text className="text-base font-semibold text-purple-600 flex-shrink-0">{communityName}</Text>
 
+                <Text className="text-base text-gray-500 flex-shrink-0">• posted by</Text>
                 <Image
                     source={{ uri: avatar }}
                     style={{
@@ -51,8 +50,15 @@ export default function ThemedPost({ data }) {
                         borderColor: 'pink',
                         borderRadius: 100,
                     }}
+                    className="flex-shrink-0"
                 />
-                <Text className="text-base text-gray-800 font-medium">{username}</Text>
+                <Text
+                    className="text-base text-gray-800 font-medium flex-1"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                >
+                    {username}
+                </Text>
 
             </View>
             <Text className="text-lg font-bold text-gray-900 px-4 pb-2">{title}</Text>
