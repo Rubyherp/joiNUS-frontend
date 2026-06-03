@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../assets/images/logo-white.png";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { PostContext } from "@/context/postContext";
 
 import ThemedInput from "../../components/themedComponents/themedInput";
@@ -9,19 +9,25 @@ import Spacer from "@/components/themedComponents/spacer";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { Divider } from "@/components/ui/divider";
 import ThemedPost from "@/components/themedComponents/themedPost";
+import { useFocusEffect } from "expo-router";
+
+//TODO: filter logic for search query
+//TODO: limit number of posts loaded on landing page, add pagination or infinite scroll (prob infinite)
 
 export default function Landing() {
     const [query, setQuery] = useState("");
     const [posts, setPosts] = useState([]);
     const { fetchPosts } = useContext(PostContext);
 
-    useEffect(() => {
-        const loadPosts = async () => {
-            const getPosts = await fetchPosts();
-            setPosts(getPosts);
-        }
-        loadPosts();
-    }, [])
+    useFocusEffect(
+        useCallback(() => {
+            const loadPosts = async () => {
+                const getPosts = await fetchPosts();
+                setPosts(getPosts);
+            }
+            loadPosts();
+        }, [fetchPosts])
+    );
 
     return (
         <SafeAreaView className="flex-1 px-4">

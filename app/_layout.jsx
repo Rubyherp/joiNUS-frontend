@@ -26,6 +26,10 @@ export default function RootLayout() {
                                 title: "Home"
                             }}
                             />
+                            <Stack.Screen name="post/[postId]" options={{
+                                headerShown: false,
+                            }}
+                            />
 
                         </Stack>
                     </PostProvider>
