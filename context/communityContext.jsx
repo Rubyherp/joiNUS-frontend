@@ -31,8 +31,22 @@ export function CommunityProvider({ children }) {
         }
     }
 
+    async function fetchCommunityById(communityId) {
+        const response = await fetch(`${API_URL}/fetchCommunityById/${communityId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to fetch community details');
+        }
+
+        return data;
+    }
+
     return (
-        <CommunityContext.Provider value={{ fetchCommunities, communities, loading, error }}>
+        <CommunityContext.Provider value={{ fetchCommunities, fetchCommunityById, communities, loading, error }}>
             {children}
         </CommunityContext.Provider>
     )
