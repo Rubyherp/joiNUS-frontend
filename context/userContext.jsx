@@ -173,7 +173,23 @@ export function UserProvider({ children }) {
         } catch (error) {
             throw error;
         }
+    }
 
+    async function fetchUserDetails(userId) {
+        try {
+            const response = await fetch(`${API_URL}/fetchUserDetails/${userId}`, {
+                headers: { 'Authorization': `Bearer ${token}` },
+            })
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch User Details");
+            }
+            return data;
+        } catch (error) {
+            throw error;
+        }
     }
 
     return (
@@ -189,6 +205,7 @@ export function UserProvider({ children }) {
                 fetchProfile,
                 profile,
                 changeAvatar,
+                fetchUserDetails,
             }}>
             {children}
         </UserContext.Provider>
