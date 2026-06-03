@@ -60,8 +60,22 @@ export function PostProvider({ children }) {
         return data.imageUrl;
     }
 
+    async function fetchPostById(postId) {
+        const response = await fetch(`${API_URL}/fetchPostById/${postId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to fetch Post");
+        }
+
+        return data;
+    }
+
     return (
-        <PostContext.Provider value={{ fetchPosts, createPost, uploadPostImage }}>
+        <PostContext.Provider value={{ fetchPosts, createPost, uploadPostImage, fetchPostById }}>
             {children}
         </PostContext.Provider>
     )
