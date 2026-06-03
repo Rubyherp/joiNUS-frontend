@@ -61,6 +61,7 @@ export default function PostPage() {
 
     return (
         <SafeAreaView className="flex-1 bg-gray-100">
+
             {/* Header */}
             <View className="flex-row items-center px-4 py-3 bg-white border-b border-gray-200">
                 <Pressable onPress={() => router.back()} className="mr-3 p-1">
@@ -70,8 +71,10 @@ export default function PostPage() {
             </View>
 
             <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 32 }}>
+
                 {/* Main card */}
                 <View className="bg-white mb-2">
+
                     {/* Community + author row */}
                     <View className="flex-row items-center px-4 pt-4 pb-2 gap-2">
                         <View className="rounded-full w-7 h-7 items-center justify-center flex-shrink-0"
@@ -103,7 +106,7 @@ export default function PostPage() {
 
                     {/* Description */}
                     {description ? (
-                        <Text className="text-base text-gray-700 px-4 pb-4 leading-6">{description}</Text>
+                        <Text className="text-lg text-gray-700 px-4 pb-4 leading-6">{description}</Text>
                     ) : null}
 
                     {/* Image */}
@@ -115,33 +118,33 @@ export default function PostPage() {
                 {/* Details card */}
                 {(more_details || requirements || member_limit || deadline) ? (
                     <View className="bg-white mb-2 px-4 py-4 gap-4">
-                        <Text className="text-sm font-bold text-gray-500 uppercase tracking-wider">Details</Text>
+                        <Text className="text-xl font-bold text-gray-500 uppercase tracking-wider">Details</Text>
 
                         {more_details ? (
                             <View>
-                                <Text className="text-xs font-semibold text-gray-400 uppercase mb-1">About</Text>
-                                <Text className="text-sm text-gray-700 leading-5">{more_details}</Text>
+                                <Text className="text-lg font-semibold text-gray-400 uppercase mb-1">About</Text>
+                                <Text className="text-base text-gray-700 leading-5">{more_details}</Text>
                             </View>
                         ) : null}
 
                         {requirements ? (
                             <View>
-                                <Text className="text-xs font-semibold text-gray-400 uppercase mb-1">Requirements</Text>
-                                <Text className="text-sm text-gray-700 leading-5">{requirements}</Text>
+                                <Text className="text-lg font-semibold text-gray-400 uppercase mb-1">Requirements</Text>
+                                <Text className="text-base text-gray-700 leading-5">{requirements}</Text>
                             </View>
                         ) : null}
 
                         <View className="flex-row gap-4">
                             {member_limit ? (
                                 <View className="flex-1 bg-gray-50 rounded-xl p-3">
-                                    <Text className="text-xs text-gray-400 mb-1">👥 Team size</Text>
-                                    <Text className="text-base font-bold text-gray-800">{member_limit} members</Text>
+                                    <Text className="text-base text-gray-400 mb-1">👥 Team size</Text>
+                                    <Text className="text-lg font-bold text-gray-800">{member_limit} members</Text>
                                 </View>
                             ) : null}
                             {deadline ? (
                                 <View className="flex-1 bg-gray-50 rounded-xl p-3">
-                                    <Text className="text-xs text-gray-400 mb-1">📅 Deadline</Text>
-                                    <Text className="text-base font-bold text-gray-800">{formatDate(deadline)}</Text>
+                                    <Text className="text-base text-gray-400 mb-1">📅 Deadline</Text>
+                                    <Text className="text-lg font-bold text-gray-800">{formatDate(deadline)}</Text>
                                 </View>
                             ) : null}
                         </View>
