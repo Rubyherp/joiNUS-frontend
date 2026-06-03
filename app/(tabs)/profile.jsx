@@ -17,15 +17,15 @@ export default function Profile() {
     const { profile, changeAvatar } = useContext(UserContext);
     const [profileUri, setProfileUri] = useState('');
 
-    const username = profile.username ?? '';
-    const year = profile.year ?? '';
-    const major = profile.major ?? '';
-    const modules = profile.modules ?? '';
-    const contact = profile.contact ?? '';
-    const email = profile.email ?? '';
-    const about = profile.about ?? '';
-    const skills = profile.skills ?? '';
-    const experiences = profile.experiences ?? '';
+    const username = profile?.username ?? '';
+    const year = profile?.year ?? '';
+    const major = profile?.major ?? '';
+    const modules = profile?.modules ?? '';
+    const contact = profile?.contact ?? '';
+    const email = profile?.email ?? '';
+    const about = profile?.about ?? '';
+    const skills = profile?.skills ?? '';
+    const experiences = profile?.experiences ?? '';
 
     const tabs = ['About', 'Skills & Exp', 'Posts'];
 
@@ -45,6 +45,15 @@ export default function Profile() {
             setProfileUri(`${newAvatar.avatar}?t=${Date.now()}`);
         }
     }
+
+    if (!profile) {
+        return (
+            <SafeAreaView className="flex-1 items-center justify-center">
+                <Text>Loading profile...</Text>
+            </SafeAreaView>
+        );
+    }
+
 
     return (
         <SafeAreaView
@@ -199,7 +208,6 @@ export default function Profile() {
                         ?
                         <ScrollView
                             showsVerticalScrollIndicator={true}
-                            indicatorStyle="black"
                         >
                             <ThemedProfileSection title="Major">
                                 {major}

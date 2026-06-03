@@ -1,4 +1,16 @@
-import { View, Text, TouchableOpacity, Pressable, ActivityIndicator, ScrollView, TouchableWithoutFeedback, Keyboard } from "react-native"; import { SafeAreaView } from "react-native-safe-area-context"; import { useState } from "react";
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    Pressable,
+    ActivityIndicator,
+    ScrollView,
+    TouchableWithoutFeedback,
+    Keyboard,
+    Alert
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useState } from "react";
 
 import Spacer from "@/components/themedComponents/spacer";
 import { LinearGradient } from "@/components/ui/linear-gradient";
@@ -18,12 +30,17 @@ import { Box } from "@/components/ui/box";
 import { Icon, CloseIcon } from '@/components/ui/icon';
 import { UploadCloud } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
+import { useContext } from "react";
+import { PostContext } from "@/context/postContext";
 
-//TODO: implement create post logic
-//TODO: upload file with Actionsheet
-//TODO: check memberLimit is a number
+
+//TODO: refactor to useReducer to manage form state or single object state for form data
+//TODO: checker to ensure title and description are not empty, and that member limit is a number if filled in
 
 export default function Create() {
+    const { uploadPostImage, createPost } = useContext(PostContext);
+
     const [loading, setLoading] = useState(false);
     const [selectedCommunity, setSelectedCommunity] = useState(null);
     const [title, setTitle] = useState("");
@@ -31,47 +48,90 @@ export default function Create() {
     const [moreDetails, setMoreDetails] = useState("");
     const [requirements, setRequirements] = useState("");
     const [memberLimit, setMemberLimit] = useState("");
-    const [deadline, setDeadline] = useState("");
+    const [deadline, setDeadline] = useState(null);
     const [showImageUpload, setShowImageUpload] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const resetState = () => (
+        setLoading(false),
+        setSelectedCommunity(null),
+        setTitle(""),
+        setDescription(""),
+        setMoreDetails(""),
+        setRequirements(""),
+        setMemberLimit(""),
+        setDeadline(null),
+        setShowImageUpload(false),
+        setSelectedImage(null)
+    )
 
     const handleCloseImageUpload = () => {
         setShowImageUpload(false);
     }
 
-    //TODO: send backend request to create post
-    const handleSubmit = () => {
-        setLoading(true);
-    }
-
-    //TODO: implement image upload logic
-    const handleImageUpload = async () => {
+    const handleImageSelection = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 0.85,
+            exif: false,
+            base64: false,
+            preferredAssetRepresentationMode: ImagePicker.UIImagePickerPreferredAssetRepresentationMode.Compatible,
         })
 
         if (result.canceled) {
             return;
         }
 
-        //TODO: append to formData
         const image = result.assets[0];
-        const formData = new FormData();
-        formData.append('postFile', {
+        setSelectedImage(image);
+        setShowImageUpload(false);
+    }
 
-        })
+    const handleRemoveImage = () => {
+        setSelectedImage(null);
+    }
 
-        //TODO: fetch url
-        //TODO: check logic: should be saved as state? not sending as request directly
-        try {
-            const response = await fetch()
+    const handleSubmit = async () => {
+        setLoading(true);
 
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to upload image");
+        let imageUrl = null;
+        if (selectedImage) {
+            try {
+                const formData = new FormData();
+
+                formData.append("postFile", {
+                    uri: selectedImage.uri,
+                    name: `post-${Date.now()}.jpg`,
+                    type: "image/jpeg",
+                });
+
+                imageUrl = await uploadPostImage(formData);
+
+            } catch (error) {
+                console.log('Upload error:', error.message);
+                setLoading(false);
+                Alert.alert('Error', error.message || 'Failed to upload image');
+                return;
             }
-            return;
+        }
+
+        try {
+            await createPost({
+                communityId: selectedCommunity?.id,
+                title,
+                description,
+                moreDetails,
+                memberLimit: memberLimit ? parseInt(memberLimit) : null,
+                requirements,
+                deadline: deadline ? deadline.toISOString() : null,
+                imageUrl
+            });
+            router.replace('/landing');
         } catch (error) {
-            throw error;
+            Alert.alert('Error', error.message || 'Failed to create post');
+        } finally {
+            resetState();
         }
     }
 
@@ -148,7 +208,7 @@ export default function Create() {
                         {/* image upload */}
                         <Text className="text-base font-semibold text-gray-800 uppercase tracking-widest mb-1 px-1">Image: (optional)</Text>
                         <Button onPress={() => setShowImageUpload(true)}>
-                            <ButtonText>Upload</ButtonText>
+                            <ButtonText>{selectedImage ? "Change Image" : "Upload Image"}</ButtonText>
                         </Button>
                         <Actionsheet isOpen={showImageUpload} onClose={handleCloseImageUpload}>
                             <ActionsheetBackdrop />
@@ -179,22 +239,29 @@ export default function Create() {
                                         as={UploadCloud}
                                         className="h-[62px] w-[62px] stroke-background-200"
                                     />
-                                    <Text className="text-white">No files uploaded yet</Text>
+                                    <Text className="text-white">
+                                        {selectedImage
+                                            ? "✓ Image Selected"
+                                            : "No files selected"}
+                                    </Text>
                                 </Box>
 
                                 <ButtonGroup className="w-full">
-                                    <Button className="w-full" onPress={handleImageUpload}>
-                                        <ButtonText>Browse files</ButtonText>
-                                    </Button>
-                                    <Button
-                                        className="w-full"
-                                        variant="outline"
-                                        isDisabled
-                                        action="secondary"
-                                    >
-                                        <ButtonText>Upload</ButtonText>
+                                    <Button className="w-full" onPress={handleImageSelection}>
+                                        <ButtonText>{selectedImage ? "Change Image" : "Browse Files"}</ButtonText>
                                     </Button>
                                 </ButtonGroup>
+
+                                {selectedImage && (
+                                    <Button
+                                        className="w-full mt-3"
+                                        variant="outline"
+                                        action="secondary"
+                                        onPress={handleRemoveImage}
+                                    >
+                                        <ButtonText>Remove Image</ButtonText>
+                                    </Button>
+                                )}
 
                             </ActionsheetContent>
                         </Actionsheet>

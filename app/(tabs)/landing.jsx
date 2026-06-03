@@ -1,7 +1,8 @@
 import { View, Text, Image, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../assets/images/logo-white.png";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { PostContext } from "@/context/postContext";
 
 import ThemedInput from "../../components/themedComponents/themedInput";
 import Spacer from "@/components/themedComponents/spacer";
@@ -11,6 +12,16 @@ import ThemedPost from "@/components/themedComponents/themedPost";
 
 export default function Landing() {
     const [query, setQuery] = useState("");
+    const [posts, setPosts] = useState([]);
+    const { fetchPosts } = useContext(PostContext);
+
+    useEffect(() => {
+        const loadPosts = async () => {
+            const getPosts = await fetchPosts();
+            setPosts(getPosts);
+        }
+        loadPosts();
+    }, [])
 
     return (
         <SafeAreaView className="flex-1 px-4">
@@ -51,11 +62,11 @@ export default function Landing() {
 
             <ScrollView
                 className="flex-1 w-full"
-                keybourdShouldPersistTaps="handled"
+                keyboardShouldPersistTaps="handled"
             >
-                <ThemedPost />
-                <ThemedPost />
-                <ThemedPost />
+                {posts.map(post => (
+                    <ThemedPost key={post.id} data={post} />
+                ))}
             </ScrollView>
         </SafeAreaView >
     )
