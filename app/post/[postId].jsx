@@ -1,5 +1,5 @@
-import { useLocalSearchParams } from "expo-router";
-import { View, Text, Image } from "react-native";
+import { useLocalSearchParams, router } from "expo-router";
+import { View, Text, Image, Pressable, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
 import { PostContext } from "@/context/postContext";
@@ -36,6 +36,16 @@ export default function PostPage() {
         getData();
     }, [])
 
+    const getInitials = (name) => name?.slice(0, 2).toUpperCase() ?? "??";
+    const getColor = (name) => {
+        const colors = ['#8637CF', '#F97316', '#EC4899', '#06B6D4', '#10B981'];
+        return name ? colors[name.charCodeAt(0) % colors.length] : '#8637CF';
+    };
+    const formatDate = (iso) => {
+        if (!iso) return null;
+        return new Date(iso).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' });
+    };
+
     const {
         title,
         description,
@@ -50,42 +60,102 @@ export default function PostPage() {
     const { name: communityName, category, tags } = community || {};
 
     return (
-        <SafeAreaView className="flex-1 items-center p-4">
-            <View className="flex-row gap-2 w-full max-w-2xl bg-white border border-gray-200 rounded-2xl overflow-hidden mb-3 shadow-sm p-4">
-                <Text>Community</Text>
-                <Text>User</Text>
+        <SafeAreaView className="flex-1 bg-gray-100">
+            {/* Header */}
+            <View className="flex-row items-center px-4 py-3 bg-white border-b border-gray-200">
+                <Pressable onPress={() => router.back()} className="mr-3 p-1">
+                    <Text className="text-2xl text-gray-500">←</Text>
+                </Pressable>
+                <Text className="text-base font-semibold text-gray-800 flex-1" numberOfLines={1}>{title ?? "Post"}</Text>
             </View>
 
-            <View className="w-full max-w-2xl bg-white border border-gray-200 rounded-2xl overflow-hidden mb-3 shadow-sm p-4">
-                <Text>Title</Text>
-                <Text>Description</Text>
+            <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 32 }}>
+                {/* Main card */}
+                <View className="bg-white mb-2">
+                    {/* Community + author row */}
+                    <View className="flex-row items-center px-4 pt-4 pb-2 gap-2">
+                        <View className="rounded-full w-7 h-7 items-center justify-center flex-shrink-0"
+                            style={{ backgroundColor: getColor(communityName) }}>
+                            <Text className="text-white text-xs font-bold">{getInitials(communityName)}</Text>
+                        </View>
+                        <Text className="text-sm font-bold text-purple-600 flex-shrink-0">{communityName}</Text>
+                        <Text className="text-sm text-gray-400 flex-shrink-0">•</Text>
+                        {avatar ? (
+                            <Image source={{ uri: avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} className="flex-shrink-0" />
+                        ) : null}
+                        <Text className="text-sm text-gray-500 flex-1" numberOfLines={1}>u/{authorName}</Text>
+                        <Text className="text-xs text-gray-400">{formatDate(created_at)}</Text>
+                    </View>
+
+                    {/* Title */}
+                    <Text className="text-xl font-bold text-gray-900 px-4 pb-2 leading-7">{title}</Text>
+
+                    {/* Tags */}
+                    {tags?.length > 0 && (
+                        <View className="flex-row flex-wrap gap-1 px-4 pb-3">
+                            {tags.map((tag) => (
+                                <View key={tag} className="bg-purple-50 border border-purple-200 rounded-full px-2 py-0.5">
+                                    <Text className="text-purple-600 text-xs font-medium">{tag}</Text>
+                                </View>
+                            ))}
+                        </View>
+                    )}
+
+                    {/* Description */}
+                    {description ? (
+                        <Text className="text-base text-gray-700 px-4 pb-4 leading-6">{description}</Text>
+                    ) : null}
+
+                    {/* Image */}
+                    {image_url ? (
+                        <Image source={{ uri: image_url }} className="w-full" style={{ height: 240 }} resizeMode="cover" />
+                    ) : null}
+                </View>
+
+                {/* Details card */}
+                {(more_details || requirements || member_limit || deadline) ? (
+                    <View className="bg-white mb-2 px-4 py-4 gap-4">
+                        <Text className="text-sm font-bold text-gray-500 uppercase tracking-wider">Details</Text>
+
+                        {more_details ? (
+                            <View>
+                                <Text className="text-xs font-semibold text-gray-400 uppercase mb-1">About</Text>
+                                <Text className="text-sm text-gray-700 leading-5">{more_details}</Text>
+                            </View>
+                        ) : null}
+
+                        {requirements ? (
+                            <View>
+                                <Text className="text-xs font-semibold text-gray-400 uppercase mb-1">Requirements</Text>
+                                <Text className="text-sm text-gray-700 leading-5">{requirements}</Text>
+                            </View>
+                        ) : null}
+
+                        <View className="flex-row gap-4">
+                            {member_limit ? (
+                                <View className="flex-1 bg-gray-50 rounded-xl p-3">
+                                    <Text className="text-xs text-gray-400 mb-1">👥 Team size</Text>
+                                    <Text className="text-base font-bold text-gray-800">{member_limit} members</Text>
+                                </View>
+                            ) : null}
+                            {deadline ? (
+                                <View className="flex-1 bg-gray-50 rounded-xl p-3">
+                                    <Text className="text-xs text-gray-400 mb-1">📅 Deadline</Text>
+                                    <Text className="text-base font-bold text-gray-800">{formatDate(deadline)}</Text>
+                                </View>
+                            ) : null}
+                        </View>
+                    </View>
+                ) : null}
+            </ScrollView>
+
+            {/* Join button */}
+            <View className="bg-white border-t border-gray-200 px-4 py-3">
+                <Pressable className="bg-purple-600 rounded-full py-3 items-center">
+                    <Text className="text-white font-bold text-base">Request to Join</Text>
+                </Pressable>
             </View>
-
-            {image_url && (
-                <View className="w-full max-w-2xl bg-white border border-gray-200 rounded-2xl overflow-hidden mb-3 shadow-sm p-4">
-                    <Image source={{ uri: image_url }} className="w-full h-64 rounded-lg" resizeMode="cover" />
-                </View>
-            )}
-
-            {more_details && (
-                <View className="w-full max-w-2xl bg-white border border-gray-200 rounded-2xl overflow-hidden mb-3 shadow-sm p-4">
-                    <Text>More Details</Text>
-                </View>
-            )}
-
-            {member_limit && (
-                <View className="w-full max-w-2xl bg-white border border-gray-200 rounded-2xl overflow-hidden mb-3 shadow-sm p-4">
-                    <Text>Member Limit</Text>
-                </View>
-            )}
-
-            {deadline && (
-                <View className="w-full max-w-2xl bg-white border border-gray-200 rounded-2xl overflow-hidden mb-3 shadow-sm p-4">
-                    <Text>Deadline</Text>
-                </View>
-            )}
-
         </SafeAreaView>
-    )
+    );
 }
 
