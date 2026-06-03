@@ -1,5 +1,4 @@
-import { createContext } from 'react';
-import { useContext } from 'react';
+import { createContext, useContext, useCallback } from 'react';
 import { UserContext } from './userContext';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -8,7 +7,7 @@ export const PostContext = createContext();
 export function PostProvider({ children }) {
     const { token } = useContext(UserContext);
 
-    async function fetchPosts() {
+    const fetchPosts = useCallback(async function () {
         try {
             const response = await fetch(`${API_URL}/posts`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -22,7 +21,7 @@ export function PostProvider({ children }) {
         } catch (error) {
             throw error;
         }
-    }
+    }, [token])
 
     async function createPost(content) {
         const response = await fetch(`${API_URL}/posts`, {
