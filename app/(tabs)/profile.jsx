@@ -1,9 +1,9 @@
-import { View, Text, TouchableOpacity, ScrollView, ViewBase } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
 
 //Custom imports
-import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 import Spacer from "@/components/themedComponents/spacer";
 import { Divider } from "@/components/ui/divider";
 import { UserContext } from "@/context/userContext";
@@ -91,14 +91,26 @@ export default function Profile() {
                             style={{ backgroundColor: Colors.primary }}
                         >
                             <View className="rounded-full p-[2px] bg-white">
-                                <Avatar size="xl">
-                                    <AvatarFallbackText
-                                        className="font-bold"
-                                    >
-                                        {username}
-                                    </AvatarFallbackText>
-                                    <AvatarImage source={{ uri: profileUri }} />
-                                </Avatar>
+
+                                <Image
+                                    source={{ uri: profileUri }}
+                                    style={{
+                                        width: 64,
+                                        height: 64,
+                                        borderRadius: 100,
+                                    }}
+                                />
+
+                                {/* temp switch out possible buggy avatar component with image component, can revert back to avatar component later if needed */}
+                                {/* <Avatar size="xl"> */}
+                                {/*     <AvatarFallbackText */}
+                                {/*         className="font-bold" */}
+                                {/*     > */}
+                                {/*         {username} */}
+                                {/*     </AvatarFallbackText> */}
+                                {/*     <AvatarImage source={{ uri: profileUri }} /> */}
+                                {/* </Avatar> */}
+
                             </View>
                         </View>
                     </TouchableOpacity>
