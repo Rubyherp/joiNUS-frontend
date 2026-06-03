@@ -10,7 +10,7 @@ import { UserContext } from "@/context/userContext";
 import ThemedProfileSection from "@/components/themedComponents/themedProfileSection";
 import { Colors } from "@/assets/colors/Colors";
 
-//TODO: use actionsheet for settings
+//TODO: use actionsheet for settings - logout, change password, etc
 
 export default function Profile() {
     const [tab, setTab] = useState(0);
