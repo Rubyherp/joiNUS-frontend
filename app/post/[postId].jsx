@@ -7,6 +7,8 @@ import { UserContext } from "@/context/userContext";
 import { CommunityContext } from "@/context/communityContext";
 
 //TODO: add edit button for author?
+//TODO: request to join
+
 export default function PostPage() {
     const { postId } = useLocalSearchParams();
     const { fetchPostById } = useContext(PostContext);
@@ -28,10 +30,6 @@ export default function PostPage() {
 
             const authorData = await fetchUserDetails(postData.author_id);
             setAuthor(authorData);
-
-            console.log("postData:", postData);
-            console.log("authorData:", authorData);
-            console.log("communityData:", postData.communities);
         }
         getData();
     }, [])
@@ -59,6 +57,7 @@ export default function PostPage() {
     const { username: authorName, avatar } = author || {};
     const { name: communityName, category, tags } = community || {};
 
+    // this UI is claude generated. I edited it
     return (
         <SafeAreaView className="flex-1 bg-gray-100">
 
