@@ -2,6 +2,8 @@ import { View, Text, Image } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/context/userContext";
 
+//TODO: add user avatar
+//TODO: fix text overflow
 export default function ThemedPost({ data }) {
 
     const [author, setAuthor] = useState(null);
