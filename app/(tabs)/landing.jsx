@@ -11,6 +11,9 @@ import { Divider } from "@/components/ui/divider";
 import ThemedPost from "@/components/themedComponents/themedPost";
 import { useFocusEffect } from "expo-router";
 
+//TODO: filter logic for search query
+//TODO: limit number of posts loaded on landing page, add pagination or infinite scroll (prob infinite)
+
 export default function Landing() {
     const [query, setQuery] = useState("");
     const [posts, setPosts] = useState([]);

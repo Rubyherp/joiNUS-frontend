@@ -2,7 +2,6 @@ import { View, Text, Image } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/context/userContext";
 
-//TODO: fix text overflow
 //TODO: Link to actual post
 export default function ThemedPost({ data }) {
 

@@ -37,6 +37,7 @@ import { PostContext } from "@/context/postContext";
 
 //TODO: refactor to useReducer to manage form state or single object state for form data
 //TODO: checker to ensure title and description are not empty, and that member limit is a number if filled in
+//TODO: add able to create community
 
 export default function Create() {
     const { uploadPostImage, createPost } = useContext(PostContext);
