@@ -24,8 +24,45 @@ export function PostProvider({ children }) {
         }
     }
 
+    async function createPost(content) {
+        const response = await fetch(`${API_URL}/posts`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(content),
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to create Post");
+        }
+
+        return data;
+    }
+
+    async function uploadPostImage(formData) {
+        const response = await fetch(`${API_URL}/uploadPostImage`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+            body: formData,
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to upload Image");
+        }
+
+        return data.imageUrl;
+    }
+
     return (
-        <PostContext.Provider value={{ fetchPosts }}>
+        <PostContext.Provider value={{ fetchPosts, createPost, uploadPostImage }}>
             {children}
         </PostContext.Provider>
     )
