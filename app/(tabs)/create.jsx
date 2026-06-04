@@ -149,7 +149,7 @@ export default function Create() {
                         </View>
 
                         {/* community picker */}
-                        <View className="flex-shrink-0">
+                        <View className="flex-shrink-1 max-w-[50%]">
                             <CommunityPicker onSelect={c => setSelectedCommunity(c)} />
                             <Spacer height={20} />
                         </View>
