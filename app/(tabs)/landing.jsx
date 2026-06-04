@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
+import { View, Text, Image, TouchableWithoutFeedback, Keyboard, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../assets/images/logo-white.png";
 import { useCallback, useContext, useState } from "react";
@@ -22,15 +22,28 @@ export default function Landing() {
     useFocusEffect(
         useCallback(() => {
             const loadPosts = async () => {
-                const getPosts = await fetchPosts();
-                setPosts(getPosts);
+                try {
+                    const getPosts = await fetchPosts();
+                    setPosts(getPosts);
+                } catch (error) {
+                    console.log("Error", "Failed to load posts. Please try again later.");
+                } finally {
+                }
             }
             loadPosts();
         }, [fetchPosts])
     );
 
+    if (posts.length === 0) {
+        return (
+            <SafeAreaView className="flex-1 justify-center items-center" edges={['top']}>
+                <Text className="text-center text-gray-500 mt-10">Loading posts...</Text>
+            </SafeAreaView>
+        )
+    }
+
     return (
-        <SafeAreaView className="flex-1 px-4">
+        <SafeAreaView className="flex-1 px-4" edges={['top', 'left', 'right']}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View className="justify-center items-center">
 
