@@ -57,17 +57,21 @@ export default function CommunityPicker({ onSelect }) {
         <>
             <TouchableOpacity
                 onPress={() => setShowActionsheet(true)}
-                className="flex-row items-center gap-2 bg-gray-800 rounded-full px-3 py-2 self-start"
+                className="flex-row items-center gap-2 bg-gray-800 rounded-full px-3 py-2 max-width-[160px]"
             >
                 {selected && (
                     <View
-                        className="w-10 h-10 rounded-full items-center justify-center"
+                        className="w-10 h-10 rounded-full items-center justify-center flex-shrink-0"
                         style={{ backgroundColor: getColor(selected.name) }}
                     >
                         <Text className="text-white text-xs font-bold">{getInitials(selected.name)}</Text>
                     </View>
                 )}
-                <Text className="text-white font-semibold text-base">
+                <Text
+                    className="text-white font-semibold text-base flex-shrink"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                >
                     {selected
                         ? `c/${selected.name}`
                         : `Select Community`
