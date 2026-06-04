@@ -45,6 +45,50 @@ export function CommunityProvider({ children }) {
         return data;
     }
 
+    async function fetchFollowedCommunities() {
+        const response = await fetch(`${API_URL}/communities/following`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to fetch following Communities');
+        }
+
+        return data;
+    }
+
+    async function followCommunity(communityId) {
+        const response = await fetch(`${API_URL}/communities/${communityId}/follow`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to follow Community');
+        }
+
+        return data;
+    }
+
+    async function unfollowCommunity(communityId) {
+        const response = await fetch(`${API_URL}/communities/${communityId}/follow`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to unfollow Community');
+        }
+
+        return data;
+    }
+
     return (
         <CommunityContext.Provider value={{ fetchCommunities, fetchCommunityById, communities, loading, error }}>
             {children}
