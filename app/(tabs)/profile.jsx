@@ -59,6 +59,7 @@ export default function Profile() {
         <SafeAreaView
             className="flex-1 items-center px-4"
             style={{ backgroundColor: Colors.light.uiBackground }}
+            edges={['top']}
         >
             <View className="flex-row items-center justify-between w-full mb-3">
                 <Text
