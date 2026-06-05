@@ -24,11 +24,13 @@ export function CommunityProvider({ children }) {
                 throw new Error(data.error || 'Failed to fetch communities');
             }
             setCommunities(data);
+            return data;
         } catch (error) {
             setError(error.message);
         } finally {
             setLoading(false);
         }
+
     }
 
     async function fetchCommunityById(communityId) {
@@ -90,7 +92,7 @@ export function CommunityProvider({ children }) {
     }
 
     return (
-        <CommunityContext.Provider value={{ fetchCommunities, fetchCommunityById, communities, loading, error }}>
+        <CommunityContext.Provider value={{ fetchCommunities, fetchCommunityById, communities, loading, error, fetchFollowedCommunities, followCommunity, unfollowCommunity }}>
             {children}
         </CommunityContext.Provider>
     )
