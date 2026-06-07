@@ -1,79 +1,192 @@
-import { View, Text, Image, FlatList } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { LinearGradient } from "@/components/ui/linear-gradient";
-import { useState } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import Logo from "../../assets/images/logo-white.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import ThemedInput from "@/components/themedComponents/themedInput";
-import { Divider } from "@/components/ui/divider";
+import { Colors } from "@/assets/colors/Colors";
+import ThemedCommunity from "@/components/themedComponents/themedCommunity";
+import { PostContext } from "@/context/postContext";
+import { CommunityContext } from "@/context/communityContext";
+import ThemedPost from "@/components/themedComponents/themedPost";
 
 //TODO: flatlist mapped as linked to backend data, currently hardcoded for UI purposes
 //TODO: link each card to the community page, and add a button to leave the community (or remove from saved)
 
-const communities = [
-    { id: '1', name: 'SGExams', description: 'A community for all students in Singapore' },
-    { id: '2', name: 'NUS', description: 'A community for all NUS students' },
-    { id: '3', name: 'joiNUS', description: 'A community for all NUS students who want to joiNUS' },
-];
-
 export default function Saved() {
-    const [query, setQuery] = useState("");
+    const [communityQuery, setCommunityQuery] = useState("");
+    const [postQuery, setPostQuery] = useState("");
+
+    const [savedPosts, setSavedPosts] = useState(null);
+    const [followedCommunities, setFollowedCommunities] = useState(null);
+    const [allCommunities, setAllCommunities] = useState(null);
+
+    const { fetchSavedPosts } = useContext(PostContext);
+    const { fetchCommunities, fetchFollowedCommunities, followCommunity, unfollowCommunity } = useContext(CommunityContext);
+
+
+    const loadData = useCallback(async () => {
+        try {
+            console.log('loadData called');
+            const [saved, followed, all] = await Promise.all([
+                fetchSavedPosts(),
+                fetchFollowedCommunities(),
+                fetchCommunities()
+            ]);
+
+            console.log('saved:', saved);
+            console.log('followed:', followed);
+            console.log('all:', all);
+            setSavedPosts(saved.map(s => s.posts));
+            setFollowedCommunities(followed.map(f => f.communities));
+            setAllCommunities(all);
+        } catch (error) {
+            Alert.alert('Error', 'Failed to load data');
+        }
+    }, [fetchSavedPosts, fetchFollowedCommunities, fetchCommunities]);
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    const [tab, setTab] = useState(0);
+    const tabs = ['Communities', 'Posts'];
 
     return (
-        <SafeAreaView className="flex-1 px-4">
+        <SafeAreaView className="flex-1" edges={['top']}>
+            <ScrollView className="flex-1">
 
-            <View className="flex-1">
-                <View className="items-center">
+                {/* top bar */}
+                <View className="flex justify-between px-4 py-2">
+                    <View>
+                        <Text className="text-2xl font-extrabold text-gray-800 tracking-light">Saved</Text>
+                        <Text className="text-base font-semibold text-gray-500 mt-1">Your bookmarks & communities</Text>
+                    </View>
 
-                    {/* searchbar */}
-                    <View className="w-[80%] h-14 justify-center">
-                        <LinearGradient
-                            className={`p-[2px] rounded-3xl`}
-                            colors={['#F97316', '#EC4899']}
-                            start={[0, 1]}
-                            end={[1, 0]}
-                        >
-                            <View className="bg-white rounded-3xl h-14 justify-center">
-                                {query === "" && (
-                                    <View className="absolute left-4 z-10 gap-4 flex-row items-center pointer-events-none">
-                                        <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
-                                        <Text className="text-black/40 text-xl">Search your Communities</Text>
-                                    </View>
-                                )}
-
-                                <ThemedInput
-                                    className="text-xl text-black bg-white border border-black/10 rounded-3xl w-full h-14 px-4"
-                                    value={query}
-                                    onChangeText={setQuery}
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                />
-                            </View>
-                        </LinearGradient>
+                    <View className="flex-row mt-3 mb-0 p-1 rounded-xl" style={{ backgroundColor: Colors.light.uiBackground }}>
+                        {tabs.map((label, i) => (
+                            <TouchableOpacity
+                                key={i}
+                                onPress={() => setTab(i)}
+                                className="flex-1 items-center py-2 rounded-lg border-gray-400"
+                                style={tab === i
+                                    ? { backgroundColor: "#fff", shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 4, shadowOffset: { width: 0, height: 1 }, elevation: 2 }
+                                    : {}
+                                }
+                            >
+                                <Text
+                                    className="text-xs font-bold"
+                                    style={{ color: tab === i ? Colors.light.title : Colors.light.text }}
+                                >
+                                    {label}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
                     </View>
                 </View>
-                <Divider className="my-4" />
 
-                <Text className="text-2xl font-semibold text-gray-800 uppercase tracking-widest mb-1 px-1">
-                    Your Communities
-                </Text>
+                {/* searchbar */}
+                {tab === 0
+                    ? (
+                        <View>
+                            <View className="w-full h-14 justify-center px-4">
+                                <LinearGradient
+                                    className={`p-[2px] rounded-3xl`}
+                                    colors={['#F97316', '#EC4899']}
+                                    start={[0, 1]}
+                                    end={[1, 0]}
+                                >
+                                    <View className="rounded-3xl h-12 justify-center">
+                                        {communityQuery === "" && (
+                                            <View className="absolute left-4 z-10 gap-4 flex-row items-center pointer-events-none">
+                                                <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
+                                                <Text className="text-black/40 text-xl">Search all communities...</Text>
+                                            </View>
+                                        )}
 
-                <FlatList
-                    data={communities}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <View className="bg-white rounded-xl p-4 mb-3 border border-gray-200">
-                            <Text className="text-lg font-bold text-gray-800">
-                                c/ {item.name}
-                            </Text>
-                            <Text className="text-lg text-gray-800">
-                                {item.description}
-                            </Text>
+                                        <ThemedInput
+                                            className="text-base text-black border border-black/10 rounded-3xl w-full h-12 px-4"
+                                            style={{ backgroundColor: "white" }}
+                                            value={communityQuery}
+                                            onChangeText={setCommunityQuery}
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                        />
+                                    </View>
+                                </LinearGradient>
+                            </View>
                         </View>
-                    )}
-                    showsVerticalScrollIndicator={false}
-                />
-            </View>
+                    )
+                    : (
+                        <View>
+                            <View className="w-full h-14 justify-center px-4">
+                                <LinearGradient
+                                    className={`p-[2px] rounded-3xl`}
+                                    colors={['#F97316', '#EC4899']}
+                                    start={[0, 1]}
+                                    end={[1, 0]}
+                                >
+
+                                    <View className="rounded-3xl h-12 justify-center">
+                                        {postQuery === "" && (
+                                            <View className="absolute left-4 z-10 gap-4 flex-row items-center pointer-events-none">
+                                                <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
+                                                <Text className="text-black/40 text-xl">Search your Saved Posts</Text>
+                                            </View>
+                                        )}
+
+                                        <ThemedInput
+                                            className="text-base text-black border border-black/10 rounded-3xl w-full h-12 px-4"
+                                            style={{ backgroundColor: "white" }}
+                                            value={postQuery}
+                                            onChangeText={setPostQuery}
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                        />
+                                    </View>
+                                </LinearGradient>
+                            </View>
+                        </View>
+                    )
+                }
+                {/* content */}
+
+                {tab === 0
+                    ? (
+
+                        <View className="pt-4">
+                            <View className="px-4">
+                                <Text className="text-gray-700 text-xl font-bold">FOLLOWING</Text>
+                            </View>
+                            {
+                                (followedCommunities ?? []).map(community => (
+                                    <ThemedCommunity key={community.id} data={community} isFollowed={true} onFollowChange={loadData} />
+                                ))
+                            }
+                            <View className="flex justify-center items-center py-1.5 border-b-2 border-gray-400 bg-gray-700">
+                                <Text className="text-base font-semibold text-gray-200 ">Browse all Communities</Text>
+                            </View>
+                            {
+                                (allCommunities ?? [])
+                                    .filter(community => !followedCommunities?.some(f => f.id === community.id))
+                                    .map(community => (
+                                        <ThemedCommunity key={community.id} data={community} isFollowed={followedCommunities?.some(followedCommunity => followedCommunity.id === community.id)} onFollowChange={loadData} />
+                                    ))
+                            }
+                        </View>
+
+                    ) : (
+                        <View className="pt-4">
+                            {(savedPosts ?? []).map(post => (
+                                <ThemedPost key={post.id} data={post} />
+                            ))}
+                        </View>
+                    )
+                }
+
+            </ScrollView>
         </SafeAreaView >
     )
 }
+

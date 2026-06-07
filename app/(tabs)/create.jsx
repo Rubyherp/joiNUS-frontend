@@ -135,7 +135,7 @@ export default function Create() {
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-gray-50" edges={['top']}>
+        <SafeAreaView className="flex-1" edges={['top']}>
             <TouchableWithoutFeedback className="flex-1" onPress={() => { Keyboard.dismiss() }}>
 
                 <View className="flex-1">
@@ -145,7 +145,7 @@ export default function Create() {
 
                         <View>
                             <Text className="text-2xl font-extrabold text-gray-800 tracking-light">New Post</Text>
-                            <Text className="text-xs text-gray-400 mt-1">Share with your Community!</Text>
+                            <Text className="text-base text-gray-400 mt-1">Share with your Community!</Text>
                         </View>
 
                         {/* community picker */}
