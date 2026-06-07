@@ -42,12 +42,13 @@ export default function Landing() {
         )
     }
 
+    //TODO: Fix placeholder not centering
     return (
         <SafeAreaView className="flex-1 px-4" edges={['top', 'left', 'right']}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View className="justify-center items-center">
 
-                    <View className="w-[80%] h-14 relative justify-center">
+                    <View className="w-full h-12 relative justify-center">
 
                         <LinearGradient
                             className={`p-[2px] rounded-3xl`}
@@ -55,7 +56,7 @@ export default function Landing() {
                             start={[0, 1]}
                             end={[1, 0]}
                         >
-                            <View className="bg-white rounded-3xl h-14 justify-center">
+                            <View className="bg-white rounded-3xl h-12 justify-center">
                                 {query === "" && (
                                     <View className="absolute left-4 z-10 gap-8 flex-row items-center pointer-events-none">
                                         <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
@@ -64,7 +65,7 @@ export default function Landing() {
                                 )}
 
                                 <ThemedInput
-                                    className="text-xl text-black bg-white border border-black/10 rounded-3xl w-full h-14 px-4"
+                                    className="text-xl text-black bg-white border border-black/10 rounded-3xl w-full h-12 px-4"
                                     value={query}
                                     onChangeText={setQuery}
                                     autoCapitalize="none"
@@ -73,8 +74,6 @@ export default function Landing() {
                             </View>
                         </LinearGradient>
                     </View>
-                    <Spacer height={10} />
-                    <Divider className="w-full" />
                     <Spacer height={10} />
                 </View>
             </TouchableWithoutFeedback>

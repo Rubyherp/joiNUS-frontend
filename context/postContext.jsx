@@ -74,8 +74,53 @@ export function PostProvider({ children }) {
         return data;
     }
 
+    async function fetchSavedPosts() {
+        const response = await fetch(`${API_URL}/posts/saved`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to fetch saved Post");
+        }
+
+        return data;
+    }
+
+    async function savePost(postId) {
+        const response = await fetch(`${API_URL}/posts/${postId}/save`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to save Post");
+        }
+
+        return data;
+    }
+
+    async function unsavePost(postId) {
+        const response = await fetch(`${API_URL}/posts/${postId}/save`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to unsave Post");
+        }
+
+        return data;
+    }
+
+
     return (
-        <PostContext.Provider value={{ fetchPosts, createPost, uploadPostImage, fetchPostById }}>
+        <PostContext.Provider value={{ fetchPosts, createPost, uploadPostImage, fetchPostById, fetchSavedPosts, savePost, unsavePost }}>
             {children}
         </PostContext.Provider>
     )
