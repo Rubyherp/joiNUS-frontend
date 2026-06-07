@@ -1,29 +1,33 @@
 import { useLocalSearchParams, router } from "expo-router";
-import { View, Text, Image, Pressable, ScrollView } from "react-native";
+import { View, Text, Image, Pressable, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
 import { PostContext } from "@/context/postContext";
 import { UserContext } from "@/context/userContext";
 import { CommunityContext } from "@/context/communityContext";
+import { Ionicons } from '@expo/vector-icons';
 
 //TODO: add edit button for author?
-//TODO: request to join
+//TODO: finish save and unsave post logic
 
 export default function PostPage() {
     const { postId } = useLocalSearchParams();
-    const { fetchPostById } = useContext(PostContext);
+    const { fetchPostById, savePost, unsavePost } = useContext(PostContext);
     const { fetchUserDetails } = useContext(UserContext);
     const { fetchCommunityById } = useContext(CommunityContext);
 
     const [post, setPost] = useState(null);
     const [author, setAuthor] = useState(null);
     const [community, setCommunity] = useState(null);
+    const [saved, setSaved] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const getData = async () => {
             const postData = await fetchPostById(postId);
             setPost(postData);
             setCommunity(postData.communities);
+            setSaved(postData.post_saves?.length > 0);
 
             const communityData = await fetchCommunityById(postData.community_id);
             setCommunity(communityData);
@@ -33,6 +37,18 @@ export default function PostPage() {
         }
         getData();
     }, [])
+
+    const handleSavePost = async () => {
+        setLoading(true);
+        try {
+            saved ? await unsavePost(postId) : await savePost(postId);
+            setSaved(!saved);
+        } catch (error) {
+            Alert.alert('Error', `Failed to ${saved ? 'unsave Post' : 'save Post'}`)
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const getInitials = (name) => name?.slice(0, 2).toUpperCase() ?? "??";
     const getColor = (name) => {
@@ -57,16 +73,39 @@ export default function PostPage() {
     const { username: authorName, avatar } = author || {};
     const { name: communityName, category, tags } = community || {};
 
-    // this UI is claude generated. I edited it
     return (
         <SafeAreaView className="flex-1 bg-gray-100">
 
             {/* Header */}
-            <View className="flex-row items-center px-4 py-3 bg-white border-b border-gray-200">
-                <Pressable onPress={() => router.back()} className="mr-3 p-1">
-                    <Text className="text-2xl text-gray-500">←</Text>
-                </Pressable>
-                <Text className="text-base font-semibold text-gray-800 flex-1" numberOfLines={1}>{title ?? "Post"}</Text>
+            <View className="flex-row h-16 py-3 bg-white border-b border-gray-200">
+
+                <View className="flex-1 ">
+                    <Pressable onPress={() => router.back()} className="mr-3 p-1 gap-2 flex-row justify-center items-center">
+                        <Text className="text-2xl text-gray-500">←</Text>
+                        <Text className="text-base font-semibold text-gray-800 flex-1 justify-center">{title ?? "Post"}</Text>
+                    </Pressable>
+                </View>
+
+                {/* save button */}
+                <View className="w-16 flex items-center">
+                    <TouchableOpacity
+                        onPress={handleSavePost}
+                        disabled={loading}
+                        activeOpacity={0.7}
+                        style={{ opacity: loading ? 0.7 : 1 }}
+                        className="flex justify-center items-center"
+                    >
+                        {loading ? (
+                            <ActivityIndicator color="#fff" />
+                        ) : (
+                            <Text className="text-white font-semibold text-lg">
+                                <Ionicons name={saved ? 'bookmark' : 'bookmark-outline'} size={24} color='black' />
+                            </Text>
+                        )}
+                    </TouchableOpacity>
+                    <Text className="text-sm text-gray-500 " >{saved ? 'unsave' : 'save'}</Text>
+
+                </View>
             </View>
 
             <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 32 }}>
@@ -152,12 +191,12 @@ export default function PostPage() {
             </ScrollView>
 
             {/* Join button */}
-            <View className="bg-white border-t border-gray-200 px-4 py-3">
-                <Pressable className="bg-purple-600 rounded-full py-3 items-center">
+            <View className="flex-row bg-white border-t border-gray-200 px-4 py-3 gap-2">
+                <Pressable className="flex-1 bg-purple-600 rounded-full py-2 items-center">
                     <Text className="text-white font-bold text-base">Request to Join</Text>
                 </Pressable>
             </View>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 
