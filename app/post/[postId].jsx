@@ -2,6 +2,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import { View, Text, Image, Pressable, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
+
 import { PostContext } from "@/context/postContext";
 import { UserContext } from "@/context/userContext";
 import { CommunityContext } from "@/context/communityContext";

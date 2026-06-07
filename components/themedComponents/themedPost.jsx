@@ -1,8 +1,9 @@
 import { View, Text, Image, Pressable } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "@/context/userContext";
 import { router } from "expo-router";
+
 import { CommunityContext } from "@/context/communityContext";
+import { UserContext } from "@/context/userContext";
 
 //TODO: Link to actual post
 //TODO: add custom Error for fetchUserDetails and fetchCommunityById

@@ -1,15 +1,14 @@
 import { View, Text, Image, TouchableWithoutFeedback, Keyboard, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../../assets/images/logo-white.png";
 import { useCallback, useContext, useState } from "react";
-import { PostContext } from "@/context/postContext";
+import { useFocusEffect } from "expo-router";
 
 import ThemedInput from "../../components/themedComponents/themedInput";
+import Logo from "../../assets/images/logo-white.png";
 import Spacer from "@/components/themedComponents/spacer";
 import { LinearGradient } from "@/components/ui/linear-gradient";
-import { Divider } from "@/components/ui/divider";
 import ThemedPost from "@/components/themedComponents/themedPost";
-import { useFocusEffect } from "expo-router";
+import { PostContext } from "@/context/postContext";
 
 //TODO: filter logic for search query
 //TODO: limit number of posts loaded on landing page, add pagination or infinite scroll (prob infinite)

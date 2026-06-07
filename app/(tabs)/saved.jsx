@@ -1,10 +1,10 @@
 import { View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
-import { LinearGradient } from "@/components/ui/linear-gradient";
 import { useState, useContext, useEffect, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
-import Logo from "../../assets/images/logo-white.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import Logo from "../../assets/images/logo-white.png";
+import { LinearGradient } from "@/components/ui/linear-gradient";
 import ThemedInput from "@/components/themedComponents/themedInput";
 import { Colors } from "@/assets/colors/Colors";
 import ThemedCommunity from "@/components/themedComponents/themedCommunity";
@@ -18,7 +18,6 @@ import ThemedPost from "@/components/themedComponents/themedPost";
 export default function Saved() {
     const [communityQuery, setCommunityQuery] = useState("");
     const [postQuery, setPostQuery] = useState("");
-
     const [savedPosts, setSavedPosts] = useState(null);
     const [followedCommunities, setFollowedCommunities] = useState(null);
     const [allCommunities, setAllCommunities] = useState(null);
@@ -39,11 +38,14 @@ export default function Saved() {
             console.log('saved:', saved);
             console.log('followed:', followed);
             console.log('all:', all);
+
             setSavedPosts(saved.map(s => s.posts));
             setFollowedCommunities(followed.map(f => f.communities));
             setAllCommunities(all);
         } catch (error) {
-            Alert.alert('Error', 'Failed to load data');
+            console.log(error.message);
+            console.log('Error', 'Failed to load data');
+            Alert.alert('Error', 'Failed to load data')
         }
     }, [fetchSavedPosts, fetchFollowedCommunities, fetchCommunities]);
 

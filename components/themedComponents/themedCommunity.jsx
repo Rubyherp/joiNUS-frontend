@@ -1,12 +1,15 @@
 import { View, Text, Pressable, TouchableOpacity, ActivityIndicator, Alert, } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { CommunityContext } from "@/context/communityContext";
+import { router } from "expo-router";
 
 import { LinearGradient } from "@/components/ui/linear-gradient";
+import { CommunityContext } from "@/context/communityContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ThemedCommunity({ data, isFollowed = false, onFollowChange }) {
 
     const communityName = data?.name ?? 'Unknown Community';
+    const communityId = data?.id ?? '';
     const { followCommunity, unfollowCommunity } = useContext(CommunityContext);
     const [followed, setFollowed] = useState(isFollowed);
     const [loading, setLoading] = useState(false);
@@ -51,8 +54,10 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
     //TODO: add onPress to link to actual community Page
     //TODO: maybe follow button as children? so i can reuse this component
 
+    console.log(data);
+
     return (
-        <Pressable onPress={() => { }}>
+        <Pressable onPress={() => router.push(`/community/${communityId}`)}>
             <View className="w-full border-b-2 border-gray-300 overflow-hidden shadow-sm">
                 <View className="flex-row items-center w-full gap-2 px-4 pt-4 pb-2">
 
@@ -83,31 +88,51 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
                         </Text>
                     </View>
 
-                    <TouchableOpacity
-                        onPress={followed ? handleUnfollow : handleFollow}
-                        disabled={loading}
-                        activeOpacity={0.7}
-                        style={{ opacity: loading ? 0.7 : 1 }}
-                    >
-                        <LinearGradient
-                            className={`py-2 px-2 rounded-3xl justify-center items-center`}
-                            colors={['#F97316', '#EC4899']}
-                            start={[0, 1]}
-                            end={[1, 0]}
+                    <View className="w-16 flex justify-center items-center">
+                        <TouchableOpacity
+                            onPress={followed ? handleUnfollow : handleFollow}
+                            disabled={loading}
+                            activeOpacity={0.7}
+                            style={{ opacity: loading ? 0.7 : 1 }}
+                            className="flex justify-center items-center"
                         >
                             {loading ? (
-                                <ActivityIndicator color="#fff" />
+                                <ActivityIndicator color="black" />
                             ) : (
-                                <Text className="text-white font-semibold text-lg"
-                                >
-                                    {followed ? '− Unfollow' : '+ Follow'}
-                                </Text>
+                                <Ionicons
+                                    name={followed ? 'heart' : 'heart-outline'}
+                                    size={24}
+                                    color={followed ? '#EC4899' : 'black'}
+                                />
                             )}
-                        </LinearGradient>
-                    </TouchableOpacity>
+                            <Text className="text-sm text-gray-500">{followed ? 'following' : 'follow'}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    {/* <TouchableOpacity */}
+                    {/*     onPress={followed ? handleUnfollow : handleFollow} */}
+                    {/*     disabled={loading} */}
+                    {/*     activeOpacity={0.7} */}
+                    {/*     style={{ opacity: loading ? 0.7 : 1 }} */}
+                    {/* > */}
+                    {/*     <LinearGradient */}
+                    {/*         className={`py-2 px-2 rounded-3xl justify-center items-center`} */}
+                    {/*         colors={['#F97316', '#EC4899']} */}
+                    {/*         start={[0, 1]} */}
+                    {/*         end={[1, 0]} */}
+                    {/*     > */}
+                    {/*         {loading ? ( */}
+                    {/*             <ActivityIndicator color="#fff" /> */}
+                    {/*         ) : ( */}
+                    {/*             <Text className="text-white font-semibold text-lg" */}
+                    {/*             > */}
+                    {/*                 {followed ? '− Unfollow' : '+ Follow'} */}
+                    {/*             </Text> */}
+                    {/*         )} */}
+                    {/*     </LinearGradient> */}
+                    {/* </TouchableOpacity> */}
 
                 </View>
             </View>
-        </Pressable>
+        </Pressable >
     )
 }
