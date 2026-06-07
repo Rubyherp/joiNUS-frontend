@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { useState, useContext, useEffect, useCallback } from "react";
+import { useFocusEffect } from "expo-router";
 import Logo from "../../assets/images/logo-white.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -46,9 +47,11 @@ export default function Saved() {
         }
     }, [fetchSavedPosts, fetchFollowedCommunities, fetchCommunities]);
 
-    useEffect(() => {
-        loadData();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            loadData()
+        }, [])
+    );
 
     const [tab, setTab] = useState(0);
     const tabs = ['Communities', 'Posts'];
@@ -132,7 +135,7 @@ export default function Saved() {
                                         {postQuery === "" && (
                                             <View className="absolute left-4 z-10 gap-4 flex-row items-center pointer-events-none">
                                                 <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
-                                                <Text className="text-black/40 text-xl">Search your Saved Posts</Text>
+                                                <Text className="text-black/40 text-xl">Search your saved posts...</Text>
                                             </View>
                                         )}
 
@@ -177,7 +180,7 @@ export default function Saved() {
                         </View>
 
                     ) : (
-                        <View className="pt-4">
+                        <View className="pt-4 px-4">
                             {(savedPosts ?? []).map(post => (
                                 <ThemedPost key={post.id} data={post} />
                             ))}
