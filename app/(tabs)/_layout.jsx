@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import { Tabs } from "expo-router";
+
 import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
@@ -38,6 +39,8 @@ export default function TabLayout() {
                             width: 48,
                             height: 48,
                             borderRadius: 26,
+                            borderWidth: 1,
+                            borderColor: focused ? 'red' : 'black',
                             backgroundColor: focused ? 'black' : 'white',
                             justifyContent: 'center',
                             alignItems: 'center',
