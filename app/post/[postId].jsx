@@ -9,12 +9,17 @@ import { CommunityContext } from "@/context/communityContext";
 import { Ionicons } from '@expo/vector-icons';
 
 //TODO: add edit button for author?
-//TODO: finish save and unsave post logic
+//TODO: think about how the host will be able to acc / rej join requests, and where
+// check if postData.author_id == current user id
+// i want to remove "req to join" if curr user is the author
+// while replacing it with the list of users who sent the join requests
+// if reqstatus is null / rejected, un-disable the button, otherwise disabled for users
+//TODO: integrate messages with requests
 
 export default function PostPage() {
     const { postId } = useLocalSearchParams();
-    const { fetchPostById, savePost, unsavePost } = useContext(PostContext);
-    const { fetchUserDetails } = useContext(UserContext);
+    const { fetchPostById, savePost, unsavePost, requestJoin, requestStatus, handlePendingRequest } = useContext(PostContext);
+    const { user, fetchUserDetails } = useContext(UserContext);
     const { fetchCommunityById } = useContext(CommunityContext);
 
     const [post, setPost] = useState(null);
@@ -22,6 +27,8 @@ export default function PostPage() {
     const [community, setCommunity] = useState(null);
     const [saved, setSaved] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [joinStatus, setJoinStatus] = useState(null);
+    const isAuthor = user?.id === post?.author_id;
 
     useEffect(() => {
         const getData = async () => {
@@ -35,10 +42,20 @@ export default function PostPage() {
 
             const authorData = await fetchUserDetails(postData.author_id);
             setAuthor(authorData);
+
+            const status = await requestStatus(postId);
+            const resolvedStatus = status?.status ?? null;
+            setJoinStatus(resolvedStatus);
+
+            if (!postData.author_id === user?.id) {
+                const status = await requestStatus(postId);
+                setJoinStatus(status);
+            }
         }
         getData();
     }, [])
 
+    //TODO: fetch save post status and update
     const handleSavePost = async () => {
         setLoading(true);
         try {
@@ -48,6 +65,18 @@ export default function PostPage() {
             Alert.alert('Error', `Failed to ${saved ? 'unsave Post' : 'save Post'}`)
         } finally {
             setLoading(false);
+        }
+    }
+
+    const handleJoinRequest = async () => {
+        try {
+            await requestJoin(postId);
+            const status = await requestStatus(postId);
+            const resolvedStatus = status?.status ?? null;
+            console.log('joinStatus:', resolvedStatus);
+            setJoinStatus(resolvedStatus);
+        } catch (error) {
+            Alert.alert(('Error', 'Failed to send join request'));
         }
     }
 
@@ -191,11 +220,48 @@ export default function PostPage() {
                 ) : null}
             </ScrollView>
 
-            {/* Join button */}
+            {/* button */}
             <View className="flex-row bg-white border-t border-gray-200 px-4 py-3 gap-2">
-                <Pressable className="flex-1 bg-purple-600 rounded-full py-2 items-center">
-                    <Text className="text-white font-bold text-base">Request to Join</Text>
-                </Pressable>
+                {isAuthor ? (
+
+                    <TouchableOpacity
+                        className="flex-1 bg-purple-600 rounded-full py-2 items-center"
+                        onPress={() => router.push(`post/${postId}/requests`)}
+                    >
+                        <Text className="text-white font-bold text-base">View Requests</Text>
+                    </TouchableOpacity>
+
+                ) : joinStatus === null ? (
+
+                    <TouchableOpacity
+                        className="flex-1 bg-purple-600 rounded-full py-2 items-center"
+                        onPress={() => handleJoinRequest()}
+                    >
+                        <Text className="text-white font-bold text-base">Request to Join</Text>
+                    </TouchableOpacity>
+
+                ) : joinStatus === 'pending' ? (
+
+                    <TouchableOpacity disabled className="flex-1 bg-gray-400 rounded-full py-2 items-center">
+                        <Text className="text-white font-bold text-base">Pending...</Text>
+                    </TouchableOpacity>
+
+                ) : joinStatus === 'accepted' ? (
+
+                    <TouchableOpacity disabled className="flex-1 bg-green-500 rounded-full py-2 items-center">
+                        <Text className="text-white font-bold text-base">Joined ✓</Text>
+                    </TouchableOpacity>
+
+                ) : joinStatus === 'rejected' ? (
+
+                    <TouchableOpacity
+                        className="flex-1 bg-red-400 rounded-full py-2 items-center"
+                        onPress={() => handleJoinRequest()}
+                    >
+                        <Text className="text-white font-bold text-base">Request Again</Text>
+                    </TouchableOpacity>
+
+                ) : null}
             </View>
         </SafeAreaView >
     );
