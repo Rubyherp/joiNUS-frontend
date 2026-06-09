@@ -18,39 +18,32 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function PostPage() {
     const { postId } = useLocalSearchParams();
-    const { fetchPostById, savePost, unsavePost, requestJoin, requestStatus, handlePendingRequest } = useContext(PostContext);
+    const { savedPostIds, fetchPostById, savePost, unsavePost, requestJoin, requestStatus, handlePendingRequest } = useContext(PostContext);
     const { user, fetchUserDetails } = useContext(UserContext);
     const { fetchCommunityById } = useContext(CommunityContext);
 
     const [post, setPost] = useState(null);
     const [author, setAuthor] = useState(null);
     const [community, setCommunity] = useState(null);
-    const [saved, setSaved] = useState(false);
     const [loading, setLoading] = useState(false);
     const [joinStatus, setJoinStatus] = useState(null);
     const isAuthor = user?.id === post?.author_id;
+    const saved = savedPostIds.has(postId);
 
     useEffect(() => {
         const getData = async () => {
             const postData = await fetchPostById(postId);
             setPost(postData);
-            setCommunity(postData.communities);
-            setSaved(postData.post_saves?.length > 0);
 
-            const communityData = await fetchCommunityById(postData.community_id);
+            const [communityData, authorData, statusData] = await Promise.all([
+                fetchCommunityById(postData.community_id),
+                fetchUserDetails(postData.author_id),
+                requestStatus(postId),
+            ])
+
             setCommunity(communityData);
-
-            const authorData = await fetchUserDetails(postData.author_id);
             setAuthor(authorData);
-
-            const status = await requestStatus(postId);
-            const resolvedStatus = status?.status ?? null;
-            setJoinStatus(resolvedStatus);
-
-            if (!postData.author_id === user?.id) {
-                const status = await requestStatus(postId);
-                setJoinStatus(status);
-            }
+            setJoinStatus(statusData?.status ?? null);
         }
         getData();
     }, [])
@@ -60,7 +53,6 @@ export default function PostPage() {
         setLoading(true);
         try {
             saved ? await unsavePost(postId) : await savePost(postId);
-            setSaved(!saved);
         } catch (error) {
             Alert.alert('Error', `Failed to ${saved ? 'unsave Post' : 'save Post'}`)
         } finally {
@@ -76,6 +68,7 @@ export default function PostPage() {
             console.log('joinStatus:', resolvedStatus);
             setJoinStatus(resolvedStatus);
         } catch (error) {
+            console.log(error.message)
             Alert.alert(('Error', 'Failed to send join request'));
         }
     }

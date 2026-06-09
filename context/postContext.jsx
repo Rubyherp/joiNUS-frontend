@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback } from 'react';
+import { createContext, useContext, useCallback, useState, useEffect } from 'react';
 import { UserContext } from './userContext';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -6,6 +6,7 @@ export const PostContext = createContext();
 
 export function PostProvider({ children }) {
     const { token } = useContext(UserContext);
+    const [savedPostIds, setSavedPostIds] = useState(new Set());
 
     const fetchPosts = useCallback(async function () {
         try {
@@ -88,6 +89,16 @@ export function PostProvider({ children }) {
         return data;
     }
 
+    useEffect(() => {
+        if (!token) {
+            return;
+        }
+        fetchSavedPosts()
+            .then(data => {
+                setSavedPostIds(new Set(data.map(row => row.post_id)));
+            });
+    }, [token]);
+
     async function savePost(postId) {
         const response = await fetch(`${API_URL}/posts/${postId}/save`, {
             method: 'POST',
@@ -100,6 +111,7 @@ export function PostProvider({ children }) {
             throw new Error(data.error || "Failed to save Post");
         }
 
+        setSavedPostIds(prev => new Set(prev).add(postId))
         return data;
     }
 
@@ -115,6 +127,11 @@ export function PostProvider({ children }) {
             throw new Error(data.error || "Failed to unsave Post");
         }
 
+        setSavedPostIds(prev => {
+            const saved = new Set(prev);
+            saved.delete(postId);
+            return saved;
+        })
         return data;
     }
 
@@ -125,7 +142,7 @@ export function PostProvider({ children }) {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(message),
+            body: JSON.stringify({ message }),
         });
 
         const data = await response.json();
@@ -215,6 +232,7 @@ export function PostProvider({ children }) {
             fetchPendingRequests,
             fetchAcceptedRequests,
             handlePendingRequest,
+            savedPostIds,
         }}>
             {children}
         </PostContext.Provider>
