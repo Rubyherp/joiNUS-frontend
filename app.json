@@ -14,7 +14,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rubyherp.joiNus-frontend",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +33,13 @@
     "plugins": [
       "expo-router",
       "@react-native-community/datetimepicker"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "46ff4ceb-894f-4e15-880f-c94d98f03893"
+      }
+    },
+    "owner": "rubyherp"
   }
 }
