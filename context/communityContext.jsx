@@ -34,7 +34,7 @@ export function CommunityProvider({ children }) {
     }
 
     async function fetchCommunityById(communityId) {
-        const response = await fetch(`${API_URL}/fetchCommunityById/${communityId}`, {
+        const response = await fetch(`${API_URL}/communities/fetchCommunityById/${communityId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 

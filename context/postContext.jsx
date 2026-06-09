@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback } from 'react';
+import { createContext, useContext, useCallback, useState, useEffect } from 'react';
 import { UserContext } from './userContext';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -6,6 +6,7 @@ export const PostContext = createContext();
 
 export function PostProvider({ children }) {
     const { token } = useContext(UserContext);
+    const [savedPostIds, setSavedPostIds] = useState(new Set());
 
     const fetchPosts = useCallback(async function () {
         try {
@@ -43,7 +44,7 @@ export function PostProvider({ children }) {
     }
 
     async function uploadPostImage(formData) {
-        const response = await fetch(`${API_URL}/uploadPostImage`, {
+        const response = await fetch(`${API_URL}/posts/uploadPostImage`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -61,7 +62,7 @@ export function PostProvider({ children }) {
     }
 
     async function fetchPostById(postId) {
-        const response = await fetch(`${API_URL}/fetchPostById/${postId}`, {
+        const response = await fetch(`${API_URL}/posts/fetchPostById/${postId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
 
@@ -88,6 +89,16 @@ export function PostProvider({ children }) {
         return data;
     }
 
+    useEffect(() => {
+        if (!token) {
+            return;
+        }
+        fetchSavedPosts()
+            .then(data => {
+                setSavedPostIds(new Set(data.map(row => row.post_id)));
+            });
+    }, [token]);
+
     async function savePost(postId) {
         const response = await fetch(`${API_URL}/posts/${postId}/save`, {
             method: 'POST',
@@ -100,6 +111,7 @@ export function PostProvider({ children }) {
             throw new Error(data.error || "Failed to save Post");
         }
 
+        setSavedPostIds(prev => new Set(prev).add(postId))
         return data;
     }
 
@@ -115,12 +127,113 @@ export function PostProvider({ children }) {
             throw new Error(data.error || "Failed to unsave Post");
         }
 
+        setSavedPostIds(prev => {
+            const saved = new Set(prev);
+            saved.delete(postId);
+            return saved;
+        })
+        return data;
+    }
+
+    async function requestJoin(postId, message) {
+        const response = await fetch(`${API_URL}/posts/${postId}/request`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to send join request");
+        }
+
+        return data;
+    }
+
+    async function requestStatus(postId) {
+        const response = await fetch(`${API_URL}/posts/${postId}/request/status`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to fetch request status");
+        }
+
+        return data;
+    }
+
+    async function fetchPendingRequests(postId) {
+        const response = await fetch(`${API_URL}/posts/${postId}/requests/pending`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to fetch pending requests ");
+        }
+
+        return data;
+    }
+
+    async function fetchAcceptedRequests(postId) {
+        const response = await fetch(`${API_URL}/posts/${postId}/requests/accepted`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to fetch accepted requests ");
+        }
+
+        return data;
+    }
+
+
+    //TODO: Possible to add rejection message to user
+    async function handlePendingRequest(requestId, status) {
+        const response = await fetch(`${API_URL}/posts/requests/${requestId}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || `Failed to ${status == "accepted" ? "accept" : "reject"} request`);
+        }
+
         return data;
     }
 
 
     return (
-        <PostContext.Provider value={{ fetchPosts, createPost, uploadPostImage, fetchPostById, fetchSavedPosts, savePost, unsavePost }}>
+        <PostContext.Provider value={{
+            fetchPosts,
+            createPost,
+            uploadPostImage,
+            fetchPostById,
+            fetchSavedPosts,
+            savePost,
+            unsavePost,
+            requestJoin,
+            requestStatus,
+            fetchPendingRequests,
+            fetchAcceptedRequests,
+            handlePendingRequest,
+            savedPostIds,
+        }}>
             {children}
         </PostContext.Provider>
     )
