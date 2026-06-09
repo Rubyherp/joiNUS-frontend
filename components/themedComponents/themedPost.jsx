@@ -39,7 +39,7 @@ export default function ThemedPost({ data }) {
     const { username, avatar } = author || {};
     const { name: communityName, } = community || {};
 
-    console.log("Post data:", data);
+    // console.log("Post data:", data);
 
     return (
         <Pressable onPress={() => router.push(`post/${data.id}`)}>

@@ -73,6 +73,7 @@ export function UserProvider({ children }) {
                 throw new Error(data.error || 'Login failed');
             }
 
+            console.log('User', data.user);
             setUser(data.user);
             setToken(data.token);
 
