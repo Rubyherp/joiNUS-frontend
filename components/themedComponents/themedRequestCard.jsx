@@ -2,12 +2,13 @@ import { View, Text, TouchableOpacity, ActivityIndicator, Alert, Image } from "r
 import { useState, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { PostContext } from "@/context/postContext";
+import { router } from "expo-router";
 
 //TODO: consider whether the author should have the power to un-accept users.
 // Initially thinking no cuz authors can abuse it
 
 export default function ThemedRequestCard({ data, onUpdate }) {
-    const { id: requestId, post_id: postId, message, profiles, status, updated_at: lastUpdated } = data || {};
+    const { id: requestId, post_id: postId, requester_id: requesterId, message, profiles, status, updated_at: lastUpdated } = data || {};
     const { username, avatar } = profiles || {};
     const { handlePendingRequest } = useContext(PostContext);
     const [loading, setLoading] = useState(false);
@@ -100,7 +101,10 @@ export default function ThemedRequestCard({ data, onUpdate }) {
 
                             {/* chat */}
                             <TouchableOpacity
-                                onPress={() => { }}
+                                onPress={() => router.push({
+                                    pathname: `/dm/${requesterId}`,
+                                    params: { username: profiles?.username }
+                                })}
                                 activeOpacity={0.7}
                                 className="flex-row items-center gap-1 w-20"
                             >
@@ -117,7 +121,10 @@ export default function ThemedRequestCard({ data, onUpdate }) {
                             </View>
                             {/* chat */}
                             <TouchableOpacity
-                                onPress={() => { }}
+                                onPress={() => router.push({
+                                    pathname: `/dm/${requesterId}`,
+                                    params: { username: profiles?.username }
+                                })}
                                 activeOpacity={0.7}
                                 className="flex-row items-center gap-1 w-20"
                             >
