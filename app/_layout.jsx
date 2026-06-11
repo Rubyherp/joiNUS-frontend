@@ -3,14 +3,15 @@ import { Stack, useRouter } from "expo-router";
 import { StatusBar, useColorScheme, Platform } from "react-native";
 import { useEffect, useRef } from "react";
 import * as Notifications from 'expo-notifications';
-import { registerForPushNotifications } from "@/utils/registerForPushNotification";
 
 import { Colors } from "@/assets/colors/Colors";
 import { UserProvider } from "@/context/userContext";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { PostProvider } from "@/context/postContext";
 import { CommunityProvider } from "@/context/communityContext";
-import { RotateOutDownLeft } from "react-native-reanimated";
+import { registerForPushNotifications } from "@/utils/registerForPushNotification";
+import { SocketProvider } from "@/context/socketContext";
+import { ChatProvider } from "@/context/chatContext";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -36,6 +37,7 @@ export default function RootLayout() {
     const responseListener = useRef();
 
     useEffect(() => {
+        // responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
             const { type, postId } = response.notification.request.content.data;
 
@@ -48,7 +50,8 @@ export default function RootLayout() {
 
         return () => {
             if (responseListener.current) {
-                Notifications.removeNotificationSubscription(responseListener.current);
+                responseListener.current.remove();
+                // Notifications.removeNotificationSubscription(responseListener.current);
             }
         }
     }, []);
@@ -56,26 +59,34 @@ export default function RootLayout() {
     return (
         <GluestackUIProvider>
             <UserProvider>
-                <CommunityProvider>
-                    <PostProvider>
-                        <StatusBar value="auto"></StatusBar>
-                        <Stack
-                            screenOptions={{
-                                headerShown: false
-                            }}
-                        >
-                            <Stack.Screen name="index" options={{
-                                title: "Home"
-                            }}
-                            />
-                            <Stack.Screen name="post/[postId]" options={{
-                                headerShown: false,
-                            }}
-                            />
+                <ChatProvider>
+                    <SocketProvider>
+                        <CommunityProvider>
+                            <PostProvider>
+                                <StatusBar value="auto" />
+                                <Stack
+                                    screenOptions={{
+                                        headerShown: false
+                                    }}
+                                >
+                                    <Stack.Screen name="index" options={{
+                                        title: "Home"
+                                    }}
+                                    />
+                                    <Stack.Screen name="post/[postId]" options={{
+                                        headerShown: false,
+                                    }}
+                                    />
+                                    <Stack.Screen name="dm/[userId]" options={{
+                                        headerShown: false,
+                                    }}
+                                    />
 
-                        </Stack>
-                    </PostProvider>
-                </CommunityProvider>
+                                </Stack>
+                            </PostProvider>
+                        </CommunityProvider>
+                    </SocketProvider>
+                </ChatProvider>
             </UserProvider>
         </GluestackUIProvider>
     )
