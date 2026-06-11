@@ -45,7 +45,12 @@ export default function Landing() {
     return (
         <SafeAreaView className="flex-1 px-4" edges={['top', 'left', 'right']}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View className="justify-center items-center">
+                <View className="justify-center">
+                    <View className="mb-3">
+                        <Text className="text-2xl font-extrabold text-gray-800">Home</Text>
+                        <Text className="text-base font-semibold text-gray-500 mt-1">Find your Team</Text>
+                    </View>
+
 
                     <View className="w-full h-12 relative justify-center">
 

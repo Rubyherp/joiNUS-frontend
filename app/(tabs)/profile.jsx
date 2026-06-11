@@ -9,13 +9,18 @@ import { Divider } from "@/components/ui/divider";
 import { UserContext } from "@/context/userContext";
 import ThemedProfileSection from "@/components/themedComponents/themedProfileSection";
 import { Colors } from "@/assets/colors/Colors";
+import { PostContext } from "@/context/postContext";
+import ThemedPost from "@/components/themedComponents/themedPost";
+import { Alert } from "react-native";
 
 //TODO: use actionsheet for settings - logout, change password, etc
 
 export default function Profile() {
+    const { user, profile, changeAvatar } = useContext(UserContext);
+    const { fetchPostsByUserId } = useContext(PostContext);
     const [tab, setTab] = useState(0);
-    const { profile, changeAvatar } = useContext(UserContext);
     const [profileUri, setProfileUri] = useState('');
+    const [posts, setPosts] = useState(null);
 
     const username = profile?.username ?? '';
     const year = profile?.year ?? '';
@@ -31,13 +36,29 @@ export default function Profile() {
 
     //FIX: fix dynamically loaded avatar on registration and login
     //TODO: improve color sheme
+
+    const loadPosts = async (userId) => {
+        try {
+            const fetched = await fetchPostsByUserId(userId);
+            setPosts(fetched ?? []);
+            console.log(fetched);
+        } catch (error) {
+            console.log(error);
+            Alert.alert('Error', error.message || 'Failed to load Posts');
+        }
+    }
+
     useEffect(() => {
+        console.log('user id:', user.id);
+        if (user?.id) {
+            loadPosts(user.id);
+        }
         if (profile?.avatar) {
             setProfileUri(`${profile.avatar}?t=${Date.now()}`);
         } else {
             setProfileUri('');
         }
-    }, [profile?.avatar]);
+    }, [profile?.avatar, user?.id]);
 
     const handleAvatarChange = async () => {
         const newAvatar = await changeAvatar();
@@ -214,13 +235,13 @@ export default function Profile() {
                     ))}
                 </View>
 
-                <Divider className="mt-2" />
 
-                <View className="flex-1 p-4">
-                    {tab === 0
-                        ?
+                <View className="flex-1 ">
+
+                    {tab === 0 && (
                         <ScrollView
                             showsVerticalScrollIndicator={true}
+                            className="p-4"
                         >
                             <ThemedProfileSection title="Major">
                                 {major}
@@ -245,30 +266,50 @@ export default function Profile() {
                             </ThemedProfileSection>
 
                         </ScrollView>
-                        : tab === 1
-                            ?
-                            <ScrollView>
-                                <ThemedProfileSection title="Skills">
-                                    {skills}
-                                </ThemedProfileSection>
+                    )}
 
-                                <ThemedProfileSection title="Experiences">
-                                    {experiences}
-                                </ThemedProfileSection>
+                    {tab === 1 && (
+                        <ScrollView
+                            showsVerticalScrollIndicator={true}
+                            className="p-4"
+                        >
+                            <ThemedProfileSection title="Skills">
+                                {skills}
+                            </ThemedProfileSection>
+
+                            <ThemedProfileSection title="Experiences">
+                                {experiences}
+                            </ThemedProfileSection>
+                        </ScrollView>
+                    )}
+
+                    {tab === 2 && (
+                        posts === null ? (
+                            <View className="flex-1 items-center justify-center py-10">
+                                <Text style={{ color: Colors.light.text }}>Loading posts...</Text>
+                            </View>
+                        ) : posts.length > 0 ? (
+                            <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={true}>
+                                <View className="pt-2 pb-6">
+                                    {posts.map(post => (
+                                        <ThemedPost key={post.id} data={post} />
+                                    ))}
+                                </View>
                             </ScrollView>
-                            :
-                            <ScrollView>
+                        ) : (
+                            <ScrollView className="flex-1" contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
                                 <View className="items-center py-10">
                                     <Text className="text-3xl mb-2">📭</Text>
                                     <Text className="font-semibold text-sm" style={{ color: Colors.light.title }}>No posts yet</Text>
                                     <Text className="text-xs mt-1" style={{ color: Colors.light.text }}>Posts you share will appear here</Text>
                                 </View>
                             </ScrollView>
-                    }
+                        )
+                    )}
                 </View>
 
             </View>
 
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
