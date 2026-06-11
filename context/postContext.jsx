@@ -75,6 +75,20 @@ export function PostProvider({ children }) {
         return data;
     }
 
+    async function fetchPostsByUserId(userId) {
+        const response = await fetch(`${API_URL}/posts/fetchPostsByUserId/${userId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to fetch Post");
+        }
+
+        return data;
+    }
+
     async function fetchSavedPosts() {
         const response = await fetch(`${API_URL}/posts/saved`, {
             headers: { 'Authorization': `Bearer ${token}` }
@@ -224,6 +238,7 @@ export function PostProvider({ children }) {
             createPost,
             uploadPostImage,
             fetchPostById,
+            fetchPostsByUserId,
             fetchSavedPosts,
             savePost,
             unsavePost,
