@@ -3,9 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
 
 //Custom imports
-import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 import Spacer from "@/components/themedComponents/spacer";
-import { Divider } from "@/components/ui/divider";
 import { UserContext } from "@/context/userContext";
 import ThemedProfileSection from "@/components/themedComponents/themedProfileSection";
 import { Colors } from "@/assets/colors/Colors";
@@ -22,15 +20,7 @@ export default function Profile() {
     const [profileUri, setProfileUri] = useState('');
     const [posts, setPosts] = useState(null);
 
-    const username = profile?.username ?? '';
-    const year = profile?.year ?? '';
-    const major = profile?.major ?? '';
-    const modules = profile?.modules ?? '';
-    const contact = profile?.contact ?? '';
-    const email = profile?.email ?? '';
-    const about = profile?.about ?? '';
-    const skills = profile?.skills ?? '';
-    const experiences = profile?.experiences ?? '';
+    const { username, year, major, modules, contact, email, about, skills, experiences } = profile || {};
 
     const tabs = ['About', 'Skills & Exp', 'Posts'];
 
@@ -41,7 +31,6 @@ export default function Profile() {
         try {
             const fetched = await fetchPostsByUserId(userId);
             setPosts(fetched ?? []);
-            console.log(fetched);
         } catch (error) {
             console.log(error);
             Alert.alert('Error', error.message || 'Failed to load Posts');
@@ -49,7 +38,6 @@ export default function Profile() {
     }
 
     useEffect(() => {
-        console.log('user id:', user.id);
         if (user?.id) {
             loadPosts(user.id);
         }
@@ -83,12 +71,12 @@ export default function Profile() {
             edges={['top']}
         >
             <View className="flex-row items-center justify-between w-full mb-3">
-                <Text
-                    className="text-3xl font-bold"
-                    style={{ color: Colors.light.title }}
-                >
-                    Profile
-                </Text>
+
+                <View className="mb-3">
+                    <Text className="text-2xl font-extrabold text-gray-800">Profile</Text>
+                    <Text className="text-base font-semibold text-gray-500 mt-1">Decide what Others see</Text>
+                </View>
+
                 <TouchableOpacity
                     className="px-4 py-1.5 rounded-full"
                     style={{ backgroundColor: Colors.primary }}
