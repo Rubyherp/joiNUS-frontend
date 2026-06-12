@@ -52,27 +52,32 @@ export default function ThemedPost({ data }) {
                     <Text className="text-base font-semibold text-purple-600 flex-shrink-0">{communityName}</Text>
 
                     <Text className="text-base text-gray-500 flex-shrink-0">• posted by</Text>
-                    {avatar ? (
-                        <Image
-                            source={{ uri: avatar }}
-                            style={{
-                                width: 30,
-                                height: 30,
-                                borderWidth: 1,
-                                borderColor: 'pink',
-                                borderRadius: 100,
-                            }}
-                            className="flex-shrink-0"
-                        />
-                    ) : (
-                        <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
-                    )}
-                    <Text className="text-base text-gray-800 font-medium flex-1"
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
+                    <Pressable
+                        onPress={() => router.push(`userProfile/${author_id}`)}
+                        className="flex-row items-center gap-2 flex-1"
                     >
-                        {username}
-                    </Text>
+                        {avatar ? (
+                            <Image
+                                source={{ uri: avatar }}
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                    borderWidth: 1,
+                                    borderColor: 'pink',
+                                    borderRadius: 100,
+                                }}
+                                className="flex-shrink-0"
+                            />
+                        ) : (
+                            <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
+                        )}
+                        <Text className="text-base text-gray-800 font-medium flex-1"
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                        >
+                            {username}
+                        </Text>
+                    </Pressable>
 
                 </View>
                 <Text className="text-lg font-bold text-gray-900 px-4 pb-2">{title}</Text>
