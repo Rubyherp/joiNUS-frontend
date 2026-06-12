@@ -25,7 +25,7 @@ export default function UserProfile() {
 
     const tabs = ['About', 'Skills & Exp', 'Posts'];
 
-    const loadPosts = async (userId) => {
+    const loadData = async (userId) => {
         try {
             const [postsData, userData] = await Promise.all([
                 fetchPostsByUserId(userId),
@@ -41,7 +41,7 @@ export default function UserProfile() {
 
     useEffect(() => {
         if (userId) {
-            loadPosts(userId);
+            loadData(userId);
         }
         if (avatar) {
             setProfileUri(`${avatar}?t=${Date.now()}`);

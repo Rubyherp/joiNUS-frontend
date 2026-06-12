@@ -10,6 +10,7 @@ import { Colors } from "@/assets/colors/Colors";
 import { PostContext } from "@/context/postContext";
 import ThemedPost from "@/components/themedComponents/themedPost";
 import { Alert } from "react-native";
+import { router } from "expo-router";
 
 //TODO: use actionsheet for settings - logout, change password, etc
 
@@ -80,6 +81,7 @@ export default function Profile() {
                 <TouchableOpacity
                     className="px-4 py-1.5 rounded-full"
                     style={{ backgroundColor: Colors.primary }}
+                    onPress={() => router.push(`/profileSetup`)}
                 >
                     <Text className="text-white font-semibold text-sm">
                         Edit
