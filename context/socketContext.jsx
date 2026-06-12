@@ -8,6 +8,7 @@ const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export function SocketProvider({ children }) {
     const { token } = useContext(UserContext);
+    // useRef to hold the socket instance across renders without causing re-renders
     const socketRef = useRef(null);
     const [connected, setConnected] = useState(false);
 
@@ -16,31 +17,38 @@ export function SocketProvider({ children }) {
             return;
         }
 
+        // instantiate socket connection
         socketRef.current = io(API_URL, {
             auth: { token },
             transports: ['websocket'],
         });
 
+        // listseners
+        // on connection event
         socketRef.current.on('connect', () => {
             console.log('Socket connected');
             setConnected(true);
         });
 
+        // on disconnection event
         socketRef.current.on('disconnect', () => {
             console.log('Socket disconnected');
             setConnected(false);
         });
 
+        // on connection error event
         socketRef.current.on('connect_error', (error) => {
             console.log('Socket error:', error.message);
         });
 
+        // cleanup on unmount
         return () => {
             socketRef.current?.disconnect();
         };
 
     }, [token]);
 
+    // events
     function joinDM(otherUserId) {
         socketRef.current?.emit('join_dm', otherUserId);
     }

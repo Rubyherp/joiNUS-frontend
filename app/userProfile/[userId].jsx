@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useEffect, useState } from "react";
 
@@ -10,60 +10,53 @@ import { Colors } from "@/assets/colors/Colors";
 import { PostContext } from "@/context/postContext";
 import ThemedPost from "@/components/themedComponents/themedPost";
 import { Alert } from "react-native";
-import { router } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 
-//TODO: use actionsheet for settings - logout, change password, etc
-
-export default function Profile() {
-    const { user, profile, changeAvatar } = useContext(UserContext);
+export default function UserProfile() {
+    const { userId } = useLocalSearchParams();
+    const { user: viewer, fetchUserDetails } = useContext(UserContext);
     const { fetchPostsByUserId } = useContext(PostContext);
     const [tab, setTab] = useState(0);
+    const [user, setUser] = useState(null);
     const [profileUri, setProfileUri] = useState('');
     const [posts, setPosts] = useState(null);
 
-    const { username, year, major, modules, contact, email, about, skills, experiences } = profile || {};
+    const { username, avatar, year, major, modules, contact, email, about, skills, experiences } = user || {};
 
     const tabs = ['About', 'Skills & Exp', 'Posts'];
 
-    //FIX: fix dynamically loaded avatar on registration and login
-    //TODO: improve color sheme
-
-    const loadPosts = async (userId) => {
+    const loadData = async (userId) => {
         try {
-            const fetched = await fetchPostsByUserId(userId);
-            setPosts(fetched ?? []);
+            const [postsData, userData] = await Promise.all([
+                fetchPostsByUserId(userId),
+                fetchUserDetails(userId)
+            ])
+            setPosts(postsData ?? []);
+            setUser(userData);
         } catch (error) {
             console.log(error);
-            Alert.alert('Error', error.message || 'Failed to load Posts');
+            Alert.alert('Error', error.message || 'Failed to load data');
         }
     }
 
     useEffect(() => {
-        if (user?.id) {
-            loadPosts(user.id);
+        if (userId) {
+            loadData(userId);
         }
-        if (profile?.avatar) {
-            setProfileUri(`${profile.avatar}?t=${Date.now()}`);
+        if (avatar) {
+            setProfileUri(`${avatar}?t=${Date.now()}`);
         } else {
             setProfileUri('');
         }
-    }, [profile?.avatar, user?.id]);
+    }, [userId, user]);
 
-    const handleAvatarChange = async () => {
-        const newAvatar = await changeAvatar();
-        if (newAvatar?.avatar) {
-            setProfileUri(`${newAvatar.avatar}?t=${Date.now()}`);
-        }
-    }
-
-    if (!profile) {
+    if (!user) {
         return (
             <SafeAreaView className="flex-1 items-center justify-center">
                 <Text>Loading profile...</Text>
             </SafeAreaView>
         );
     }
-
 
     return (
         <SafeAreaView
@@ -73,20 +66,29 @@ export default function Profile() {
         >
             <View className="flex-row items-center justify-between w-full mb-3">
 
-                <View className="mb-3">
-                    <Text className="text-2xl font-extrabold text-gray-800">Profile</Text>
-                    <Text className="text-base font-semibold text-gray-500 mt-1">Decide what Others see</Text>
+                <View className="flex-1 ">
+                    <Pressable onPress={() => router.back()} className="mr-3 p-1 gap-2 flex-row justify-center items-center">
+                        <Text className="text-2xl text-gray-500">←</Text>
+                        <Text className="text-base font-semibold text-gray-800 flex-1 justify-center">Back</Text>
+                    </Pressable>
                 </View>
 
-                <TouchableOpacity
-                    className="px-4 py-1.5 rounded-full"
-                    style={{ backgroundColor: Colors.primary }}
-                    onPress={() => router.push(`/profileSetup`)}
-                >
-                    <Text className="text-white font-semibold text-sm">
-                        Edit
-                    </Text>
-                </TouchableOpacity>
+
+                {/* check if viewing own profile */}
+                {userId !== viewer?.id && (
+                    <TouchableOpacity
+                        className="px-4 py-1.5 rounded-full bg-green-800"
+                        onPress={() => router.push({
+                            pathname: `/dm/${userId}`,
+                            params: { username }
+                        })}
+                    >
+                        <Text className="text-white font-semibold text-sm">
+                            Chat
+                        </Text>
+                    </TouchableOpacity>
+                )}
+
             </View>
 
             <View
@@ -94,38 +96,23 @@ export default function Profile() {
                 style={{ borderWidth: 0.5, borderColor: 'rgba(0,0,0,0.07)' }}
             >
                 <View className="flex-row items-center">
-                    <TouchableOpacity
-                        testID="avatar-button"
-                        onPress={handleAvatarChange}
+                    <View
+                        className="rounded-full p-[3px]"
+                        style={{ backgroundColor: Colors.primary }}
                     >
-                        <View
-                            className="rounded-full p-[3px]"
-                            style={{ backgroundColor: Colors.primary }}
-                        >
-                            <View className="rounded-full p-[2px] bg-white">
+                        <View className="rounded-full p-[2px] bg-white">
 
-                                <Image
-                                    source={{ uri: profileUri }}
-                                    style={{
-                                        width: 64,
-                                        height: 64,
-                                        borderRadius: 100,
-                                    }}
-                                />
+                            <Image
+                                source={{ uri: profileUri }}
+                                style={{
+                                    width: 64,
+                                    height: 64,
+                                    borderRadius: 100,
+                                }}
+                            />
 
-                                {/* temp switch out possible buggy avatar component with image component, can revert back to avatar component later if needed */}
-                                {/* <Avatar size="xl"> */}
-                                {/*     <AvatarFallbackText */}
-                                {/*         className="font-bold" */}
-                                {/*     > */}
-                                {/*         {username} */}
-                                {/*     </AvatarFallbackText> */}
-                                {/*     <AvatarImage source={{ uri: profileUri }} /> */}
-                                {/* </Avatar> */}
-
-                            </View>
                         </View>
-                    </TouchableOpacity>
+                    </View>
                     <Spacer width={16} height={0} />
 
                     <View className="flex-1">

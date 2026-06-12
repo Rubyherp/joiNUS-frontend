@@ -81,6 +81,10 @@ export default function RootLayout() {
                                         headerShown: false,
                                     }}
                                     />
+                                    <Stack.Screen name="userProfile/[userId]" options={{
+                                        headerShown: false,
+                                    }}
+                                    />
 
                                 </Stack>
                             </PostProvider>

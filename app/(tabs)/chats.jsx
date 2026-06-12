@@ -61,6 +61,7 @@ export default function Chats() {
                     <View className="mb-3">
                         <Text className="text-2xl font-extrabold text-gray-800">Messages</Text>
                         <Text className="text-base font-semibold text-gray-500 mt-1">Your Conversations</Text>
+
                     </View>
 
                     <Spacer height={10} />
@@ -92,9 +93,8 @@ export default function Chats() {
                         </LinearGradient>
                     </View>
 
-                    <Text className="text-2xl font-semibold text-gray-800 uppercase tracking-widest mb-1 px-1">
-                        Your Chats
-                    </Text>
+                    <Spacer height={20} />
+                    <Text className="text-gray-700 text-xl font-bold">Chats</Text>
 
                     {loading ? (
                         <View className="flex-1 items-center justify-center">
@@ -115,7 +115,7 @@ export default function Chats() {
                             renderItem={({ item }) => (
 
                                 <TouchableOpacity
-                                    className="flex-row items-center py-3 border-b border-gray-100 gap-3 "
+                                    className="flex-row items-center py-3 gap-3 border-b border-gray-400"
                                     onPress={() => router.push({
                                         pathname: `/dm/${item.other_user_id}`,
                                         params: { username: item.profile?.username }

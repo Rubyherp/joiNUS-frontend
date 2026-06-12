@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { View, Keyboard, Text, ScrollView, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Alert } from "react-native";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,21 +10,43 @@ import ThemedInput from "@/components/themedComponents/themedInput";
 import { router } from "expo-router";
 
 export default function ProfileSetup() {
-    const { profileCreation } = useContext(UserContext);
+    const { profileCreation, fetchUserDetails, user } = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
-    const [profileDetails, setProfileDetails] = useState({
-        avatar: '',
-        username: '',
-        major: '',
-        year: '',
-        modules: '',
-        contact: '',
-        email: '',
-        about: '',
-        skills: '',
-        experiences: '',
-    });
+    const [profileDetails, setProfileDetails] = useState(
+        { username: '', year: '', major: '', modules: '', contact: '', email: '', about: '', skills: '', experiences: '' }
+    );
+
+    console.log("user in profileSetup:", user);
+
+    const loadData = async () => {
+        try {
+            const userDetails = await fetchUserDetails(user.id);
+            if (userDetails) {
+                const { username, year, major, modules, contact, email, about, skills, experiences } = userDetails || {};
+
+                setProfileDetails({
+                    username: username ?? '',
+                    year: year ? String(year) : '',
+                    major: major ?? '',
+                    modules: modules ?? '',
+                    contact: contact ?? '',
+                    email: email ?? '',
+                    about: about ?? '',
+                    skills: skills ?? '',
+                    experiences: experiences ?? ''
+                });
+            }
+
+        } catch (error) {
+            console.log('Error', error.message);
+            Alert.alert('Error', 'Failed to load data');
+        }
+    }
+
+    useEffect(() => {
+        loadData();
+    }, [user?.id]);
 
     const handleSubmit = async () => {
         setLoading(true);

@@ -95,6 +95,7 @@ export function UserProvider({ children }) {
         setToken(null);
     }
 
+    // rename to profileSave
     async function profileCreation(payload) {
         try {
             const response = await fetch(`${API_URL}/profileCreation`, {
