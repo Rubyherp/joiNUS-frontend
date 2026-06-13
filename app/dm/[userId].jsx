@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, TouchableWithoutFeedback, Image, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useContext, useState, useRef, useCallback, useEffect } from 'react';
@@ -8,12 +8,15 @@ import { ChatContext } from '@/context/chatContext';
 
 export default function DMChat() {
     const { userId: otherUserId, username } = useLocalSearchParams();
-    const { user } = useContext(UserContext)
+    const { user, fetchUserDetails } = useContext(UserContext)
     const { joinDM, leaveDM, sendDM, onDM } = useContext(SocketContext);
     const { fetchChatHistory } = useContext(ChatContext);
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(true);
+    const [userData, setUserData] = useState(null);
+
+    const { avatar } = userData || {};
 
     const flatListRef = useRef(null);
 
@@ -21,9 +24,11 @@ export default function DMChat() {
     useEffect(() => {
         setLoading(true);
 
-        const fetchHistory = async () => {
+        const fetchData = async () => {
             try {
+                const userData = await fetchUserDetails(otherUserId);
                 const history = await fetchChatHistory(otherUserId);
+                setUserData(userData);
                 setMessages(history || []);
                 setLoading(false);
 
@@ -32,7 +37,8 @@ export default function DMChat() {
                 setLoading(false);
             }
         }
-        fetchHistory();
+        fetchData();
+
         joinDM(otherUserId);
 
         const unsub = onDM((msg) => {
@@ -83,9 +89,31 @@ export default function DMChat() {
                 <TouchableOpacity onPress={() => router.back()}>
                     <Text className="text-2xl text-gray-500 mr-3">←</Text>
                 </TouchableOpacity>
-                <Text className="text-lg font-bold text-gray-800">
-                    u/{username ?? 'Chat'}
-                </Text>
+
+                <Pressable
+                    className='flex-row gap-2 items-center'
+                    onPress={() => router.push(`userProfile/${otherUserId}`)}
+                >
+                    {avatar ? (
+                        <Image
+                            source={{ uri: avatar }}
+                            style={{
+                                width: 30,
+                                height: 30,
+                                borderWidth: 1,
+                                borderColor: 'pink',
+                                borderRadius: 100,
+                            }}
+                            className="flex-shrink-0"
+                        />
+                    ) : (
+                        <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
+                    )}
+
+                    <Text className="text-lg font-bold text-gray-800">
+                        {username ?? 'Chat'}
+                    </Text>
+                </Pressable>
             </View>
 
             {loading ? (
