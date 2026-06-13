@@ -9,6 +9,7 @@ import Spacer from "@/components/themedComponents/spacer";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import ThemedPost from "@/components/themedComponents/themedPost";
 import { PostContext } from "@/context/postContext";
+import { Home } from "lucide-react-native";
 
 //TODO: filter logic for search query
 //TODO: limit number of posts loaded on landing page, add pagination or infinite scroll (prob infinite)
@@ -46,12 +47,24 @@ export default function Landing() {
         <SafeAreaView className="flex-1 px-4" edges={['top', 'left', 'right']}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View className="justify-center">
-                    <View className="mb-3">
-                        <Text className="text-2xl font-extrabold text-gray-800">Home</Text>
-                        <Text className="text-base font-semibold text-gray-500 mt-1">Find your Team</Text>
+
+                    {/* header */}
+                    <View className="flex-row items-center gap-3">
+                        <Home size={48} color="#f97316" />
+                        <View className="flex-row items-center justify-between flex-1">
+                            <View className="flex">
+                                <Text className="text-2xl font-extrabold text-gray-800">Home</Text>
+                                <Text className="text-base font-semibold text-gray-500 mt-1">Find your Team</Text>
+                            </View>
+                            <Image source={Logo}
+                                className="h-20 w-20"
+                                resizeMode="contain"
+                            />
+                        </View>
                     </View>
 
 
+                    {/* searchbar */}
                     <View className="w-full h-12 relative justify-center">
 
                         <LinearGradient

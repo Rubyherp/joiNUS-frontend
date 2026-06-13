@@ -17,8 +17,6 @@ export default function ProfileSetup() {
         { username: '', year: '', major: '', modules: '', contact: '', email: '', about: '', skills: '', experiences: '' }
     );
 
-    console.log("user in profileSetup:", user);
-
     const loadData = async () => {
         try {
             const userDetails = await fetchUserDetails(user.id);
@@ -39,7 +37,7 @@ export default function ProfileSetup() {
             }
 
         } catch (error) {
-            console.log('Error', error.message);
+            console.log('Error: ProfileSetup', error.message);
             Alert.alert('Error', 'Failed to load data');
         }
     }

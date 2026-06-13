@@ -11,6 +11,7 @@ import ThemedCommunity from "@/components/themedComponents/themedCommunity";
 import { PostContext } from "@/context/postContext";
 import { CommunityContext } from "@/context/communityContext";
 import ThemedPost from "@/components/themedComponents/themedPost";
+import { Star } from "lucide-react-native";
 
 //TODO: flatlist mapped as linked to backend data, currently hardcoded for UI purposes
 //TODO: link each card to the community page, and add a button to leave the community (or remove from saved)
@@ -38,7 +39,7 @@ export default function Saved() {
             setFollowedCommunities(followed.map(f => f.communities));
             setAllCommunities(all);
         } catch (error) {
-            console.log('Error', error.message);
+            console.log('Error: saved', error.message);
             Alert.alert('Error', 'Failed to load data')
         }
     }, [fetchSavedPosts, fetchFollowedCommunities, fetchCommunities]);
@@ -57,13 +58,24 @@ export default function Saved() {
             <ScrollView className="flex-1">
 
                 {/* top bar */}
-                <View className="flex justify-between px-4 py-2">
-                    <View>
-                        <Text className="text-2xl font-extrabold text-gray-800 tracking-light">Saved</Text>
-                        <Text className="text-base font-semibold text-gray-500 mt-1">Your bookmarks & communities</Text>
+                <View className="flex justify-between px-4">
+
+                    {/* header */}
+                    <View className="flex-row items-center gap-3">
+                        <Star size={48} color="#f97316" />
+                        <View className="flex-row items-center justify-between flex-1">
+                            <View className="flex">
+                                <Text className="text-2xl font-extrabold text-gray-800">Saved</Text>
+                                <Text className="text-base font-semibold text-gray-500 mt-1">Your bookmarks & communities</Text>
+                            </View>
+                            <Image source={Logo}
+                                className="h-20 w-20"
+                                resizeMode="contain"
+                            />
+                        </View>
                     </View>
 
-                    <View className="flex-row mt-3 mb-0 p-1 rounded-xl" style={{ backgroundColor: Colors.light.uiBackground }}>
+                    <View className="flex-row p-1 rounded-xl" style={{ backgroundColor: Colors.light.uiBackground }}>
                         {tabs.map((label, i) => (
                             <TouchableOpacity
                                 key={i}

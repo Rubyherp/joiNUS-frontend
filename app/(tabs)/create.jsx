@@ -11,13 +11,14 @@ import { Button, ButtonText, ButtonGroup } from "@/components/ui/button";
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper, } from '@/components/ui/actionsheet';
 import { Box } from "@/components/ui/box";
 import { Icon, CloseIcon } from '@/components/ui/icon';
-import { UploadCloud, ImageIcon, FileText, Users, Clock, AlignLeft, Sparkles } from "lucide-react-native";
+import { UploadCloud, ImageIcon, FileText, Users, Clock, AlignLeft, Sparkles, PenBoxIcon } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useContext } from "react";
 import { PostContext } from "@/context/postContext";
 import ThemedLabel from "@/components/themedComponents/themedLabel";
 import ThemedSectionCard from "@/components/themedComponents/themedSectionCard";
+import Logo from "../../assets/images/logo-white.png";
 
 
 //TODO: refactor to useReducer to manage form state or single object state for form data
@@ -141,18 +142,24 @@ export default function Create() {
                 <View className="flex-1">
 
                     {/* top bar */}
-                    <View className="flex-row justify-between items-center px-4 py-2">
+                    <View className="flex-row justify-between items-center px-4">
 
-                        <View>
-                            <Text className="text-2xl font-extrabold text-gray-800 tracking-light">New Post</Text>
-                            <Text className="text-base text-gray-400 mt-1">Share with your Community!</Text>
+                        {/* header */}
+                        <View className="flex-row items-center gap-3">
+                            <PenBoxIcon size={48} color="#f97316" />
+                            <View className="flex-row items-center justify-between flex-1">
+                                <View className="flex">
+                                    <Text className="text-2xl font-extrabold text-gray-800">New Post</Text>
+                                    <Text className="text-base font-semibold text-gray-500 mt-1">Share with your Community!</Text>
+                                </View>
+                                <Image source={Logo}
+                                    className="h-20 w-20"
+                                    resizeMode="contain"
+                                />
+                            </View>
                         </View>
 
-                        {/* community picker */}
-                        <View className="flex-shrink-1 max-w-[50%]">
-                            <CommunityPicker onSelect={c => setSelectedCommunity(c)} />
-                            <Spacer height={20} />
-                        </View>
+
                     </View>
 
                     <ScrollView
@@ -160,6 +167,12 @@ export default function Create() {
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{ paddingBottom: 24 }}
                     >
+
+                        {/* community picker */}
+                        <View className="flex-shrink-1 max-w-[50%]">
+                            <CommunityPicker onSelect={c => setSelectedCommunity(c)} />
+                            <Spacer height={10} />
+                        </View>
 
                         {/* title */}
                         <ThemedSectionCard>
