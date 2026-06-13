@@ -73,7 +73,7 @@ export default function CommunityPicker({ onSelect }) {
                     ellipsizeMode="tail"
                 >
                     {selected
-                        ? `c/${selected.name}`
+                        ? `${selected.name}`
                         : `Select Community`
                     }
                 </Text>

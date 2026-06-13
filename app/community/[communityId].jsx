@@ -69,7 +69,7 @@ export default function CommunityPage() {
                     <Pressable onPress={() => router.back()} className="mr-3 p-1 gap-2 flex-row justify-center items-center">
                         <Text className="text-2xl text-gray-500">←</Text>
                         <Text className="text-base font-semibold text-gray-800 flex-1 justify-center" numberOfLines={1}>
-                            {name ? `c/${name}` : 'Community'}
+                            {name ? `${name}` : 'Community'}
                         </Text>
                     </Pressable>
                 </View>
@@ -111,7 +111,7 @@ export default function CommunityPage() {
                             <Text className="text-white text-lg font-bold">{getInitials(name)}</Text>
                         </View>
                         <View className="flex-1">
-                            <Text className="text-xl font-bold text-purple-600">c/{name}</Text>
+                            <Text className="text-xl font-bold text-purple-600">{name}</Text>
                             <Text className="text-sm text-gray-400">{category} · since {formatDate(created_at)}</Text>
                         </View>
                     </View>

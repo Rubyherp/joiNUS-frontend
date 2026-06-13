@@ -147,7 +147,7 @@ export default function PostPage() {
                         {avatar ? (
                             <Image source={{ uri: avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} className="flex-shrink-0" />
                         ) : null}
-                        <Text className="text-sm text-gray-500 flex-1" numberOfLines={1}>u/{authorName}</Text>
+                        <Text className="text-sm text-gray-500 flex-1" numberOfLines={1}>{authorName}</Text>
                         <Text className="text-xs text-gray-400">{formatDate(created_at)}</Text>
                     </View>
 

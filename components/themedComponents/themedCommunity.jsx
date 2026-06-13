@@ -77,7 +77,7 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
                             numberOfLines={1}
                             ellipsizeMode="tail"
                         >
-                            c/{communityName}
+                            {communityName}
                         </Text>
                         <Text
                             className="py-1 text-base text-gray-500"

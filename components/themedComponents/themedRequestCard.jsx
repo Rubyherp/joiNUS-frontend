@@ -55,7 +55,7 @@ export default function ThemedRequestCard({ data, onUpdate }) {
                             numberOfLines={1}
                             ellipsizeMode="tail"
                         >
-                            u/{username ?? "Unknown User"}
+                            {username ?? "Unknown User"}
                         </Text>
 
                     </View>

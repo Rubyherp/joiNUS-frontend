@@ -145,7 +145,7 @@ export default function Chats() {
                                     <View className="flex-1">
                                         <View className="flex-row justify-between items-center">
                                             <Text className="text-base font-semibold text-gray-800">
-                                                u/{item.profile?.username ?? 'Unknown'}
+                                                {item.profile?.username ?? 'Unknown'}
                                             </Text>
                                             <Text className="text-sm text-gray-400">
                                                 {formatTime(item.last_message_at)}
