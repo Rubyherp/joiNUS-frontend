@@ -9,11 +9,6 @@ import { CommunityContext } from "@/context/communityContext";
 import { Ionicons } from '@expo/vector-icons';
 
 //TODO: add edit button for author?
-//TODO: think about how the host will be able to acc / rej join requests, and where
-// check if postData.author_id == current user id
-// i want to remove "req to join" if curr user is the author
-// while replacing it with the list of users who sent the join requests
-// if reqstatus is null / rejected, un-disable the button, otherwise disabled for users
 //TODO: integrate messages with requests
 
 export default function PostPage() {
@@ -44,6 +39,7 @@ export default function PostPage() {
             setCommunity(communityData);
             setAuthor(authorData);
             setJoinStatus(statusData?.status ?? null);
+            console.log(communityData.id)
         }
         getData();
     }, [])
@@ -138,16 +134,30 @@ export default function PostPage() {
 
                     {/* Community + author row */}
                     <View className="flex-row items-center px-4 pt-4 pb-2 gap-2">
-                        <View className="rounded-full w-7 h-7 items-center justify-center flex-shrink-0"
-                            style={{ backgroundColor: getColor(communityName) }}>
-                            <Text className="text-white text-xs font-bold">{getInitials(communityName)}</Text>
-                        </View>
-                        <Text className="text-sm font-bold text-purple-600 flex-shrink-0">{communityName}</Text>
-                        <Text className="text-sm text-gray-400 flex-shrink-0">•</Text>
-                        {avatar ? (
-                            <Image source={{ uri: avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} className="flex-shrink-0" />
-                        ) : null}
-                        <Text className="text-sm text-gray-500 flex-1" numberOfLines={1}>{authorName}</Text>
+
+                        <Pressable
+                            className="flex-row justify-center items-center gap-2"
+                            onPress={() => router.push(`/community/${community.id}`)}
+                        >
+                            <View className="rounded-full w-7 h-7 items-center justify-center flex-shrink-0"
+                                style={{ backgroundColor: getColor(communityName) }}>
+                                <Text className="text-white text-xs font-bold">{getInitials(communityName)}</Text>
+                            </View>
+                            <Text className="text-sm font-bold text-purple-600 flex-shrink-0">{communityName}</Text>
+
+                            <Text className="text-sm text-gray-400 flex-shrink-0">•</Text>
+                        </Pressable>
+
+                        <Pressable
+                            className="flex-row justify-center items-center gap-2"
+                            onPress={() => router.push(`/userProfile/${author.id}`)}
+                        >
+                            {avatar ? (
+                                <Image source={{ uri: avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} className="flex-shrink-0" />
+                            ) : null}
+                            <Text className="text-sm text-gray-500 flex-1" numberOfLines={1}>{authorName}</Text>
+                        </Pressable>
+
                         <Text className="text-xs text-gray-400">{formatDate(created_at)}</Text>
                     </View>
 

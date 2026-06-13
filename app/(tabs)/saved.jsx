@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
-import { useState, useContext, useEffect, useCallback } from "react";
+import { useState, useContext, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -23,28 +23,22 @@ export default function Saved() {
     const [allCommunities, setAllCommunities] = useState(null);
 
     const { fetchSavedPosts } = useContext(PostContext);
-    const { fetchCommunities, fetchFollowedCommunities, followCommunity, unfollowCommunity } = useContext(CommunityContext);
+    const { fetchCommunities, fetchFollowedCommunities } = useContext(CommunityContext);
 
 
     const loadData = useCallback(async () => {
         try {
-            console.log('loadData called');
             const [saved, followed, all] = await Promise.all([
                 fetchSavedPosts(),
                 fetchFollowedCommunities(),
                 fetchCommunities()
             ]);
 
-            console.log('saved:', saved);
-            console.log('followed:', followed);
-            console.log('all:', all);
-
             setSavedPosts(saved.map(s => s.posts));
             setFollowedCommunities(followed.map(f => f.communities));
             setAllCommunities(all);
         } catch (error) {
-            console.log(error.message);
-            console.log('Error', 'Failed to load data');
+            console.log('Error', error.message);
             Alert.alert('Error', 'Failed to load data')
         }
     }, [fetchSavedPosts, fetchFollowedCommunities, fetchCommunities]);
