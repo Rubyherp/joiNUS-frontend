@@ -11,32 +11,61 @@ import { PostContext } from "@/context/postContext";
 import ThemedPost from "@/components/themedComponents/themedPost";
 import { Alert } from "react-native";
 import { router } from "expo-router";
+import ProfileSettingPicker from "@/components/helpers/profileSettingPicker";
+import { User } from "lucide-react-native";
 
 //TODO: use actionsheet for settings - logout, change password, etc
+//TODO: improve color sheme
+//TODO: add change password logic
+//TODO: add zoom for contacts and email?
+//TODO: abstract profile section into reusable component? this one prob ms3
 
 export default function Profile() {
-    const { user, profile, changeAvatar } = useContext(UserContext);
+    const { user, profile, changeAvatar, logout } = useContext(UserContext);
     const { fetchPostsByUserId } = useContext(PostContext);
     const [tab, setTab] = useState(0);
     const [profileUri, setProfileUri] = useState('');
     const [posts, setPosts] = useState(null);
+    const [selectedSetting, setSelectedSetting] = useState(null);
 
     const { username, year, major, modules, contact, email, about, skills, experiences } = profile || {};
 
     const tabs = ['About', 'Skills & Exp', 'Posts'];
-
-    //FIX: fix dynamically loaded avatar on registration and login
-    //TODO: improve color sheme
 
     const loadPosts = async (userId) => {
         try {
             const fetched = await fetchPostsByUserId(userId);
             setPosts(fetched ?? []);
         } catch (error) {
-            console.log(error);
+            console.log('Error: Profile', error.message);
             Alert.alert('Error', error.message || 'Failed to load Posts');
         }
     }
+
+    // handle selected setting
+    useEffect(() => {
+        if (!selectedSetting) {
+            return;
+        }
+
+        if (selectedSetting === 'EditProfile') {
+            console.log('edit profile');
+            router.push(`/profileSetup`);
+            setSelectedSetting(null);
+        }
+
+        if (selectedSetting === 'ChangePassword') {
+            console.log('change password');
+            setSelectedSetting(null);
+        }
+
+        if (selectedSetting === 'Logout') {
+            console.log('logout');
+            logout();
+            router.push(`/login`);
+            setSelectedSetting(null);
+        }
+    }, [selectedSetting]);
 
     useEffect(() => {
         if (user?.id) {
@@ -67,28 +96,26 @@ export default function Profile() {
 
     return (
         <SafeAreaView
-            className="flex-1 items-center px-4"
+            className="flex-1 items-center px-4 mb-8"
             style={{ backgroundColor: Colors.light.uiBackground }}
             edges={['top']}
         >
-            <View className="flex-row items-center justify-between w-full mb-3">
 
-                <View className="mb-3">
-                    <Text className="text-2xl font-extrabold text-gray-800">Profile</Text>
-                    <Text className="text-base font-semibold text-gray-500 mt-1">Decide what Others see</Text>
+            {/* Header */}
+            <View className="flex-row items-center w-full mb-3 justify-center">
+
+                <User size={48} color="#f97316" />
+                <View className="flex-row items-center justify-between flex-1 ml-3">
+                    <View className="flex">
+                        <Text className="text-2xl font-extrabold text-gray-800">Profile</Text>
+                        <Text className="text-base font-semibold text-gray-500 mt-1">Personalise what others see</Text>
+                    </View>
                 </View>
 
-                <TouchableOpacity
-                    className="px-4 py-1.5 rounded-full"
-                    style={{ backgroundColor: Colors.primary }}
-                    onPress={() => router.push(`/profileSetup`)}
-                >
-                    <Text className="text-white font-semibold text-sm">
-                        Edit
-                    </Text>
-                </TouchableOpacity>
+                <ProfileSettingPicker onSelect={c => setSelectedSetting(c)} />
             </View>
 
+            {/* profile card */}
             <View
                 className="w-full bg-white rounded-2xl px-5 py-5 mb-3"
                 style={{ borderWidth: 0.5, borderColor: 'rgba(0,0,0,0.07)' }}
@@ -112,16 +139,6 @@ export default function Profile() {
                                         borderRadius: 100,
                                     }}
                                 />
-
-                                {/* temp switch out possible buggy avatar component with image component, can revert back to avatar component later if needed */}
-                                {/* <Avatar size="xl"> */}
-                                {/*     <AvatarFallbackText */}
-                                {/*         className="font-bold" */}
-                                {/*     > */}
-                                {/*         {username} */}
-                                {/*     </AvatarFallbackText> */}
-                                {/*     <AvatarImage source={{ uri: profileUri }} /> */}
-                                {/* </Avatar> */}
 
                             </View>
                         </View>
@@ -158,6 +175,7 @@ export default function Profile() {
 
                 <Spacer height={14} />
 
+                {/* contacts */}
                 <View className="flex-row gap-2">
                     <View
                         className="flex-1 flex-row items-center gap-2 rounded-xl px-3 py-2.5"
@@ -203,6 +221,8 @@ export default function Profile() {
                     </View>
                 </View>
             </View>
+
+            {/* content-tab */}
             <View className="flex-1 w-full bg-white rounded-2xl overflow-hidden" style={{ borderWidth: 0.5, borderColor: 'rgba(0,0,0,0.07)' }}>
                 <View className="flex-row mx-3 mt-3 mb-0 p-1 rounded-xl" style={{ backgroundColor: Colors.light.uiBackground }}>
                     {tabs.map((label, i) => (
@@ -226,7 +246,8 @@ export default function Profile() {
                 </View>
 
 
-                <View className="flex-1 ">
+                {/* content */}
+                <View className="flex-1 bg-white rounded-b-2xl">
 
                     {tab === 0 && (
                         <ScrollView
@@ -238,7 +259,7 @@ export default function Profile() {
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Year of Study">
-                                {year}
+                                {String(year)}
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Modules">
