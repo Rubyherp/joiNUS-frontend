@@ -91,7 +91,6 @@ export function UserProvider({ children }) {
     }
 
     const logout = () => {
-        setUser(null);
         setToken(null);
     }
 
