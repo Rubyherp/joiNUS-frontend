@@ -46,12 +46,20 @@ export default function ThemedPost({ data }) {
             <View className="w-full bg-white border border-gray-200 rounded-2xl overflow-hidden mb-3 shadow-sm">
 
                 <View className="flex-row items-center w-full gap-2 px-4 pt-4 pb-2">
-                    <View className="rounded-full w-8 h-8 items-center justify-center" style={{ backgroundColor: getColor(communityName) }}>
-                        <Text className="text-white text-base font-bold">{getInitials(communityName)}</Text>
-                    </View>
-                    <Text className="text-base font-semibold text-purple-600 flex-shrink-0">{communityName}</Text>
+
+                    <Pressable
+                        onPress={() => router.push(`/community/${community_id}`)}
+                        className="flex-row items-center gap-2"
+                    >
+                        <View className="rounded-full w-8 h-8 items-center justify-center" style={{ backgroundColor: getColor(communityName) }}>
+                            <Text className="text-white text-base font-bold">{getInitials(communityName)}</Text>
+                        </View>
+                        <Text className="text-base font-semibold text-purple-600 flex-shrink-0">{communityName}</Text>
+
+                    </Pressable>
 
                     <Text className="text-base text-gray-500 flex-shrink-0">• posted by</Text>
+
                     <Pressable
                         onPress={() => router.push(`userProfile/${author_id}`)}
                         className="flex-row items-center gap-2 flex-1"
