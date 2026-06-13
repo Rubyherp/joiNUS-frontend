@@ -18,8 +18,8 @@ import ThemedPost from "@/components/themedComponents/themedPost";
 export default function Saved() {
     const [communityQuery, setCommunityQuery] = useState("");
     const [postQuery, setPostQuery] = useState("");
-    const [savedPosts, setSavedPosts] = useState(null);
-    const [followedCommunities, setFollowedCommunities] = useState(null);
+    const [savedPosts, setSavedPosts] = useState([]);
+    const [followedCommunities, setFollowedCommunities] = useState([]);
     const [allCommunities, setAllCommunities] = useState(null);
 
     const { fetchSavedPosts } = useContext(PostContext);
@@ -155,8 +155,8 @@ export default function Saved() {
                         </View>
                     )
                 }
-                {/* content */}
 
+                {/* content */}
                 {tab === 0
                     ? (
 
@@ -165,9 +165,16 @@ export default function Saved() {
                                 <Text className="text-gray-700 text-xl font-bold">FOLLOWING</Text>
                             </View>
                             {
-                                (followedCommunities ?? []).map(community => (
-                                    <ThemedCommunity key={community.id} data={community} isFollowed={true} onFollowChange={loadData} />
-                                ))
+                                followedCommunities && followedCommunities.length > 0 ? (
+                                    followedCommunities.map(community => (
+                                        <ThemedCommunity key={community.id} data={community} isFollowed={true} onFollowChange={loadData} />
+                                    ))
+                                ) : (
+                                    <View className="items-center justify-center py-8 px-8">
+                                        <Text className="text-gray-700 font-bold text-lg mt-4 text-center">No communities yet</Text>
+                                        <Text className="text-lg">Follow a community to display it here! 🌐</Text>
+                                    </View>
+                                )
                             }
                             <View className="flex justify-center items-center py-1.5 border-b-2 border-gray-400 bg-gray-700">
                                 <Text className="text-base font-semibold text-gray-200 ">Browse all Communities</Text>
@@ -182,11 +189,20 @@ export default function Saved() {
                         </View>
 
                     ) : (
+
                         <View className="pt-4 px-4">
-                            {(savedPosts ?? []).map(post => (
-                                <ThemedPost key={post.id} data={post} />
-                            ))}
+                            {savedPosts && savedPosts.length > 0 ? (
+                                savedPosts.map(post => (
+                                    <ThemedPost key={post.id} data={post} />
+                                ))
+                            ) : (
+                                <View className="items-center justify-center py-8 px-8">
+                                    <Text className="text-gray-700 font-bold text-lg mt-4 text-center">No saved posts yet</Text>
+                                    <Text className="text-lg">Save a post to display it here! 🔖</Text>
+                                </View>
+                            )}
                         </View>
+
                     )
                 }
 
