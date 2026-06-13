@@ -8,6 +8,7 @@ import ThemedInput from "@/components/themedComponents/themedInput";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { ChatContext } from "@/context/chatContext";
 import Spacer from "@/components/themedComponents/spacer";
+import { MessageCircleCheck } from "lucide-react-native";
 
 //TODO: map each user as link to individual chat page, currently hardcoded for UI purposes
 //TODO: position absolute the search icon for user in the platform
@@ -58,13 +59,19 @@ export default function Chats() {
                 <View className="flex-1">
 
                     {/* header */}
-                    <View className="mb-3">
-                        <Text className="text-2xl font-extrabold text-gray-800">Messages</Text>
-                        <Text className="text-base font-semibold text-gray-500 mt-1">Your Conversations</Text>
-
+                    <View className="flex-row items-center gap-3">
+                        <MessageCircleCheck size={48} color="#f97316" />
+                        <View className="flex-row items-center justify-between flex-1">
+                            <View className="flex">
+                                <Text className="text-2xl font-extrabold text-gray-800">Messages</Text>
+                                <Text className="text-base font-semibold text-gray-500 mt-1">Your Conversations</Text>
+                            </View>
+                            <Image source={Logo}
+                                className="h-20 w-20"
+                                resizeMode="contain"
+                            />
+                        </View>
                     </View>
-
-                    <Spacer height={10} />
 
                     {/* searchbar */}
                     <View className="w-full h-14 justify-center">
