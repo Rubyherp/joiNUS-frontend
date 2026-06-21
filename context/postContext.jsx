@@ -231,6 +231,40 @@ export function PostProvider({ children }) {
         return data;
     }
 
+    async function deletePostById(postId) {
+        console.log('Deleting post:', postId);
+        console.log('DELETE URL:', `${API_URL}/posts/delete/${postId}`);
+        const response = await fetch(`${API_URL}/posts/delete/${postId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const text = await response.text();
+        console.log('Delete response status:', response.status);
+        console.log('Delete response body:', text);
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch {
+            throw new Error(`Server returned non-JSON response (status ${response.status})`);
+        }
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to delete Post');
+        }
+
+        return data;
+
+        // const data = await response.json();
+        //
+        // if (!response.ok) {
+        //     throw new Error(data.error || 'Failed to delete Post');
+        // }
+        //
+        // return data;
+    }
 
     return (
         <PostContext.Provider value={{
@@ -247,6 +281,7 @@ export function PostProvider({ children }) {
             fetchPendingRequests,
             fetchAcceptedRequests,
             handlePendingRequest,
+            deletePostById,
             savedPostIds,
         }}>
             {children}
