@@ -1,23 +1,23 @@
-import { View, Text, TouchableOpacity, Pressable, ActivityIndicator, ScrollView, TouchableWithoutFeedback, Keyboard, Alert, Image, } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
+import { ActivityIndicator, Alert, Image, Keyboard, Pressable, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import Spacer from "@/components/themedComponents/spacer";
-import { LinearGradient } from "@/components/ui/linear-gradient";
 import CommunityPicker from "@/components/helpers/communityPicker";
-import ThemedInput from "@/components/themedComponents/themedInput";
 import DeadlinePicker from "@/components/helpers/deadlinePicker";
-import { Button, ButtonText, ButtonGroup } from "@/components/ui/button";
-import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper, } from '@/components/ui/actionsheet';
-import { Box } from "@/components/ui/box";
-import { Icon, CloseIcon } from '@/components/ui/icon';
-import { UploadCloud, ImageIcon, FileText, Users, Clock, AlignLeft, Sparkles, PenBoxIcon } from "lucide-react-native";
-import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
-import { useContext } from "react";
-import { PostContext } from "@/context/postContext";
+import Spacer from "@/components/themedComponents/spacer";
+import ThemedInput from "@/components/themedComponents/themedInput";
 import ThemedLabel from "@/components/themedComponents/themedLabel";
 import ThemedSectionCard from "@/components/themedComponents/themedSectionCard";
+import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper, } from '@/components/ui/actionsheet';
+import { Box } from "@/components/ui/box";
+import { Button, ButtonGroup, ButtonText } from "@/components/ui/button";
+import { CloseIcon, Icon } from '@/components/ui/icon';
+import { LinearGradient } from "@/components/ui/linear-gradient";
+import { PostContext } from "@/context/postContext";
+import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
+import { AlignLeft, Clock, FileText, ImageIcon, PenBoxIcon, Sparkles, UploadCloud, Users } from "lucide-react-native";
+import { useContext } from "react";
 import Logo from "../../assets/images/logo-white.png";
 
 
@@ -378,7 +378,7 @@ export default function Create() {
                             style={{ opacity: loading ? 0.7 : 1 }}
                         >
                             <LinearGradient
-                                className={`py-4 rounded-3xl justify-center items-center`}
+                                className={`py-2 rounded-3xl justify-center items-center`}
                                 colors={['#F97316', '#EC4899']}
                                 start={[0, 1]}
                                 end={[1, 0]}
