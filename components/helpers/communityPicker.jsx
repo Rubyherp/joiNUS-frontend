@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/actionsheet';
 import { useContext } from "react";
 import { CommunityContext } from "@/context/communityContext";
+import { Ionicons } from "@expo/vector-icons";
 
 const getInitials = (name) => name.slice(0, 2).toUpperCase();
 
@@ -36,6 +37,7 @@ export default function CommunityPicker({ onSelect }) {
         setSelected(community);
         onSelect(community);
         handleClose();
+        console.log(community)
     }
 
     const Item = useCallback(({ item }) => (
@@ -57,27 +59,34 @@ export default function CommunityPicker({ onSelect }) {
         <>
             <TouchableOpacity
                 onPress={() => setShowActionsheet(true)}
-                className="flex-row items-center gap-2 bg-gray-800 rounded-full px-3 py-2 max-width-[160px]"
+                className="flex-row items-center bg-gray-800 rounded-full px-3 py-2 justify-between max-w-[240px]"
             >
-                {selected && (
-                    <View
-                        className="w-10 h-10 rounded-full items-center justify-center flex-shrink-0"
-                        style={{ backgroundColor: getColor(selected.name) }}
+
+                <View className="flex-row justify-center items-center gap-2 flex-1 min-w-0">
+                    {selected && (
+                        <View
+                            className="w-8 h-8 rounded-full items-center justify-center flex-shrink-0"
+                            style={{ backgroundColor: getColor(selected.name) }}
+                        >
+                            <Text className="text-white text-xs font-bold">{getInitials(selected.name)}</Text>
+                        </View>
+                    )}
+
+                    <Text
+                        className="text-white font-semibold text-base flex-1"
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                     >
-                        <Text className="text-white text-xs font-bold">{getInitials(selected.name)}</Text>
-                    </View>
-                )}
-                <Text
-                    className="text-white font-semibold text-base flex-shrink"
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                >
-                    {selected
-                        ? `${selected.name}`
-                        : `Select Community`
-                    }
-                </Text>
-                <Text className="text-gray-400">⌃</Text>
+                        {selected
+                            ? `${selected.name}`
+                            : `Select Community`
+                        }
+                    </Text>
+                </View>
+                <View className="px-2 flex-shrink-0">
+                    <Ionicons name="chevron-down" size={14} color="#9ca3af" />
+                </View>
+
             </TouchableOpacity>
 
             <Actionsheet isOpen={showActionsheet} onClose={handleClose}>

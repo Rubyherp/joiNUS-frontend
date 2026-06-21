@@ -7,6 +7,7 @@ import { PostContext } from "@/context/postContext";
 import { UserContext } from "@/context/userContext";
 import { CommunityContext } from "@/context/communityContext";
 import { Ionicons } from '@expo/vector-icons';
+import { PenBoxIcon } from 'lucide-react-native'
 
 //TODO: add edit button for author?
 //TODO: integrate messages with requests
@@ -223,48 +224,64 @@ export default function PostPage() {
                 ) : null}
             </ScrollView>
 
-            {/* button */}
-            <View className="flex-row bg-white border-t border-gray-200 px-4 py-3 gap-2">
-                {isAuthor ? (
+            {/* control */}
+            <View className="flex-row bg-white border-t border-gray-200 px-4 py-3 items-center gap-2">
 
-                    <TouchableOpacity
-                        className="flex-1 bg-purple-600 rounded-full py-2 items-center"
-                        onPress={() => router.push(`post/${postId}/requests`)}
+                {/* button */}
+                <View className="flex-row flex-1 ">
+                    {isAuthor ? (
+
+                        <TouchableOpacity
+                            className="flex-1 bg-purple-600 rounded-full py-2 items-center"
+                            onPress={() => router.push(`post/${postId}/requests`)}
+                        >
+                            <Text className="text-white font-bold text-base">View Requests</Text>
+                        </TouchableOpacity>
+
+                    ) : joinStatus === null ? (
+
+                        <TouchableOpacity
+                            className="flex-1 bg-purple-600 rounded-full py-2 items-center"
+                            onPress={() => handleJoinRequest()}
+                        >
+                            <Text className="text-white font-bold text-base">Request to Join</Text>
+                        </TouchableOpacity>
+
+                    ) : joinStatus === 'pending' ? (
+
+                        <TouchableOpacity disabled className="flex-1 bg-gray-400 rounded-full py-2 items-center">
+                            <Text className="text-white font-bold text-base">Pending...</Text>
+                        </TouchableOpacity>
+
+                    ) : joinStatus === 'accepted' ? (
+
+                        <TouchableOpacity disabled className="flex-1 bg-green-500 rounded-full py-2 items-center">
+                            <Text className="text-white font-bold text-base">Joined ✓</Text>
+                        </TouchableOpacity>
+
+                    ) : joinStatus === 'rejected' ? (
+
+                        <TouchableOpacity
+                            className="flex-1 bg-red-400 rounded-full py-2 items-center"
+                            onPress={() => handleJoinRequest()}
+                        >
+                            <Text className="text-white font-bold text-base">Request Again</Text>
+                        </TouchableOpacity>
+
+                    ) : null}
+
+                </View>
+
+                {isAuthor && (
+                    <Pressable
+                        onPress={() => router.push(`post/${postId}/editPost`)}
+                        className="flex-row gap-2 bg-green-700 rounded-full items-center px-4 py-1"
                     >
-                        <Text className="text-white font-bold text-base">View Requests</Text>
-                    </TouchableOpacity>
+                        <Text className="text-white font-bold text-base">Edit</Text>
+                        <PenBoxIcon size={26} color={'white'} />
+                    </Pressable>
+                )}
 
-                ) : joinStatus === null ? (
-
-                    <TouchableOpacity
-                        className="flex-1 bg-purple-600 rounded-full py-2 items-center"
-                        onPress={() => handleJoinRequest()}
-                    >
-                        <Text className="text-white font-bold text-base">Request to Join</Text>
-                    </TouchableOpacity>
-
-                ) : joinStatus === 'pending' ? (
-
-                    <TouchableOpacity disabled className="flex-1 bg-gray-400 rounded-full py-2 items-center">
-                        <Text className="text-white font-bold text-base">Pending...</Text>
-                    </TouchableOpacity>
-
-                ) : joinStatus === 'accepted' ? (
-
-                    <TouchableOpacity disabled className="flex-1 bg-green-500 rounded-full py-2 items-center">
-                        <Text className="text-white font-bold text-base">Joined ✓</Text>
-                    </TouchableOpacity>
-
-                ) : joinStatus === 'rejected' ? (
-
-                    <TouchableOpacity
-                        className="flex-1 bg-red-400 rounded-full py-2 items-center"
-                        onPress={() => handleJoinRequest()}
-                    >
-                        <Text className="text-white font-bold text-base">Request Again</Text>
-                    </TouchableOpacity>
-
-                ) : null}
             </View>
         </SafeAreaView >
     );
