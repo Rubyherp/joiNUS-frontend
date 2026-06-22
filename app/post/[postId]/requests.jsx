@@ -1,12 +1,12 @@
-import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
+import { View, Text, ScrollView, Pressable, Alert, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useContext, useEffect, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router'
 
 import { PostContext } from "@/context/postContext";
-import { CommunityContext } from "@/context/communityContext";
-import { setReactActEnvironment } from '@testing-library/react-native/build/act';
 import ThemedRequestCard from '@/components/themedComponents/themedRequestCard';
+import Logo from "../../../assets/images/logo-white.png";
+import { Handshake } from "lucide-react-native";
 
 //1. fetch pending req and accepted req
 //2. map each req to their req card
@@ -21,7 +21,7 @@ export default function Requests() {
     const [pendingRequests, setPendingRequests] = useState([]);
     const [acceptedRequests, setAcceptedRequests] = useState([]);
 
-    const { fetchPostById, fetchPendingRequests, fetchAcceptedRequests, handlePendingRequest, } = useContext(PostContext);
+    const { fetchPostById, fetchPendingRequests, fetchAcceptedRequests } = useContext(PostContext);
 
     const { postId } = useLocalSearchParams();
 
@@ -59,31 +59,49 @@ export default function Requests() {
                 </View>
 
                 {/* top bar */}
-                <View className="flex justify-between px-4 py-2">
-                    <View>
-                        <Text className="text-2xl font-extrabold text-gray-800 tracking-light">Requests</Text>
-                        <Text className="text-base font-semibold text-gray-500 mt-1">Manage your requests</Text>
+                <View className="flex-row items-center gap-3 px-4">
+                    <Handshake size={48} color="#f97316" />
+                    <View className="flex-row items-center justify-between flex-1">
+                        <View className="flex">
+                            <Text className="text-2xl font-extrabold text-gray-800">Requests</Text>
+                            <Text className="text-base font-semibold text-gray-500 mt-1">Manage your requests</Text>
+                        </View>
+                        <Image source={Logo}
+                            className="h-20 w-20"
+                            resizeMode="contain"
+                        />
                     </View>
 
                 </View>
 
                 {/* accepted */}
                 <View>
-                    <View className="flex justify-center items-center py-1.5 border-b-2 border-gray-400 bg-gray-700">
-                        <Text className="text-base font-semibold text-gray-200 ">Accept</Text>
+                    <View className="px-4 py-2 bg-gray-50 border-b border-gray-500">
+                        <Text className="text-sm font-semibold text-gray-500 uppercase tracking-wide text-center">Accepted</Text>
                     </View>
-                    {acceptedRequests?.map(req =>
+                    {acceptedRequests && acceptedRequests.length > 0 ? (acceptedRequests?.map(req =>
                         <ThemedRequestCard key={req.id} data={req} onUpdate={loadData} />
+                    )) : (
+                        <View className="items-center justify-center pb-4 px-8">
+                            <Text className="text-gray-700 font-bold text-lg mt-4 text-center">No accepted requests yet</Text>
+                            <Text className="text-gray-500 text-sm mt-1 text-center">Once you accept someone, they'll show up here 🙌</Text>
+                        </View>
                     )}
                 </View>
 
                 {/* pending */}
                 <View>
-                    <View className="flex justify-center items-center py-1.5 border-b-2 border-gray-400 bg-gray-700">
-                        <Text className="text-base font-semibold text-gray-200 ">Pending</Text>
+                    <View className="px-4 py-2 bg-gray-50 border-b border-gray-500">
+                        <Text className="text-sm font-semibold text-gray-500 uppercase tracking-wide text-center">Pending</Text>
                     </View>
-                    {pendingRequests?.map(req =>
-                        <ThemedRequestCard key={req.id} data={req} onUpdate={loadData} />
+                    {pendingRequests && pendingRequests.length > 0 ? (
+                        pendingRequests?.map(req =>
+                            <ThemedRequestCard key={req.id} data={req} onUpdate={loadData} />
+                        )) : (
+                        <View className="items-center justify-center px-8">
+                            <Text className="text-gray-700 font-bold text-lg mt-4 text-center">No pending requests</Text>
+                            <Text className="text-gray-500 text-sm mt-1 text-center">Requests to join your project will show up here 👀</Text>
+                        </View>
                     )}
                 </View>
 

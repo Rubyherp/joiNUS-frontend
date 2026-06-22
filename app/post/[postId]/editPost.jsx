@@ -419,7 +419,7 @@ export default function Create() {
 
                     {/* post button */}
                     <View
-                        className="px-4 pb-4 pt-2 bg-gray-50 flex-row gap-2"
+                        className="px-4 bg-gray-50 flex-row gap-2"
                         style={{ paddingBottom: 30, shadowColor: "#000", shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.05, shadowRadius: 8 }}
                     >
                         <TouchableOpacity
@@ -430,7 +430,7 @@ export default function Create() {
                             style={{ opacity: loading ? 0.7 : 1 }}
                         >
                             <LinearGradient
-                                className={`py-2 rounded-3xl justify-center items-center`}
+                                className={`py-1.5 rounded-3xl justify-center items-center`}
                                 colors={['#F97316', '#EC4899']}
                                 start={[0, 1]}
                                 end={[1, 0]}
@@ -446,9 +446,9 @@ export default function Create() {
                         {/* delete button */}
                         <Pressable
                             onPress={handleDeletePost}
-                            className="flex-row gap-2 bg-red-700 rounded-full items-center px-4 py-2"
+                            className="flex-row gap-2 bg-red-700 rounded-full items-center px-4 py-1.5"
                         >
-                            <Trash size={26} color={'white'} />
+                            <Trash size={24} color={'white'} />
                             <Text className="text-white font-bold text-base">Delete</Text>
                         </Pressable>
 

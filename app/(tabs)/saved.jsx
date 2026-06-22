@@ -75,7 +75,7 @@ export default function Saved() {
                         </View>
                     </View>
 
-                    <View className="flex-row p-1 rounded-xl" style={{ backgroundColor: Colors.light.uiBackground }}>
+                    <View className="flex-row p-1 pb-4 rounded-xl" style={{ backgroundColor: Colors.light.uiBackground }}>
                         {tabs.map((label, i) => (
                             <TouchableOpacity
                                 key={i}
@@ -168,7 +168,7 @@ export default function Saved() {
 
                         <View className="pt-4">
                             <View className="px-4">
-                                <Text className="text-gray-700 text-xl font-bold">FOLLOWING</Text>
+                                <Text className="text-gray-700 text-xl font-bold">Following</Text>
                             </View>
                             {
                                 followedCommunities && followedCommunities.length > 0 ? (
@@ -176,14 +176,15 @@ export default function Saved() {
                                         <ThemedCommunity key={community.id} data={community} isFollowed={true} onFollowChange={loadData} />
                                     ))
                                 ) : (
-                                    <View className="items-center justify-center py-8 px-8">
+                                    <View className="items-center justify-center pb-4 px-8">
                                         <Text className="text-gray-700 font-bold text-lg mt-4 text-center">No communities yet</Text>
                                         <Text className="text-lg">Follow a community to display it here! 🌐</Text>
                                     </View>
                                 )
                             }
-                            <View className="flex justify-center items-center py-1.5 border-b-2 border-gray-400 bg-gray-700">
-                                <Text className="text-base font-semibold text-gray-200 ">Browse all Communities</Text>
+
+                            <View className="px-4 py-2 bg-gray-50 border-b border-t border-gray-500">
+                                <Text className="text-sm font-semibold text-gray-500 uppercase tracking-wide text-center">Browse all Communities</Text>
                             </View>
                             {
                                 (allCommunities ?? [])

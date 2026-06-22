@@ -102,17 +102,17 @@ export default function Profile() {
         >
 
             {/* Header */}
-            <View className="flex-row items-center w-full mb-3 justify-center">
 
+            <View className="flex-row my-2 items-center gap-3">
                 <User size={48} color="#f97316" />
-                <View className="flex-row items-center justify-between flex-1 ml-3">
+                <View className="flex-row items-center justify-between flex-1">
                     <View className="flex">
                         <Text className="text-2xl font-extrabold text-gray-800">Profile</Text>
                         <Text className="text-base font-semibold text-gray-500 mt-1">Personalise what others see</Text>
                     </View>
-                </View>
 
-                <ProfileSettingPicker onSelect={c => setSelectedSetting(c)} />
+                    <ProfileSettingPicker onSelect={c => setSelectedSetting(c)} />
+                </View>
             </View>
 
             {/* profile card */}
