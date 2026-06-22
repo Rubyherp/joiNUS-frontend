@@ -62,13 +62,12 @@ export default function Create() {
             setDescription(description)
             setMoreDetails(more_details)
             setRequirements(requirements)
-            setMemberLimit(String(member_limit))
+            setMemberLimit(member_limit ? String(member_limit) : null)
             setDeadline(deadline)
             setSelectedImage(image_url)
             setSelectedCommunityId(community_id)
 
             console.log('Post Set')
-            console.log(deadline)
             setLoading(false);
         }
 
