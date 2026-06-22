@@ -68,7 +68,7 @@ export default function Create() {
             setSelectedCommunityId(community_id)
 
             console.log('Post Set')
-            console.log(image_url)
+            console.log(deadline)
             setLoading(false);
         }
 
@@ -159,7 +159,7 @@ export default function Create() {
                 moreDetails,
                 memberLimit: memberLimit ? parseInt(memberLimit) : null,
                 requirements,
-                deadline: deadline ? deadline.toISOString() : null,
+                deadline: deadline ? deadline : null,
                 imageUrl
             });
             router.replace('/landing');
@@ -411,7 +411,7 @@ export default function Create() {
 
                                 <View className="pl-5 pr-4 py-4">
                                     <ThemedLabel icon={Clock} label="Deadline" optional />
-                                    <DeadlinePicker onSelect={date => setDeadline(date)} />
+                                    <DeadlinePicker onSelect={date => setDeadline(date)} existingDate={deadline} />
                                 </View>
                             </View>
                         </View>
