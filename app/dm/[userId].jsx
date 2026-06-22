@@ -66,15 +66,17 @@ export default function DMChat() {
 
         return (
             <View className={`px-4 py-1 flex-row ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <View className={`max-w-[75%] rounded-2xl px-4 py-2 ${isMe ? 'bg-purple-600' : 'bg-gray-600'}`}>
+                <View className={`max-w-[75%] rounded-2xl px-4 py-2 ${isMe ? 'bg-purple-600' : 'bg-gray-600'} flex`}>
                     <Text className='text-white'>
                         {item.content}
                     </Text>
-                    <Text className={`text-xs mt-0.5 ${isMe ? 'text-purple-600' : 'text-gray-600'}`}>
+
+                    <Text className='text-xs mt-0.5 text-slate-200 text-right'>
                         {new Date(item.created_at).toLocaleTimeString('en-SG', {
                             hour: '2-digit',
                             minute: '2-digit',
                         })}
+
                     </Text>
                 </View>
             </View>
