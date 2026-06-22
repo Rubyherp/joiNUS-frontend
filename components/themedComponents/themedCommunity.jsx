@@ -59,32 +59,33 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
     return (
         <Pressable onPress={() => router.push(`/community/${communityId}`)}>
             <View className="w-full border-b-2 border-gray-300 overflow-hidden shadow-sm">
-                <View className="flex-row items-center w-full gap-2 px-4 pt-4 pb-2">
+                <View className="flex-row items-center w-full gap-4 px-4 pt-4 pb-2">
 
                     <View
                         className="rounded-full w-16 h-16 items-center justify-center"
                         style={{ backgroundColor: getColor(communityName) }}
                     >
-                        <Text className="text-white text-base font-bold"
+                        <Text className="text-white text-l font-bold"
                         >
                             {getInitials(communityName)}
                         </Text>
                     </View>
 
-                    <View className="flex-1">
+                    <View className="flex-1 justify-center gap-1">
                         <Text
-                            className="flex-1 text-xl font-semibold text-purple-600"
+                            className="text-l font-bold text-purple-600"
                             numberOfLines={1}
                             ellipsizeMode="tail"
                         >
                             {communityName}
                         </Text>
                         <Text
-                            className="py-1 text-base text-gray-500"
+                            className="text-base text-gray-500"
                             numberOfLines={1}
                             ellipsizeMode="tail"
                         >
-                            {data?.category ?? "General"} • {data?.tags?.length ?? 0} tags
+                            {data?.category ?? "General"}
+                            {/* • {data?.tags?.length ?? 0} tags */}
                         </Text>
                     </View>
 
@@ -108,6 +109,7 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
                             <Text className="text-sm text-gray-500">{followed ? 'following' : 'follow'}</Text>
                         </TouchableOpacity>
                     </View>
+
                     {/* <TouchableOpacity */}
                     {/*     onPress={followed ? handleUnfollow : handleFollow} */}
                     {/*     disabled={loading} */}
