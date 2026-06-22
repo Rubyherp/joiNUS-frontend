@@ -85,6 +85,10 @@ export default function RootLayout() {
                                         headerShown: false,
                                     }}
                                     />
+                                    <Stack.Screen name="post/[postId]/editPost" options={{
+                                        headerShown: false,
+                                    }}
+                                    />
 
                                 </Stack>
                             </PostProvider>

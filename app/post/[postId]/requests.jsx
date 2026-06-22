@@ -13,6 +13,8 @@ import ThemedRequestCard from '@/components/themedComponents/themedRequestCard';
 //3. in each card, retrieve status of the req, render if accepted 
 //4. think about this logic tomorrow =p
 
+//TODO: Add placeholder if there are no requests
+
 export default function Requests() {
 
     const [post, setPost] = useState(null);

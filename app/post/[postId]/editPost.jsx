@@ -1,34 +1,34 @@
-import { useState } from "react";
-import { ActivityIndicator, Alert, Image, Keyboard, Pressable, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, } from "react-native";
+import { View, Text, TouchableOpacity, Pressable, ActivityIndicator, ScrollView, TouchableWithoutFeedback, Keyboard, Alert, Image, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useState, useEffect } from "react";
 
-import CommunityPicker from "@/components/helpers/communityPicker";
-import DeadlinePicker from "@/components/helpers/deadlinePicker";
-import Spacer from "@/components/themedComponents/spacer";
+import { LinearGradient } from "@/components/ui/linear-gradient";
 import ThemedInput from "@/components/themedComponents/themedInput";
-import ThemedLabel from "@/components/themedComponents/themedLabel";
-import ThemedSectionCard from "@/components/themedComponents/themedSectionCard";
+import DeadlinePicker from "@/components/helpers/deadlinePicker";
+import { Button, ButtonText, ButtonGroup } from "@/components/ui/button";
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetDragIndicator, ActionsheetDragIndicatorWrapper, } from '@/components/ui/actionsheet';
 import { Box } from "@/components/ui/box";
-import { Button, ButtonGroup, ButtonText } from "@/components/ui/button";
-import { CloseIcon, Icon } from '@/components/ui/icon';
-import { LinearGradient } from "@/components/ui/linear-gradient";
-import { PostContext } from "@/context/postContext";
+import { Icon, CloseIcon } from '@/components/ui/icon';
+import { UploadCloud, ImageIcon, FileText, Users, Clock, AlignLeft, Sparkles, Trash } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
-import { AlignLeft, Clock, FileText, ImageIcon, PenBoxIcon, Sparkles, UploadCloud, Users } from "lucide-react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import { useContext } from "react";
-import Logo from "../../assets/images/logo-white.png";
+import { PostContext } from "@/context/postContext";
+import ThemedLabel from "@/components/themedComponents/themedLabel";
+import ThemedSectionCard from "@/components/themedComponents/themedSectionCard";
 
+// 1. retrieve existing post data using postId from route params
+// 2. populate the form fields with the existing post data
 
-//TODO: refactor to useReducer to manage form state or single object state for form data
-//TODO: add able to create community
+//TODO: Fix edit deadline
 
 export default function Create() {
-    const { uploadPostImage, createPost } = useContext(PostContext);
+    const { postId } = useLocalSearchParams();
 
     const [loading, setLoading] = useState(false);
-    const [selectedCommunity, setSelectedCommunity] = useState(null);
+
+    // Not allowed to change selected Community
+    const [selectedCommunityId, setSelectedCommunityId] = useState(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [moreDetails, setMoreDetails] = useState("");
@@ -38,9 +38,45 @@ export default function Create() {
     const [showImageUpload, setShowImageUpload] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
 
+    const { uploadPostImage, createPost, fetchPostById, deletePostById } = useContext(PostContext);
+
+
+    useEffect(() => {
+        const loadData = async () => {
+            setLoading(true);
+            const postData = await fetchPostById(postId);
+
+            const {
+                title,
+                description,
+                image_url,
+                more_details,
+                requirements,
+                member_limit,
+                deadline,
+                created_at,
+                community_id,
+            } = postData || {};
+
+            setTitle(title)
+            setDescription(description)
+            setMoreDetails(more_details)
+            setRequirements(requirements)
+            setMemberLimit(member_limit ? String(member_limit) : null)
+            setDeadline(deadline)
+            setSelectedImage(image_url)
+            setSelectedCommunityId(community_id)
+
+            console.log('Post Set')
+            setLoading(false);
+        }
+
+        loadData();
+    }, [])
+
     const resetState = () => (
         setLoading(false),
-        setSelectedCommunity(null),
+        setSelectedCommunityId(null),
         setTitle(""),
         setDescription(""),
         setMoreDetails(""),
@@ -88,15 +124,12 @@ export default function Create() {
             Alert.alert('Missing Description', 'Please enter a description for your post.');
             return;
         }
-        if (!selectedCommunity) {
-            Alert.alert('No Community Selected', 'Please select a community for your post.');
-            return;
-        }
 
         setLoading(true);
 
-        let imageUrl = null;
-        if (selectedImage) {
+        let imageUrl = typeof selectedImage === 'string' ? selectedImage : null;
+
+        if (selectedImage && typeof selectedImage === 'object' && selectedImage.uri) {
             try {
                 const formData = new FormData();
 
@@ -118,13 +151,14 @@ export default function Create() {
 
         try {
             await createPost({
-                communityId: selectedCommunity?.id,
+                postId,
+                communityId: selectedCommunityId,
                 title,
                 description,
                 moreDetails,
                 memberLimit: memberLimit ? parseInt(memberLimit) : null,
                 requirements,
-                deadline: deadline ? deadline.toISOString() : null,
+                deadline: deadline ? deadline : null,
                 imageUrl
             });
             router.replace('/landing');
@@ -135,9 +169,31 @@ export default function Create() {
         }
     }
 
+    const handleDeletePost = async () => {
+        Alert.alert(
+            'Delete Post',
+            'Are you sure you want to delete this post? This cannot be undone.',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            await deletePostById(postId);
+                            router.replace('/landing');
+                        } catch (error) {
+                            Alert.alert('Error', error.message || 'Failed to delete Post');
+                        }
+                    }
+                }
+            ]
+        );
+    }
+
     return (
         <SafeAreaView className="flex-1" edges={['top']}>
-            <TouchableWithoutFeedback className="flex-1" onPress={() => { Keyboard.dismiss() }}>
+            <View className="flex-1" onPress={() => { Keyboard.dismiss() }}>
 
                 <View className="flex-1">
 
@@ -145,19 +201,14 @@ export default function Create() {
                     <View className="flex-row justify-between items-center px-4">
 
                         {/* header */}
-                        <View className="flex-row items-center gap-3">
-                            <PenBoxIcon size={48} color="#f97316" />
-                            <View className="flex-row items-center justify-between flex-1">
-                                <View className="flex">
-                                    <Text className="text-2xl font-extrabold text-gray-800">New Post</Text>
-                                    <Text className="text-base font-semibold text-gray-500 mt-1">Share with your Community!</Text>
-                                </View>
-                                <Image source={Logo}
-                                    className="h-20 w-20"
-                                    resizeMode="contain"
-                                />
-                            </View>
+
+                        <View className="flex-1 ">
+                            <Pressable onPress={() => router.back()} className="mr-3 p-1 gap-2 flex-row justify-center items-center">
+                                <Text className="text-2xl text-gray-500">←</Text>
+                                <Text className="text-base font-semibold text-gray-800 flex-1 justify-center">Return</Text>
+                            </Pressable>
                         </View>
+
 
 
                     </View>
@@ -168,11 +219,12 @@ export default function Create() {
                         contentContainerStyle={{ paddingBottom: 24 }}
                     >
 
+                        {/* To remove cuz user shouldn't change the community */}
                         {/* community picker */}
-                        <View className="flex-shrink-1 max-w-[50%]">
-                            <CommunityPicker onSelect={c => setSelectedCommunity(c)} />
-                            <Spacer height={10} />
-                        </View>
+                        {/* <View className="flex-shrink-1 max-w-[50%]"> */}
+                        {/*     <CommunityPicker onSelect={c => setSelectedCommunity(c)} /> */}
+                        {/*     <Spacer height={10} /> */}
+                        {/* </View> */}
 
                         {/* title */}
                         <ThemedSectionCard>
@@ -212,7 +264,7 @@ export default function Create() {
                             <ThemedLabel icon={ImageIcon} label="Image" optional />
                             {selectedImage && (
                                 <Image
-                                    source={{ uri: selectedImage.uri }}
+                                    source={{ uri: typeof selectedImage === 'string' ? selectedImage : selectedImage.uri }}
                                     className="w-full h-40"
                                     resizeMode="cover"
                                 />
@@ -358,7 +410,7 @@ export default function Create() {
 
                                 <View className="pl-5 pr-4 py-4">
                                     <ThemedLabel icon={Clock} label="Deadline" optional />
-                                    <DeadlinePicker onSelect={date => setDeadline(date)} />
+                                    <DeadlinePicker onSelect={date => setDeadline(date)} existingDate={deadline} />
                                 </View>
                             </View>
                         </View>
@@ -367,14 +419,14 @@ export default function Create() {
 
                     {/* post button */}
                     <View
-                        className="px-4 pb-4 pt-2 bg-gray-50"
-                        style={{ paddingBottom: 20, shadowColor: "#000", shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.05, shadowRadius: 8 }}
+                        className="px-4 pb-4 pt-2 bg-gray-50 flex-row gap-2"
+                        style={{ paddingBottom: 30, shadowColor: "#000", shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.05, shadowRadius: 8 }}
                     >
                         <TouchableOpacity
                             onPress={handleSubmit}
                             disabled={loading}
                             activeOpacity={0.7}
-                            className="w-full"
+                            className="flex-1"
                             style={{ opacity: loading ? 0.7 : 1 }}
                         >
                             <LinearGradient
@@ -390,10 +442,20 @@ export default function Create() {
                                 )}
                             </LinearGradient>
                         </TouchableOpacity>
+
+                        {/* delete button */}
+                        <Pressable
+                            onPress={handleDeletePost}
+                            className="flex-row gap-2 bg-red-700 rounded-full items-center px-4 py-2"
+                        >
+                            <Trash size={26} color={'white'} />
+                            <Text className="text-white font-bold text-base">Delete</Text>
+                        </Pressable>
+
                     </View>
 
                 </View>
-            </TouchableWithoutFeedback >
+            </View>
         </SafeAreaView >
     )
 }
