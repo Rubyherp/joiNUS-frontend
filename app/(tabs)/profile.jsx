@@ -132,6 +132,7 @@ export default function Profile() {
                             <View className="rounded-full p-[2px] bg-white">
 
                                 <Image
+                                    testID="avatar-image"
                                     source={{ uri: profileUri }}
                                     style={{
                                         width: 64,
