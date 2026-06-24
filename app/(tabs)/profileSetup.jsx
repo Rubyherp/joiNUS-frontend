@@ -14,14 +14,16 @@ export default function ProfileSetup() {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
     const [profileDetails, setProfileDetails] = useState(
-        { username: '', year: '', major: '', modules: '', contact: '', email: '', about: '', skills: '', experiences: '' }
+        { username: '', avatar: '', year: '', major: '', modules: '', contact: '', email: '', about: '', skills: '', experiences: '' }
     );
 
     const loadData = async () => {
+        if (!user?.id || !fetchUserDetails) return;
         try {
             const userDetails = await fetchUserDetails(user.id);
             if (userDetails) {
-                const { username, year, major, modules, contact, email, about, skills, experiences } = userDetails || {};
+
+                const { username, avatar, year, major, modules, contact, email, about, skills, experiences } = userDetails || {};
 
                 setProfileDetails({
                     username: username ?? '',
@@ -32,7 +34,8 @@ export default function ProfileSetup() {
                     email: email ?? '',
                     about: about ?? '',
                     skills: skills ?? '',
-                    experiences: experiences ?? ''
+                    experiences: experiences ?? '',
+                    avatar: avatar ?? ''
                 });
             }
 
