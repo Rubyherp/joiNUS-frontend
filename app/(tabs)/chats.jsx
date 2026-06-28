@@ -90,7 +90,15 @@ export default function Chats() {
                                 )}
 
                                 <ThemedInput
-                                    className="text-xl text-black bg-white border border-black/10 rounded-3xl w-full h-12 px-4"
+                                    className="text-black bg-white border border-black/10 rounded-3xl w-full px-4"
+                                    style={{
+                                        height: 42,
+                                        fontSize: 16,
+                                        lineHeight: 20,
+                                        textAlignVertical: 'center',
+                                        paddingTop: 0,
+                                        paddingBottom: 0,
+                                    }}
                                     value={query}
                                     onChangeText={setQuery}
                                     autoCapitalize="none"
