@@ -8,7 +8,7 @@ import { Link } from 'expo-router';
 export default function Home() {
     return (
         <LinearGradient
-            className="flex-1 items-center justify-center px-8 py-12"
+            className="flex-1 items-center justify-center px-8"
             colors={['#F58529', '#DD2A7B', '#8134AF', '#515BD4']}
             start={[0, 0]}
             end={[1, 1]}
@@ -18,6 +18,7 @@ export default function Home() {
                 className="w-92 h-56"
                 resizeMode="contain"
             />
+            <Spacer height={24} />
 
             <Text className='text-2xl text-center font-semibold text-white leading-9'>
                 Your{' '}
@@ -57,19 +58,22 @@ export default function Home() {
                 </Pressable>
             </Link>
 
-            <Link href='/landing' asChild>
-                <Pressable className='active:opacity-70 w-80' >
-                    <LinearGradient
-                        className="w-full border border-white rounded-full items-center py-2"
-                        colors={['#8637CF', '#0F55A1']}
-                        start={[0, 1]}
-                        end={[1, 0]}
-                    >
-                        <Text className='text-2xl text-center font-semibold text-white leading-9'>Teleport to Landing</Text>
-                    </LinearGradient>
-                </Pressable>
-            </Link>
+            {/* <Link href='/landing' asChild> */}
+            {/*     <Pressable className='active:opacity-70 w-80' > */}
+            {/*         <LinearGradient */}
+            {/*             className="w-full border border-white rounded-full items-center py-2" */}
+            {/*             colors={['#8637CF', '#0F55A1']} */}
+            {/*             start={[0, 1]} */}
+            {/*             end={[1, 0]} */}
+            {/*         > */}
+            {/*             <Text className='text-2xl text-center font-semibold text-white leading-9'>Teleport to Landing</Text> */}
+            {/*         </LinearGradient> */}
+            {/*     </Pressable> */}
+            {/* </Link> */}
+            {/**/}
 
+            <Spacer height={48} />
+            <Spacer height={48} />
 
         </LinearGradient>
     )
