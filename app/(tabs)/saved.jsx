@@ -13,8 +13,8 @@ import { CommunityContext } from "@/context/communityContext";
 import ThemedPost from "@/components/themedComponents/themedPost";
 import { Star } from "lucide-react-native";
 
-//TODO: flatlist mapped as linked to backend data, currently hardcoded for UI purposes
-//TODO: link each card to the community page, and add a button to leave the community (or remove from saved)
+// 1.flatlist mapped as linked to backend data, currently hardcoded for UI purposes
+// 2.link each card to the community page, and add a button to leave the community (or remove from saved)
 
 export default function Saved() {
     const [communityQuery, setCommunityQuery] = useState("");
@@ -115,10 +115,16 @@ export default function Saved() {
                                                 <Text className="text-black/40 text-xl">Search all communities...</Text>
                                             </View>
                                         )}
-
                                         <ThemedInput
-                                            className="text-base text-black border border-black/10 rounded-3xl w-full h-12 px-4"
-                                            style={{ backgroundColor: "white" }}
+                                            className="text-black bg-white border border-black/10 rounded-3xl w-full px-4"
+                                            style={{
+                                                height: 42,
+                                                fontSize: 16,
+                                                lineHeight: 20,
+                                                textAlignVertical: 'center',
+                                                paddingTop: 0,
+                                                paddingBottom: 0,
+                                            }}
                                             value={communityQuery}
                                             onChangeText={setCommunityQuery}
                                             autoCapitalize="none"
@@ -148,8 +154,15 @@ export default function Saved() {
                                         )}
 
                                         <ThemedInput
-                                            className="text-base text-black border border-black/10 rounded-3xl w-full h-12 px-4"
-                                            style={{ backgroundColor: "white" }}
+                                            className="text-black bg-white border border-black/10 rounded-3xl w-full px-4"
+                                            style={{
+                                                height: 42,
+                                                fontSize: 16,
+                                                lineHeight: 20,
+                                                textAlignVertical: 'center',
+                                                paddingTop: 0,
+                                                paddingBottom: 0,
+                                            }}
                                             value={postQuery}
                                             onChangeText={setPostQuery}
                                             autoCapitalize="none"
