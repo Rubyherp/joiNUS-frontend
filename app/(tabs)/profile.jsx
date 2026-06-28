@@ -30,6 +30,18 @@ export default function Profile() {
 
     const { username, year, major, modules, contact, email, about, skills, experiences } = profile || {};
 
+    const displayUsername = username || 'Anonymous User';
+    const displayMajor = major || 'No major set';
+    const displayYear = year ? `Year ${year}` : 'Year not set';
+    const displayContact = contact || 'No contact added';
+    const displayEmail = email || 'No email added';
+    const displayAbout = about?.trim() ? about : 'No description yet — tell others about yourself!';
+    const displaySkills = skills?.trim() ? skills : 'No skills listed yet';
+    const displayExperiences = experiences?.trim() ? experiences : 'No experience listed yet';
+
+    // Modules needs special handling since you .split(' ') on it
+    const moduleList = modules?.trim() ? modules.split(' ').filter(Boolean) : [];
+
     const tabs = ['About', 'Skills & Exp', 'Posts'];
 
     const loadPosts = async (userId) => {
@@ -151,13 +163,13 @@ export default function Profile() {
                             className="text-xl font-bold"
                             style={{ color: Colors.light.title }}
                         >
-                            {username}
+                            {displayUsername}
                         </Text>
                         <Text
                             className="text-sm mt-0.5"
                             style={{ color: Colors.light.text }}
                         >
-                            {major}
+                            {displayMajor}
                         </Text>
 
                         {!!year && (
@@ -168,7 +180,7 @@ export default function Profile() {
                                 <Text
                                     className="text-xs font-semibold"
                                     style={{ color: Colors.primary }}
-                                >Year {year}</Text>
+                                >{displayYear}</Text>
                             </View>
                         )}
                     </View>
@@ -190,13 +202,17 @@ export default function Profile() {
                             <Text
                                 className="text-[10px] font-semibold uppercase tracking-widest"
                                 style={{ color: Colors.light.text }}
-                            >Contacts</Text>
+                            >
+                                Contacts
+                            </Text>
                             <Text
                                 className="text-xs font-semibold"
                                 numberOfLines={1}
                                 ellipsizeMode="tail"
                                 style={{ color: Colors.light.title }}
-                            >{contact}</Text>
+                            >
+                                {displayContact}
+                            </Text>
                         </View>
                     </View>
 
@@ -211,13 +227,17 @@ export default function Profile() {
                             <Text
                                 className="text-[10px] font-semibold uppercase tracking-widest"
                                 style={{ color: Colors.light.text }}
-                            >Email</Text>
+                            >
+                                Email
+                            </Text>
                             <Text
                                 className="text-xs font-semibold"
                                 numberOfLines={1}
                                 ellipsizeMode="tail"
                                 style={{ color: Colors.light.title }}
-                            >{email}</Text>
+                            >
+                                {displayEmail}
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -256,25 +276,33 @@ export default function Profile() {
                             className="p-4"
                         >
                             <ThemedProfileSection title="Major">
-                                {major}
+                                {displayMajor}
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Year of Study">
-                                {String(year)}
+                                {String(displayYear)}
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Modules">
                                 <View className="flex-row flex-wrap gap-1.5 mt-1">
-                                    {modules.split(' ').filter(Boolean).map((mod, i) => (
-                                        <View key={i} className="px-2.5 py-1 rounded-lg" style={{ backgroundColor: Colors.light.uiBackground }}>
-                                            <Text className="text-xs font-semibold" style={{ color: Colors.light.title }}>{mod}</Text>
+                                    {moduleList.length > 0 ? (
+                                        <View className="flex-row flex-wrap gap-1.5 mt-1">
+                                            {moduleList.map((mod, i) => (
+                                                <View key={i} className="px-2.5 py-1 rounded-lg" style={{ backgroundColor: Colors.light.uiBackground }}>
+                                                    <Text className="text-xs font-semibold" style={{ color: Colors.light.title }}>{mod}</Text>
+                                                </View>
+                                            ))}
                                         </View>
-                                    ))}
+                                    ) : (
+                                        <Text className="text-xs italic mt-1" style={{ color: Colors.light.text }}>
+                                            No modules added yet
+                                        </Text>
+                                    )}
                                 </View>
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Description">
-                                {about}
+                                {displayAbout}
                             </ThemedProfileSection>
 
                         </ScrollView>
@@ -286,11 +314,11 @@ export default function Profile() {
                             className="p-4"
                         >
                             <ThemedProfileSection title="Skills">
-                                {skills}
+                                {displaySkills}
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Experiences">
-                                {experiences}
+                                {displayExperiences}
                             </ThemedProfileSection>
                         </ScrollView>
                     )}
