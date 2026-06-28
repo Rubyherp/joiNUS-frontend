@@ -146,7 +146,15 @@ export default function DMChat() {
                 >
                     <View className="flex-row justify-center items-center px-4 py-3 bg-white border-t border-gray-200 gap-2">
                         <TextInput
-                            className="flex-1 bg-gray-400 rounded-full px-4 py-2 text-lg justify-center"
+                            className="flex-1 bg-gray-400 rounded-full px-4"
+                            style={{
+                                height: 42,
+                                fontSize: 16,
+                                lineHeight: 20,
+                                textAlignVertical: 'center',
+                                paddingTop: 0,
+                                paddingBottom: 0,
+                            }}
                             placeholder="Message..."
                             placeholderTextColor={'purple'}
                             value={input}
