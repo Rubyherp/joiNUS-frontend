@@ -7,6 +7,7 @@ This guide will get the joiNUS app running on your phone or simulator. The backe
 - [Node.js](https://nodejs.org) installed (any recent LTS version)
 - The **Expo Go** app on your phone ([iOS](https://apps.apple.com/app/expo-go/id982107779) / [Android](https://play.google.com/store/apps/details?id=host.exp.exponent)) — *or* Xcode/Android Studio if you'd rather use a simulator
 - The joiNUS frontend code (sent separately as a zip, or a GitHub link)
+- Note: THIS IS BUILT FOR IOS, AND NOT TESTED ON ANDROID DEVICES.
 
 ## Steps
 
