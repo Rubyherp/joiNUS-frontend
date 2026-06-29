@@ -25,6 +25,18 @@ export default function UserProfile() {
 
     const tabs = ['About', 'Skills & Exp', 'Posts'];
 
+    const displayUsername = username || 'Anonymous User';
+    const displayMajor = major || 'No major set';
+    const displayYear = year ? `Year ${year}` : 'Year not set';
+    const displayContact = contact || 'No contact added';
+    const displayEmail = email || 'No email added';
+    const displayAbout = about?.trim() ? about : 'No description yet — tell others about yourself!';
+    const displaySkills = skills?.trim() ? skills : 'No skills listed yet';
+    const displayExperiences = experiences?.trim() ? experiences : 'No experience listed yet';
+
+    // Modules needs special handling since you .split(' ') on it
+    const moduleList = modules?.trim() ? modules.split(' ').filter(Boolean) : [];
+
     const loadData = async (userId) => {
         try {
             const [postsData, userData] = await Promise.all([
@@ -120,13 +132,13 @@ export default function UserProfile() {
                             className="text-xl font-bold"
                             style={{ color: Colors.light.title }}
                         >
-                            {username}
+                            {displayUsername}
                         </Text>
                         <Text
                             className="text-sm mt-0.5"
                             style={{ color: Colors.light.text }}
                         >
-                            {major}
+                            {displayMajor}
                         </Text>
 
                         {!!year && (
@@ -137,7 +149,7 @@ export default function UserProfile() {
                                 <Text
                                     className="text-xs font-semibold"
                                     style={{ color: Colors.primary }}
-                                >Year {year}</Text>
+                                >{displayYear}</Text>
                             </View>
                         )}
                     </View>
@@ -164,7 +176,7 @@ export default function UserProfile() {
                                 numberOfLines={1}
                                 ellipsizeMode="tail"
                                 style={{ color: Colors.light.title }}
-                            >{contact}</Text>
+                            >{displayContact}</Text>
                         </View>
                     </View>
 
@@ -185,7 +197,7 @@ export default function UserProfile() {
                                 numberOfLines={1}
                                 ellipsizeMode="tail"
                                 style={{ color: Colors.light.title }}
-                            >{email}</Text>
+                            >{displayEmail}</Text>
                         </View>
                     </View>
                 </View>
@@ -221,11 +233,11 @@ export default function UserProfile() {
                             className="p-4"
                         >
                             <ThemedProfileSection title="Major">
-                                {major}
+                                {displayMajor}
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Year of Study">
-                                {year}
+                                {displayYear}
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Modules">
@@ -239,7 +251,7 @@ export default function UserProfile() {
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Description">
-                                {about}
+                                {displayAbout}
                             </ThemedProfileSection>
 
                         </ScrollView>
@@ -251,11 +263,11 @@ export default function UserProfile() {
                             className="p-4"
                         >
                             <ThemedProfileSection title="Skills">
-                                {skills}
+                                {displaySkills}
                             </ThemedProfileSection>
 
                             <ThemedProfileSection title="Experiences">
-                                {experiences}
+                                {displayExperiences}
                             </ThemedProfileSection>
                         </ScrollView>
                     )}
