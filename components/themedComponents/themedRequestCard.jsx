@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ActivityIndicator, Alert, Image } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert, Image, Pressable, ScrollView } from "react-native";
 import { useState, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { PostContext } from "@/context/postContext";
@@ -34,31 +34,37 @@ export default function ThemedRequestCard({ data, onUpdate }) {
 
                 <View className="flex-row flex-1 justify-between">
                     {/* avatar */}
-                    <View className="flex-row flex-1 gap-2 items-center">
-                        {avatar ? (
-                            <Image
-                                source={{ uri: avatar }}
-                                style={{
-                                    width: 40,
-                                    height: 40,
-                                    borderWidth: 1,
-                                    borderColor: 'pink',
-                                    borderRadius: 100,
-                                }}
-                                className="flex-shrink-0"
-                            />
-                        ) : (
-                            <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
-                        )}
 
-                        <Text className="text-base text-gray-800 font-medium flex-1"
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
-                            {username ?? "Unknown User"}
-                        </Text>
+                    <Pressable
+                        onPress={requesterId ? () => router.push(`userProfile/${requesterId}`) : () => { }}
+                        className="flex-row items-center gap-2 flex-1"
+                    >
+                        <View className="flex-row flex-1 gap-2 items-center">
+                            {avatar ? (
+                                <Image
+                                    source={{ uri: avatar }}
+                                    style={{
+                                        width: 40,
+                                        height: 40,
+                                        borderWidth: 1,
+                                        borderColor: 'pink',
+                                        borderRadius: 100,
+                                    }}
+                                    className="flex-shrink-0"
+                                />
+                            ) : (
+                                <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
+                            )}
 
-                    </View>
+                            <Text className="text-base text-gray-800 font-medium flex-1"
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                            >
+                                {username ?? "Unknown User"}
+                            </Text>
+
+                        </View>
+                    </Pressable>
 
                     {/* Status and timestamp */}
                     <Text className="text-base text-gray-600 pb-2">
@@ -67,11 +73,11 @@ export default function ThemedRequestCard({ data, onUpdate }) {
                 </View>
 
                 {/* info */}
-                <View className="flex-1">
-                    <Text className="text-base text-gray-700 py-1" numberOfLines={2}>
+                <ScrollView className="flex-1 max-h-[100px] border-l-2 rounded-xl border-purple-700 pl-1" nestedScrollEnabled={true}>
+                    <Text className="text-base text-gray-700 py-1" >
                         {message ?? 'No message provided'}
                     </Text>
-                </View>
+                </ScrollView>
 
                 {/* action */}
                 <View className="flex-1 flex-row justify-evenly items-center gap-2">
