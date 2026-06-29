@@ -27,7 +27,7 @@ export default function joinRequestModal({ visible, onClose, onSubmit }) {
                 className="items-center justify-center w-full"
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
             >
-                <ModalContent className="bg-black/50 border border-white">
+                <ModalContent className="bg-black/100 border border-white">
 
 
                     <ModalHeader>
@@ -38,7 +38,7 @@ export default function joinRequestModal({ visible, onClose, onSubmit }) {
                     <ModalBody>
                         <VStack space="sm">
                             <Text size="sm" className='text-gray-200'>
-                                Add a short message to the hose (optional)
+                                Add a short message to the host (optional)
                             </Text>
                             <Textarea size="md" className='border border-white'>
                                 <TextareaInput

@@ -8,6 +8,8 @@ import { UserContext } from "@/context/userContext";
 import { CommunityContext } from "@/context/communityContext";
 import { Ionicons } from '@expo/vector-icons';
 import { PenBoxIcon } from 'lucide-react-native'
+import JoinRequestModal from "@/components/helpers/joinRequestModal";
+
 
 //TODO: add edit button for author?
 //TODO: integrate messages with requests
@@ -23,6 +25,8 @@ export default function PostPage() {
     const [community, setCommunity] = useState(null);
     const [loading, setLoading] = useState(false);
     const [joinStatus, setJoinStatus] = useState(null);
+    const [showJoinModal, setShowJoinModal] = useState(false);
+
     const isAuthor = user?.id === post?.author_id;
     const saved = savedPostIds.has(postId);
 
@@ -57,16 +61,16 @@ export default function PostPage() {
         }
     }
 
-    const handleJoinRequest = async () => {
+    const handleJoinRequest = async (message) => {
         try {
-            await requestJoin(postId);
+            await requestJoin(postId, message);
             const status = await requestStatus(postId);
             const resolvedStatus = status?.status ?? null;
             console.log('joinStatus:', resolvedStatus);
             setJoinStatus(resolvedStatus);
         } catch (error) {
             console.log(error.message)
-            Alert.alert(('Error', 'Failed to send join request'));
+            Alert.alert('Error', 'Failed to send join request');
         }
     }
 
@@ -242,7 +246,7 @@ export default function PostPage() {
 
                         <TouchableOpacity
                             className="flex-1 bg-purple-600 rounded-full py-2 items-center"
-                            onPress={() => handleJoinRequest()}
+                            onPress={() => setShowJoinModal(true)}
                         >
                             <Text className="text-white font-bold text-base">Request to Join</Text>
                         </TouchableOpacity>
@@ -263,7 +267,7 @@ export default function PostPage() {
 
                         <TouchableOpacity
                             className="flex-1 bg-red-400 rounded-full py-2 items-center"
-                            onPress={() => handleJoinRequest()}
+                            onPress={() => setShowJoinModal(true)}
                         >
                             <Text className="text-white font-bold text-base">Request Again</Text>
                         </TouchableOpacity>
@@ -283,6 +287,13 @@ export default function PostPage() {
                 )}
 
             </View>
+
+            <JoinRequestModal
+                visible={showJoinModal}
+                onSubmit={handleJoinRequest}
+                onClose={() => setShowJoinModal(false)}
+            >
+            </JoinRequestModal>
         </SafeAreaView >
     );
 }
