@@ -76,7 +76,7 @@ export default function Requests() {
 
                 {/* accepted */}
                 <View>
-                    <View className="px-4 py-2 bg-gray-50 border-b border-gray-500">
+                    <View className="px-4 py-2 bg-gray-50 border-b border-t border-gray-300">
                         <Text className="text-sm font-semibold text-gray-500 uppercase tracking-wide text-center">Accepted</Text>
                     </View>
                     {acceptedRequests && acceptedRequests.length > 0 ? (acceptedRequests?.map(req =>
@@ -91,7 +91,7 @@ export default function Requests() {
 
                 {/* pending */}
                 <View>
-                    <View className="px-4 py-2 bg-gray-50 border-b border-gray-500">
+                    <View className="px-4 py-2 bg-gray-50 border-b border-t border-gray-300">
                         <Text className="text-sm font-semibold text-gray-500 uppercase tracking-wide text-center">Pending</Text>
                     </View>
                     {pendingRequests && pendingRequests.length > 0 ? (

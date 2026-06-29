@@ -88,11 +88,19 @@ export default function Login() {
 
                     <ThemedInput
                         className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
+                        style={{
+                            height: 42,
+                            fontSize: 16,
+                            lineHeight: 20,
+                            textAlignVertical: 'center',
+                            paddingTop: 0,
+                            paddingBottom: 0,
+                            ...(emailError ? { borderColor: 'red', borderWidth: 2 } : null)
+                        }}
                         testID="email-input"
-                        placeholder="e_______@u.nus.edu"
+                        placeholder="e_ _ _ _ _ _ _@u.nus.edu"
                         value={loginDetail.email}
                         onChangeText={(text) => setLoginDetail(prev => ({ ...prev, email: text }))}
-                        style={!emailError ? null : { borderColor: 'red', borderWidth: 2 }}
                         autoCapitalize="none"
                         KeyboardType="email-address"
                         autoCorrect={false}
@@ -101,12 +109,20 @@ export default function Login() {
 
                     <ThemedInput
                         className={`text-base text-${BWColor} ${inputBGColor} border-black/10 rounded-2xl w-[80%] h-14 px-4`}
+                        style={{
+                            height: 42,
+                            fontSize: 16,
+                            lineHeight: 20,
+                            textAlignVertical: 'center',
+                            paddingTop: 0,
+                            paddingBottom: 0,
+                            ...(emailError ? { borderColor: 'red', borderWidth: 2 } : null)
+                        }}
                         testID="password-input"
-                        placeholder="PASSWORD"
+                        placeholder="password"
                         secureTextEntry={true}
                         value={loginDetail.password}
                         onChangeText={(text) => setLoginDetail(prev => ({ ...prev, password: text }))}
-                        style={!passwordError ? null : { borderColor: 'red', borderWidth: 2 }}
                         autoCapitalize="none"
                     />
                     <Spacer height={20} />

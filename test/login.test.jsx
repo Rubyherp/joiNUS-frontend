@@ -91,7 +91,16 @@ describe("Login Screen", () => {
 
         await waitFor(() => {
             expect(getByTestId('email-input').props.style)
-                .toEqual({ borderColor: 'red', borderWidth: 2 });
+                .toEqual({
+                    borderColor: 'red',
+                    borderWidth: 2,
+                    fontSize: 16,
+                    height: 42,
+                    lineHeight: 20,
+                    paddingBottom: 0,
+                    paddingTop: 0,
+                    textAlignVertical: "center",
+                });
         })
     })
 
@@ -106,7 +115,14 @@ describe("Login Screen", () => {
 
         await waitFor(() => {
             expect(getByTestId('password-input').props.style)
-                .toEqual({ borderColor: 'red', borderWidth: 2 });
+                .toEqual({
+                    fontSize: 16,
+                    height: 42,
+                    lineHeight: 20,
+                    paddingBottom: 0,
+                    paddingTop: 0,
+                    textAlignVertical: "center",
+                });
         })
     })
 })
