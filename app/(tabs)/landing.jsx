@@ -42,6 +42,20 @@ export default function Landing() {
         )
     }
 
+    const filteredPosts = posts.filter(post => {
+        if (!query) {
+            console.log('Post:', post);
+            return true;
+        };
+
+        const q = query.toLowerCase();
+
+        return (
+            post.title?.toLowerCase().includes(q) ||
+            post.communities?.name?.toLowerCase().includes(q)
+        );
+    })
+
     //TODO: Fix placeholder not centering
     return (
         <SafeAreaView className="flex-1 px-4" edges={['top', 'left', 'right']}>
@@ -107,8 +121,8 @@ export default function Landing() {
                 className="flex-1 w-full"
                 keyboardShouldPersistTaps="handled"
             >
-                {posts.map(post => (
-                    <ThemedPost key={post.id} data={post} />
+                {filteredPosts.map(post => (
+                    < ThemedPost key={post.id} data={post} />
                 ))}
             </ScrollView>
         </SafeAreaView >
