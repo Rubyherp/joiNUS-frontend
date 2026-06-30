@@ -7,7 +7,9 @@ This guide will get the joiNUS app running on your phone or simulator. The backe
 - [Node.js](https://nodejs.org) installed (any recent LTS version)
 - The **Expo Go** app on your phone ([iOS](https://apps.apple.com/app/expo-go/id982107779) / [Android](https://play.google.com/store/apps/details?id=host.exp.exponent)) — *or* Xcode/Android Studio if you'd rather use a simulator
 - The joiNUS frontend code (sent separately as a zip, or a GitHub link)
-- Note: THIS IS BUILT FOR IOS, AND NOT TESTED ON ANDROID DEVICES.
+- **Connect your physical phone and laptop to the same Wifi**, unless using a simulator.
+
+Note: THIS IS BUILT FOR IOS, AND NOT TESTED ON ANDROID DEVICES.
 
 ## Steps
 
@@ -61,7 +63,7 @@ A QR code will appear in your terminal.
 Most likely culprits, in order of likelihood:
 1. `.env` file wasn't created, or has a typo in the URL
 2. Backend happened to be asleep — just wait ~40s and retry
-3. Phone and laptop issue — *this shouldn't apply here* since the backend is hosted online, not running locally
+3. The physical phone and laptop are not connected to the Wifi (Avoid using public Wifi)
 
 If you hit an error, a screenshot of the terminal output is the fastest way for me to debug it.
 Any questions, do feel free to reach out to me =)
