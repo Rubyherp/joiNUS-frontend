@@ -185,9 +185,11 @@ export default function Saved() {
                             </View>
                             {
                                 followedCommunities && followedCommunities.length > 0 ? (
-                                    followedCommunities.map(community => (
-                                        <ThemedCommunity key={community.id} data={community} isFollowed={true} onFollowChange={loadData} />
-                                    ))
+                                    followedCommunities
+                                        .filter(community => community.name.toLowerCase().includes(communityQuery.toLowerCase()))
+                                        .map(community => (
+                                            <ThemedCommunity key={community.id} data={community} isFollowed={true} onFollowChange={loadData} />
+                                        ))
                                 ) : (
                                     <View className="items-center justify-center pb-4 px-8">
                                         <Text className="text-gray-700 font-bold text-lg mt-4 text-center">No communities yet</Text>
@@ -202,6 +204,7 @@ export default function Saved() {
                             {
                                 (allCommunities ?? [])
                                     .filter(community => !followedCommunities?.some(f => f.id === community.id))
+                                    .filter(community => community.name.toLowerCase().includes(communityQuery.toLowerCase()))
                                     .map(community => (
                                         <ThemedCommunity key={community.id} data={community} isFollowed={followedCommunities?.some(followedCommunity => followedCommunity.id === community.id)} onFollowChange={loadData} />
                                     ))
@@ -212,9 +215,11 @@ export default function Saved() {
 
                         <View className="pt-4 px-4">
                             {savedPosts && savedPosts.length > 0 ? (
-                                savedPosts.map(post => (
-                                    <ThemedPost key={post.id} data={post} />
-                                ))
+                                savedPosts
+                                    .filter(post => post.title.toLowerCase().includes(postQuery.toLowerCase()))
+                                    .map(post => (
+                                        <ThemedPost key={post.id} data={post} />
+                                    ))
                             ) : (
                                 <View className="items-center justify-center py-8 px-8">
                                     <Text className="text-gray-700 font-bold text-lg mt-4 text-center">No saved posts yet</Text>
