@@ -193,6 +193,26 @@ export function UserProvider({ children }) {
         }
     }
 
+    async function fetchUserByUsername(username) {
+        try {
+            const response = await fetch(`${API_URL}/fetchUserByUsername/${username}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to fetch User by Username");
+            }
+
+            return data;
+
+        } catch (error) {
+            throw error;
+        }
+
+    }
+
     return (
         <UserContext.Provider
             value={{
@@ -207,6 +227,7 @@ export function UserProvider({ children }) {
                 profile,
                 changeAvatar,
                 fetchUserDetails,
+                fetchUserByUsername,
             }}>
             {children}
         </UserContext.Provider>

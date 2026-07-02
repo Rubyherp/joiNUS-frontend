@@ -123,7 +123,7 @@ export default function ProfileSetup() {
                                         <Spacer height={20} />
 
                                         {/* major */}
-                                        <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Major</Text>
+                                        <Text className="text-xs font-extrabold tracking-widest uppercase text-gray-700">Major/Position</Text>
                                         <Spacer height={8} />
 
                                         <ThemedInput

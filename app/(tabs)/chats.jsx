@@ -1,23 +1,41 @@
 import { View, Text, Image, FlatList, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useContext, useCallback } from "react";
-import { useFocusEffect, router } from "expo-router";
+import { useState, useContext, useCallback, useEffect } from "react";
+import { useFocusEffect } from "expo-router";
 import Logo from "../../assets/images/logo-white.png";
 
 import ThemedInput from "@/components/themedComponents/themedInput";
+import ThemedChatCard from "@/components/themedComponents/themedChatCard";
 import { LinearGradient } from "@/components/ui/linear-gradient";
 import { ChatContext } from "@/context/chatContext";
 import Spacer from "@/components/themedComponents/spacer";
 import { MessageCircleCheck } from "lucide-react-native";
+import { Colors } from "@/assets/colors/Colors";
+import { UserContext } from "@/context/userContext";
+import ThemedUserCard from "@/components/themedComponents/themedUserCard";
 
-//TODO: map each user as link to individual chat page, currently hardcoded for UI purposes
-//TODO: position absolute the search icon for user in the platform
+// 1, map each user as link to individual chat page, currently hardcoded for UI purposes
+// 2. position absolute the search icon for user in the platform
+
+//3. set recents as chatted users when userQuery is empty
+//4. themedUserCard component
+//5. fetchUserByUsername in userContext?
+//6. map all possible users to themedUserCard
+
+//TODO: inifinite scroll for users, and conversations, and search results
 
 export default function Chats() {
     const { loadConversations } = useContext(ChatContext);
+    const { fetchUserByUsername } = useContext(UserContext);
+
     const [query, setQuery] = useState("");
+    const [userQuery, setUserQuery] = useState("");
     const [conversations, setConversations] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [tab, setTab] = useState(0);
+    const [users, setUsers] = useState([]);
+
+    const tabs = ['Chats', 'People'];
 
     const loadConvo = async () => {
         try {
@@ -37,21 +55,30 @@ export default function Chats() {
         }, [loadConvo])
     );
 
+    useEffect(() => {
+        if (!userQuery.trim()) {
+            setUsers([]);
+            return;
+        }
+        const timeOut = setTimeout(async () => {
+            setLoading(true);
+            try {
+                const data = await fetchUserByUsername(userQuery);
+                console.log('Fetched Users: ', data);
+                setUsers(data);
+            } catch (error) {
+                console.error(err);
+                setUsers([]);
+            } finally {
+                setLoading(false);
+            }
+        }, 300)
+        return () => {
+            clearTimeout(timeOut)
+        };
+    }, [userQuery])
+
     const filtered = conversations.filter(c => c.profile?.username?.toLowerCase().includes(query.toLowerCase()));
-
-    const formatTime = iso => {
-        if (!iso) {
-            return '';
-        }
-
-        const date = new Date(iso);
-        const now = new Date();
-        const isToday = date.toDateString() === now.toDateString();
-        if (isToday) {
-            return date.toLocaleTimeString('en-SG', { hour: '2-digit', minute: '2-digit' });
-        }
-        return date.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' });
-    }
 
     return (
         <SafeAreaView className="flex-1 px-4">
@@ -73,49 +100,117 @@ export default function Chats() {
                         </View>
                     </View>
 
-                    {/* searchbar */}
-                    <View className="w-full h-14 justify-center">
-                        <LinearGradient
-                            className={`p-[2px] rounded-3xl`}
-                            colors={['#F97316', '#EC4899']}
-                            start={[0, 1]}
-                            end={[1, 0]}
-                        >
-                            <View className="bg-white rounded-3xl h-12 justify-center">
-                                {query === "" && (
-                                    <View className="absolute left-4 z-10 gap-8 flex-row items-center pointer-events-none">
-                                        <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
-                                        <Text className="text-black/40 text-xl">Search your Chats</Text>
-                                    </View>
-                                )}
-
-                                <ThemedInput
-                                    className="text-black bg-white border border-black/10 rounded-3xl w-full px-4"
-                                    style={{
-                                        height: 42,
-                                        fontSize: 16,
-                                        lineHeight: 20,
-                                        textAlignVertical: 'center',
-                                        paddingTop: 0,
-                                        paddingBottom: 0,
-                                    }}
-                                    value={query}
-                                    onChangeText={setQuery}
-                                    autoCapitalize="none"
-                                    autoCorrect={false}
-                                />
-                            </View>
-                        </LinearGradient>
+                    <View className="flex-row p-1 pb-4 rounded-xl" style={{ backgroundColor: Colors.light.uiBackground }}>
+                        {tabs.map((label, i) => (
+                            <TouchableOpacity
+                                key={i}
+                                onPress={() => setTab(i)}
+                                className="flex-1 items-center py-2 rounded-lg border-gray-400"
+                                style={tab === i
+                                    ? { backgroundColor: "#fff", shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 4, shadowOffset: { width: 0, height: 1 }, elevation: 2 }
+                                    : {}
+                                }
+                            >
+                                <Text
+                                    className="text-xs font-bold"
+                                    style={{ color: tab === i ? Colors.light.title : Colors.light.text }}
+                                >
+                                    {label}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
                     </View>
 
+                    {/* searchbar */}
+                    {tab === 0 ?
+
+                        (
+                            <View className="w-full h-14 justify-center">
+                                <LinearGradient
+                                    className={`p-[2px] rounded-3xl`}
+                                    colors={['#F97316', '#EC4899']}
+                                    start={[0, 1]}
+                                    end={[1, 0]}
+                                >
+                                    <View className="bg-white rounded-3xl h-12 justify-center">
+                                        {query === "" && (
+                                            <View className="absolute left-4 z-10 gap-8 flex-row items-center pointer-events-none">
+                                                <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
+                                                <Text className="text-black/40 text-xl">Search your Chats</Text>
+                                            </View>
+                                        )}
+
+                                        <ThemedInput
+                                            className="text-black bg-white border border-black/10 rounded-3xl w-full px-4"
+                                            style={{
+                                                height: 42,
+                                                fontSize: 16,
+                                                lineHeight: 20,
+                                                textAlignVertical: 'center',
+                                                paddingTop: 0,
+                                                paddingBottom: 0,
+                                            }}
+                                            value={query}
+                                            onChangeText={setQuery}
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                        />
+                                    </View>
+                                </LinearGradient>
+                            </View>
+                        ) : (
+                            <View className="w-full h-14 justify-center">
+                                <LinearGradient
+                                    className={`p-[2px] rounded-3xl`}
+                                    colors={['#F97316', '#EC4899']}
+                                    start={[0, 1]}
+                                    end={[1, 0]}
+                                >
+                                    <View className="bg-white rounded-3xl h-12 justify-center">
+                                        {userQuery === "" && (
+                                            <View className="absolute left-4 z-10 gap-8 flex-row items-center pointer-events-none">
+                                                <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
+                                                <Text className="text-black/40 text-xl">Search Users</Text>
+                                            </View>
+                                        )}
+
+                                        <ThemedInput
+                                            className="text-black bg-white border border-black/10 rounded-3xl w-full px-4"
+                                            style={{
+                                                height: 42,
+                                                fontSize: 16,
+                                                lineHeight: 20,
+                                                textAlignVertical: 'center',
+                                                paddingTop: 0,
+                                                paddingBottom: 0,
+                                            }}
+                                            value={userQuery}
+                                            onChangeText={setUserQuery}
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                        />
+                                    </View>
+                                </LinearGradient>
+                            </View>
+
+                        )}
+
                     <Spacer height={20} />
-                    <Text className="text-gray-700 text-xl font-bold">Chats</Text>
+                    {
+                        tab === 0 ? (
+                            <Text className="text-gray-700 text-xl font-bold">💬 Chats</Text>
+                        ) : !userQuery ? (
+                            <Text className="text-gray-700 text-xl font-bold">🔄 Recent Conversations</Text>
+                        ) : (
+                            <Text className="text-gray-700 text-xl font-bold">✨ New Conversations</Text>
+                        )
+                    }
 
                     {loading ? (
                         <View className="flex-1 items-center justify-center">
                             <ActivityIndicator />
                         </View>
-                    ) : (
+                    ) : tab === 0 ? (
 
                         <FlatList
                             data={filtered}
@@ -128,57 +223,41 @@ export default function Chats() {
                                 </View>
                             }
                             renderItem={({ item }) => (
-
-                                <TouchableOpacity
-                                    className="flex-row items-center py-3 gap-3 border-b border-gray-400"
-                                    onPress={() => router.push({
-                                        pathname: `/dm/${item.other_user_id}`,
-                                        params: { username: item.profile?.username }
-                                    })}
-                                    activeOpacity={0.7}
-                                >
-
-                                    {/* avatar */}
-                                    {item.profile?.avatar ? (
-                                        <Image
-                                            source={{ uri: item.profile.avatar }}
-                                            style={{
-                                                width: 40,
-                                                height: 40,
-                                                borderWidth: 1,
-                                                borderColor: 'pink',
-                                                borderRadius: 100,
-                                            }}
-                                            className="flex-shrink-0"
-                                        />
-                                    ) : (
-                                        <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
-                                    )}
-
-
-                                    {/* message preview */}
-                                    <View className="flex-1">
-                                        <View className="flex-row justify-between items-center">
-                                            <Text className="text-base font-semibold text-gray-800">
-                                                {item.profile?.username ?? 'Unknown'}
-                                            </Text>
-                                            <Text className="text-sm text-gray-400">
-                                                {formatTime(item.last_message_at)}
-                                            </Text>
-                                        </View>
-                                        <Text
-                                            className="text-sm text-gray-500 mt-0.5"
-                                            numberOfLines={1}
-                                            ellipsizeMode="tail"
-                                        >
-                                            {item.last_message}
-                                        </Text>
-                                    </View>
-
-                                </TouchableOpacity>
+                                <ThemedChatCard item={item} />
                             )}
                         />
 
+                    ) : (
+
+                        !userQuery ? (
+                            <FlatList
+                                data={filtered}
+                                keyExtractor={(item) => item.room_id}
+                                ListEmptyComponent={
+                                    <View className="items-center mt-20">
+                                        <Text className="text-3xl mb-2">💬</Text>
+                                        <Text className="font-semibold text-sm text-gray-600">No Recent Conversations</Text>
+                                        <Text className="text-xs mt-1 text-gray-400">Connect and chat with new Users!</Text>
+                                    </View>
+                                }
+                                renderItem={({ item }) => (
+                                    <ThemedChatCard item={item} />
+                                )}
+                            />
+                        ) : (
+
+                            loading ? (
+                                <ActivityIndicator color={"black"} />
+                            ) : (
+                                <FlatList
+                                    data={users}
+                                    keyExtractor={(item) => item.id}
+                                    renderItem={({ item }) => (
+                                        <ThemedUserCard item={item} />
+                                    )}
+                                />
+                            )
+                        )
                     )}
 
                 </View>

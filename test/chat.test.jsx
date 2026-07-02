@@ -2,6 +2,7 @@ import Chats from "@/app/(tabs)/chats";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { ChatContext } from "@/context/chatContext";
 import { Alert } from "react-native";
+import { UserContext } from "@/context/userContext";
 
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
@@ -31,15 +32,24 @@ const mockConversations = [
     },
 ];
 
-const renderChats = (contextOverrides = {}) => {
-    const defaultContext = {
+const renderChats = (chatContextOverride = {}, userContextOverride = {}) => {
+
+    const defaultChatContext = {
         loadConversations: jest.fn().mockResolvedValue(mockConversations),
-        ...contextOverrides,
+        ...chatContextOverride,
     };
+
+    const defaultUserContext = {
+        fetchUserByUsername: jest.fn(),
+        ...userContextOverride,
+    }
+
     return render(
-        <ChatContext.Provider value={defaultContext}>
-            <Chats />
-        </ChatContext.Provider>
+        <UserContext.Provider value={defaultUserContext}>
+            <ChatContext.Provider value={defaultChatContext}>
+                <Chats />
+            </ChatContext.Provider>
+        </UserContext.Provider>
     );
 };
 
