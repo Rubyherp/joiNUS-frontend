@@ -2,7 +2,6 @@ import { createContext, useState } from "react";
 import EmptyPasswordError from "@/customError/emptyPasswordError";
 import EmailError from "@/customError/emailError";
 import * as ImagePicker from "expo-image-picker";
-import { P } from "@expo/html-elements";
 
 export const UserContext = createContext();
 
