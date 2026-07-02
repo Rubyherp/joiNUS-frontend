@@ -40,9 +40,9 @@ Save the file. This tells the app where to find the backend — without it, the 
 ```bash
 npx expo start
 ```
-Press "s" key to switch to "Expo Go", rather than Development Build.
-Using arrow keys, choose "Proceed Anonymously" in your terminal.
-A QR code will appear in your terminal.
+- Press "s" key to switch to "Expo Go", rather than Development Build.
+- Using arrow keys, choose "Proceed Anonymously" in your terminal.
+- A QR code will appear in your terminal.
 
 ### 5. Open it on your phone
 
