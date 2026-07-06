@@ -13,7 +13,7 @@ import { useFocusEffect } from "expo-router";
 
 //1. filter logic for search query
 //2. limit number of posts loaded on landing page, add pagination or infinite scroll (prob infinite)
-//TODO: fix searchbar typing
+//3. fix searchbar typing
 
 const POST_LIMIT = 8;
 
