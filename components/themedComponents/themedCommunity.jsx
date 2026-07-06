@@ -54,7 +54,7 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
     //TODO: add onPress to link to actual community Page
     //TODO: maybe follow button as children? so i can reuse this component
 
-    console.log(data);
+    // console.log(data);
 
     return (
         <Pressable onPress={() => router.push(`/community/${communityId}`)}>

@@ -1,6 +1,8 @@
 import { createContext, useContext, useCallback, useState, useEffect } from 'react';
 import { UserContext } from './userContext';
 
+//TODO: edit fetchPost Params
+
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 export const PostContext = createContext();
 
@@ -8,9 +10,15 @@ export function PostProvider({ children }) {
     const { token } = useContext(UserContext);
     const [savedPostIds, setSavedPostIds] = useState(new Set());
 
-    const fetchPosts = useCallback(async function () {
+    const fetchPosts = useCallback(async function (postNum = 0, limit = 10, query = "") {
         try {
-            const response = await fetch(`${API_URL}/posts`, {
+            const params = new URLSearchParams({
+                postNum,
+                limit,
+                ...(query ? { query } : {}),
+            })
+
+            const response = await fetch(`${API_URL}/posts?${params}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();

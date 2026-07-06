@@ -27,7 +27,7 @@ export default function ThemedRequestCard({ data, onUpdate }) {
         }
     }
 
-    console.log('data', data);
+    // console.log('data', data);
     return (
         <View className="w-full border-b-2 border-gray-300 overflow-hidden shadow-base">
             <View className="flex w-full gap-2 px-4 pt-4 pb-2">

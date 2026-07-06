@@ -37,7 +37,7 @@ export default function CommunityPicker({ onSelect }) {
         setSelected(community);
         onSelect(community);
         handleClose();
-        console.log(community)
+        // console.log(community)
     }
 
     const Item = useCallback(({ item }) => (
