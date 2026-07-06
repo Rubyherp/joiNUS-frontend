@@ -99,8 +99,35 @@ export function CommunityProvider({ children }) {
         return data;
     }
 
+    async function requestNewCommunity({ name, description, category }) {
+        const payload = {
+            name,
+            description,
+            category,
+        }
+
+        console.log('Requesting new community with payload:', payload);
+
+        const response = await fetch(`${API_URL}/communities/requestNewCommunity`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to send request for a new community');
+        }
+
+        return data;
+    }
+
     return (
-        <CommunityContext.Provider value={{ fetchCommunities, fetchCommunityById, communities, loading, error, fetchFollowedCommunities, followCommunity, unfollowCommunity }}>
+        <CommunityContext.Provider value={{ fetchCommunities, fetchCommunityById, communities, loading, error, fetchFollowedCommunities, followCommunity, unfollowCommunity, requestNewCommunity }}>
             {children}
         </CommunityContext.Provider>
     )
