@@ -48,17 +48,25 @@ export function CommunityProvider({ children }) {
     }
 
     async function fetchFollowedCommunities() {
-        const response = await fetch(`${API_URL}/communities/following`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        })
+        setLoading(true);
+        try {
+            const response = await fetch(`${API_URL}/communities/following`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
 
-        const data = await response.json();
+            const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.error || 'Failed to fetch following Communities');
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to fetch following Communities');
+            }
+
+            setCommunities(data);
+            return data;
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
         }
-
-        return data;
     }
 
     async function followCommunity(communityId) {

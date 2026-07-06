@@ -13,10 +13,19 @@ import {
 import { useContext } from "react";
 import { CommunityContext } from "@/context/communityContext";
 import { Ionicons } from "@expo/vector-icons";
+import { Users } from "lucide-react-native";
 
-const getInitials = (name) => name.slice(0, 2).toUpperCase();
+const getInitials = (name) => {
+    if (!name) {
+        return '?';
+    }
+    return name.slice(0, 2).toUpperCase();
+}
 
 const getColor = (name) => {
+    if (!name) {
+        return '#6B7280';
+    }
     const colors = ['#8637CF', '#F97316', '#EC4899', '#06B6D4', '#10B981'];
     return colors[name.charCodeAt(0) % colors.length];
 }
@@ -25,11 +34,19 @@ export default function CommunityPicker({ onSelect }) {
     const [showActionsheet, setShowActionsheet] = useState(false);
     const [selected, setSelected] = useState(null);
 
-    const { fetchCommunities, communities, loading } = useContext(CommunityContext);
+    const { fetchFollowedCommunities, communities } = useContext(CommunityContext);
 
     useEffect(() => {
-        fetchCommunities();
-    }, [])
+        fetchFollowedCommunities();
+    }, [communities]);
+
+    // useEffect(() => {
+    //     if (communities.length > 0) {
+    //         console.log('Communities fetched:', communities);
+    //     }
+    // }, [communities]);
+
+    const flattenCommunities = communities.map(item => item.communities ? item.communities : item);
 
     const handleClose = () => setShowActionsheet(false);
 
@@ -95,11 +112,23 @@ export default function CommunityPicker({ onSelect }) {
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
-                    <ActionsheetFlatList
-                        data={communities}
-                        renderItem={({ item }) => <Item item={item} />}
-                        keyExtractor={(item) => item.id}
-                    />
+                    {communities.length === 0 ? (
+                        <View className="items-center justify-center py-10 px-6">
+                            <Users size={48} color="#6b7280" />
+                            <Text className="text-gray-400 text-lg font-semibold mt-4 text-center">
+                                No communities followed yet
+                            </Text>
+                            <Text className="text-gray-500 text-sm mt-2 text-center">
+                                Follow communities to start posting in them
+                            </Text>
+                        </View>
+                    ) : (
+                        <ActionsheetFlatList
+                            data={flattenCommunities}
+                            renderItem={({ item }) => <Item item={item} />}
+                            keyExtractor={(item) => String(item.id)}
+                        />
+                    )}
                 </ActionsheetContent>
             </Actionsheet>
 
