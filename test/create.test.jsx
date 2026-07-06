@@ -1,6 +1,7 @@
 import Create from "@/app/(tabs)/create";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
-import { PostContext, postContext } from "@/context/postContext";
+import { PostContext } from "@/context/postContext";
+import { CommunityContext } from "@/context/communityContext";
 import { Alert } from "react-native"
 
 //Mocks
@@ -53,16 +54,22 @@ jest.mock('@/components/helpers/deadlinePicker', () => {
 jest.spyOn(Alert, 'alert').mockImplementation(() => { });
 
 const renderCreate = (contextOverride = {}) => {
-    const defaultContext = {
+    const defaultPostContext = {
         uploadPostImage: jest.fn(),
         createPost: jest.fn().mockResolvedValue({ id: 'post-1' }),
         ...contextOverride
     };
 
+    const defaultCommunityContext = {
+        requestNewCommunity: jest.fn(),
+    };
+
     return render(
-        <PostContext.Provider value={defaultContext}>
-            <Create />
-        </PostContext.Provider>
+        <CommunityContext.Provider value={defaultCommunityContext}>
+            <PostContext.Provider value={defaultPostContext}>
+                <Create />
+            </PostContext.Provider>
+        </CommunityContext.Provider>
     )
 }
 
