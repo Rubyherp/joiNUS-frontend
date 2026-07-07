@@ -16,6 +16,7 @@ import { useContext } from "react";
 import { PostContext } from "@/context/postContext";
 import ThemedLabel from "@/components/themedComponents/themedLabel";
 import ThemedSectionCard from "@/components/themedComponents/themedSectionCard";
+import { Switch } from "@/components/ui/switch";
 
 // 1. retrieve existing post data using postId from route params
 // 2. populate the form fields with the existing post data
@@ -35,6 +36,7 @@ export default function Create() {
     const [deadline, setDeadline] = useState(null);
     const [showImageUpload, setShowImageUpload] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [isAnonymous, setIsAnonymous] = useState(false);
 
     const { uploadPostImage, createPost, fetchPostById, deletePostById } = useContext(PostContext);
 
@@ -54,6 +56,7 @@ export default function Create() {
                 deadline,
                 created_at,
                 community_id,
+                is_anonymous,
             } = postData || {};
 
             setTitle(title)
@@ -64,6 +67,7 @@ export default function Create() {
             setDeadline(deadline)
             setSelectedImage(image_url)
             setSelectedCommunityId(community_id)
+            setIsAnonymous(is_anonymous)
 
             console.log('Post Set')
             setLoading(false);
@@ -82,7 +86,8 @@ export default function Create() {
         setMemberLimit(""),
         setDeadline(null),
         setShowImageUpload(false),
-        setSelectedImage(null)
+        setSelectedImage(null),
+        setIsAnonymous(false)
     )
 
     const handleCloseImageUpload = () => {
@@ -157,7 +162,8 @@ export default function Create() {
                 memberLimit: memberLimit ? parseInt(memberLimit) : null,
                 requirements,
                 deadline: deadline ? deadline : null,
-                imageUrl
+                imageUrl,
+                isAnonymous
             });
             router.replace('/landing');
         } catch (error) {
@@ -418,6 +424,19 @@ export default function Create() {
                                 </View>
                             </View>
 
+                            <View className="flex-row items-center gap-3 mb-5">
+                                <Text className="text-lg font-semibold text-gray-800">Post Anonymously</Text>
+                                <Switch
+                                    size="md"
+                                    value={isAnonymous}
+                                    onValueChange={setIsAnonymous}
+                                    isDisabled={false}
+                                    trackColor={{ false: '#d4d4d4', true: '#c4b5fd' }}
+                                    thumbColor="#fafafa"
+                                    activeThumbColor="#fafafa"
+                                    ios_backgroundColor="#d4d4d4"
+                                />
+                            </View>
                         </ScrollView>
                     </KeyboardAvoidingView>
 
