@@ -9,14 +9,15 @@ import { CommunityContext } from "@/context/communityContext";
 import { Ionicons } from '@expo/vector-icons';
 import { PenBoxIcon } from 'lucide-react-native'
 import JoinRequestModal from "@/components/helpers/joinRequestModal";
+import { EyeOff } from "lucide-react-native";
 
 
-//TODO: add edit button for author?
-//TODO: integrate messages with requests
+//1. add edit button for author?
+//2. integrate messages with requests
 
 export default function PostPage() {
     const { postId } = useLocalSearchParams();
-    const { savedPostIds, fetchPostById, savePost, unsavePost, requestJoin, requestStatus, handlePendingRequest } = useContext(PostContext);
+    const { savedPostIds, fetchPostById, savePost, unsavePost, requestJoin, requestStatus } = useContext(PostContext);
     const { user, fetchUserDetails } = useContext(UserContext);
     const { fetchCommunityById } = useContext(CommunityContext);
 
@@ -44,7 +45,7 @@ export default function PostPage() {
             setCommunity(communityData);
             setAuthor(authorData);
             setJoinStatus(statusData?.status ?? null);
-            console.log(communityData.id)
+            // console.log(communityData.id)
         }
         getData();
     }, [])
@@ -66,10 +67,10 @@ export default function PostPage() {
             await requestJoin(postId, message);
             const status = await requestStatus(postId);
             const resolvedStatus = status?.status ?? null;
-            console.log('joinStatus:', resolvedStatus);
+            // console.log('joinStatus:', resolvedStatus);
             setJoinStatus(resolvedStatus);
         } catch (error) {
-            console.log(error.message)
+            // console.log(error.message)
             Alert.alert('Error', 'Failed to send join request');
         }
     }
@@ -93,9 +94,11 @@ export default function PostPage() {
         member_limit,
         deadline,
         created_at,
+        is_anonymous,
     } = post || {};
     const { username: authorName, avatar } = author || {};
     const { name: communityName, category, tags } = community || {};
+    const isAnonymous = is_anonymous;
 
     return (
         <SafeAreaView className="flex-1 bg-gray-100">
@@ -149,18 +152,25 @@ export default function PostPage() {
                                 <Text className="text-white text-xs font-bold">{getInitials(communityName)}</Text>
                             </View>
                             <Text className="text-sm font-bold text-purple-600 flex-shrink-0">{communityName}</Text>
-
-                            <Text className="text-sm text-gray-400 flex-shrink-0">•</Text>
                         </Pressable>
+
+                        <Text className="text-base text-gray-500 flex-shrink-0">• posted by</Text>
 
                         <Pressable
                             className="flex-row justify-center items-center gap-2"
-                            onPress={() => router.push(`/userProfile/${author.id}`)}
+                            onPress={() => !isAnonymous && router.push(`userProfile/${author.id}`)}
                         >
-                            {avatar ? (
+                            {!isAnonymous && avatar ? (
                                 <Image source={{ uri: avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} className="flex-shrink-0" />
-                            ) : null}
-                            <Text className="text-sm text-gray-500 flex-1" numberOfLines={1}>{authorName}</Text>
+                            ) : (
+                                <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#d1d5db', justifyContent: 'center', alignItems: 'center' }}>
+                                    <EyeOff size={16} color="#6b7280" />
+                                </View>
+                            )}
+
+                            <Text className="text-sm text-gray-500 flex-1" numberOfLines={1}>
+                                {isAnonymous ? 'Hidden' : authorName}
+                            </Text>
                         </Pressable>
 
                         <Text className="text-xs text-gray-400">{formatDate(created_at)}</Text>

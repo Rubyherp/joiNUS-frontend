@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ActivityIndicator, Alert, Platform, Image, Keyboard, Pressable, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View, KeyboardAvoidingView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -21,10 +21,10 @@ import { AlignLeft, Clock, FileText, ImageIcon, PenBoxIcon, Sparkles, UploadClou
 import { useContext } from "react";
 import Logo from "../../assets/images/logo-white.png";
 import { Colors } from "@/assets/colors/Colors";
+import { Switch } from "@/components/ui/switch";
 
 
 //TODO: refactor to useReducer to manage form state or single object state for form data
-//TODO: add able to create community
 
 export default function Create() {
     const { uploadPostImage, createPost } = useContext(PostContext);
@@ -41,6 +41,7 @@ export default function Create() {
     const [showImageUpload, setShowImageUpload] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [tab, setTab] = useState(0);
+    const [isAnonymous, setIsAnonymous] = useState(false);
 
     const [communityName, setCommunityName] = useState("");
     const [communityDescription, setCommunityDescription] = useState("");
@@ -59,6 +60,7 @@ export default function Create() {
         setDeadline(null),
         setShowImageUpload(false),
         setSelectedImage(null),
+        setIsAnonymous(false),
         setCommunityName(""),
         setCommunityDescription(""),
         setCommunityCategory("")
@@ -138,7 +140,8 @@ export default function Create() {
                 memberLimit: memberLimit ? parseInt(memberLimit) : null,
                 requirements,
                 deadline: deadline ? deadline.toISOString() : null,
-                imageUrl
+                imageUrl,
+                isAnonymous
             });
             router.replace('/landing');
         } catch (error) {
@@ -176,6 +179,10 @@ export default function Create() {
             resetState();
         }
     }
+
+    useEffect(() => {
+        console.log('Anonymous mode:', isAnonymous);
+    }, [isAnonymous])
 
     return (
         <SafeAreaView className="flex-1" edges={['top']}>
@@ -447,7 +454,22 @@ export default function Create() {
                                                 </View>
                                             </View>
                                         </View>
+
+                                        <View className="flex-row items-center gap-3 mb-5">
+                                            <Text className="text-lg font-semibold text-gray-800">Post Anonymously</Text>
+                                            <Switch
+                                                size="md"
+                                                value={isAnonymous}
+                                                onValueChange={setIsAnonymous}
+                                                isDisabled={false}
+                                                trackColor={{ false: '#d4d4d4', true: '#c4b5fd' }}
+                                                thumbColor="#fafafa"
+                                                activeThumbColor="#fafafa"
+                                                ios_backgroundColor="#d4d4d4"
+                                            />
+                                        </View>
                                     </View>
+
                                 ) : (
                                     <View>
                                         <ThemedSectionCard>
@@ -513,8 +535,6 @@ export default function Create() {
 
                                     </View>
                                 )}
-
-
 
                         </ScrollView>
 

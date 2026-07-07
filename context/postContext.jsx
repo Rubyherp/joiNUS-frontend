@@ -22,6 +22,7 @@ export function PostProvider({ children }) {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
+            console.log('Fetched posts:', data);
 
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to fetch posts');
