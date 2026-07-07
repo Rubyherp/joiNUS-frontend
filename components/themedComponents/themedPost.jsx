@@ -4,6 +4,7 @@ import { router } from "expo-router";
 
 import { CommunityContext } from "@/context/communityContext";
 import { UserContext } from "@/context/userContext";
+import { EyeOff } from "lucide-react-native";
 
 //TODO: Link to actual post
 //TODO: add custom Error for fetchUserDetails and fetchCommunityById
@@ -38,6 +39,7 @@ export default function ThemedPost({ data }) {
     }
     const { username, avatar } = author || {};
     const { name: communityName, } = community || {};
+    const isAnonymous = data.is_anonymous;
 
     // console.log("Post data:", data);
 
@@ -61,10 +63,10 @@ export default function ThemedPost({ data }) {
                     <Text className="text-base text-gray-500 flex-shrink-0">• posted by</Text>
 
                     <Pressable
-                        onPress={() => router.push(`userProfile/${author_id}`)}
+                        onPress={() => !isAnonymous && router.push(`userProfile/${author_id}`)}
                         className="flex-row items-center gap-2 flex-1"
                     >
-                        {avatar ? (
+                        {!isAnonymous && avatar ? (
                             <Image
                                 source={{ uri: avatar }}
                                 style={{
@@ -77,13 +79,15 @@ export default function ThemedPost({ data }) {
                                 className="flex-shrink-0"
                             />
                         ) : (
-                            <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
+                            <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#d1d5db', justifyContent: 'center', alignItems: 'center' }}>
+                                <EyeOff size={16} color="#6b7280" />
+                            </View>
                         )}
                         <Text className="text-base text-gray-800 font-medium flex-1"
                             numberOfLines={1}
                             ellipsizeMode="tail"
                         >
-                            {username}
+                            {!isAnonymous ? username : 'Hidden'}
                         </Text>
                     </Pressable>
 
@@ -104,6 +108,6 @@ export default function ThemedPost({ data }) {
                 ) : null}
 
             </View>
-        </Pressable>
+        </Pressable >
     )
 }
