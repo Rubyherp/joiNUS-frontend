@@ -162,7 +162,7 @@ describe("Create Post Screen", () => {
             expect(mockUploadPostImage).toHaveBeenCalled();
             expect(mockCreatePost).toHaveBeenCalledWith({
                 "communityId": "community-1", "deadline": null, "description": "A description", "imageUrl": "https://cdn.test/image.jpg", "memberLimit": null,
-                "moreDetails": "", "requirements": "", "title": "A title"
+                "moreDetails": "", "requirements": "", "title": "A title", "isAnonymous": false
             });
         });
     });
