@@ -1,3 +1,10 @@
+jest.mock('react-native-gesture-handler', () => ({
+    Gesture: { Pan: () => ({}) },
+    GestureDetector: ({ children }) => children,
+    GestureHandlerRootView: ({ children }) => children,
+    State: {},
+}));
+
 import DMChat from "@/app/dm/[userId]";
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import { UserContext } from "@/context/userContext";
@@ -88,7 +95,7 @@ describe('DMChat', () => {
         fireEvent.changeText(input, 'Hello xn');
         fireEvent.press(getByText('↑'));
 
-        expect(socketContext.sendDM).toHaveBeenCalledWith('u-1', 'Hello xn');
+        expect(socketContext.sendDM).toHaveBeenCalledWith('u-1', 'Hello xn', null);
         expect(input.props.value).toBe('');
     });
 
