@@ -5,7 +5,7 @@ const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 export const ChatContext = createContext();
 
 export function ChatProvider({ children }) {
-    const { token } = useContext(UserContext);
+    const { user, token } = useContext(UserContext);
 
     async function fetchChatHistory(otherUserId) {
         const response = await fetch(`${API_URL}/chats/dm/${otherUserId}/messages`, {
@@ -40,8 +40,31 @@ export function ChatProvider({ children }) {
 
     }, [token])
 
+    const uploadAttachment = useCallback(async (attachment, otherUserId) => {
+        const formData = new FormData();
+        formData.append('file', {
+            uri: attachment.uri,
+            name: attachment.name || 'attachment',
+            type: attachment.mimeType || attachment.type,
+        })
+
+        const response = await fetch(`${API_URL}/chats/upload/${otherUserId}`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: formData,
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to upload attachment');
+        }
+
+        return data;
+    }, [token])
+
     return (
-        <ChatContext.Provider value={{ fetchChatHistory, loadConversations }}>
+        <ChatContext.Provider value={{ fetchChatHistory, loadConversations, uploadAttachment }}>
             {children}
         </ChatContext.Provider>
     )

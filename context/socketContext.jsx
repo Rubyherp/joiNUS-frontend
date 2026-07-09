@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { UserContext } from './userContext';
+import { ChatContext } from './chatContext';
 
 export const SocketContext = createContext();
 
@@ -8,6 +9,7 @@ const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export function SocketProvider({ children }) {
     const { token } = useContext(UserContext);
+    const { uploadAttachment } = useContext(ChatContext);
     // useRef to hold the socket instance across renders without causing re-renders
     const socketRef = useRef(null);
     const [connected, setConnected] = useState(false);
@@ -57,8 +59,15 @@ export function SocketProvider({ children }) {
         socketRef.current?.emit('leave_dm', otherUserId);
     }
 
-    function sendDM(otherUserId, content) {
-        socketRef.current?.emit('send_dm', { otherUserId, content });
+    async function sendDM(otherUserId, content, attachment) {
+        let attachments = [];
+
+        if (attachment) {
+            const result = await uploadAttachment(attachment, otherUserId);
+            attachments = [result];
+        }
+
+        socketRef.current?.emit('send_dm', { otherUserId, content, attachments });
     }
 
     function onDM(callback) {
