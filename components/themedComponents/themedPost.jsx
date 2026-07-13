@@ -10,9 +10,31 @@ export default function ThemedPost({ data }) {
 
     const [author, setAuthor] = useState(null);
     const [community, setCommunity] = useState(null);
+    const [imageDimensions, setImageDimensions] = useState(null);
+    const [imgContainerWidth, setImgContainerWidth] = useState(0);
     const { author_id, title, description, image_url, community_id } = data || {};
     const { fetchUserDetails } = useContext(UserContext);
     const { fetchCommunityById } = useContext(CommunityContext);
+
+    useEffect(() => {
+        if (!image_url) return;
+        let cancelled = false;
+        Image.getSize(image_url, (w, h) => {
+            if (!cancelled) {
+                setImageDimensions({ w, h });
+            }
+        }, () => {
+            if (!cancelled) {
+                setImageDimensions(null);
+            }
+        });
+        return () => { cancelled = true; };
+    }, [image_url]);
+
+    const MAX_IMAGE_HEIGHT = 450;
+    const displayHeight = imageDimensions && imgContainerWidth > 0
+        ? Math.min(imgContainerWidth * imageDimensions.h / imageDimensions.w, MAX_IMAGE_HEIGHT)
+        : null;
 
     useEffect(() => {
         const loadData = async () => {
@@ -97,11 +119,20 @@ export default function ThemedPost({ data }) {
                 ) : null}
 
                 {image_url ? (
-                    < Image
-                        source={{ uri: image_url }}
-                        className="w-full h-48"
-                        resizeMode="cover"
-                    />
+
+                    <View
+                        onLayout={(e) => setImgContainerWidth(e.nativeEvent.layout.width)}
+                    >
+                        <Image
+                            source={{ uri: image_url }}
+                            style={{
+                                width: '100%',
+                                height: displayHeight ?? undefined,
+                                aspectRatio: displayHeight ? undefined : 16 / 9,
+                            }}
+                            resizeMode="cover"
+                        />
+                    </View>
                 ) : null}
 
             </View>

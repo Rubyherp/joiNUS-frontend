@@ -29,6 +29,9 @@ export default function PostPage() {
     const [joinStatus, setJoinStatus] = useState(null);
     const [showJoinModal, setShowJoinModal] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
+    const [imageDimensions, setImageDimensions] = useState(null);
+    const [imgContainerWidth, setImgContainerWidth] = useState(0);
+    const image_url = post?.image_url;
 
     const isAuthor = user?.id === post?.author_id;
     const saved = savedPostIds.has(postId);
@@ -56,6 +59,22 @@ export default function PostPage() {
         }
         getData();
     }, [])
+
+    useEffect(() => {
+        if (!image_url) return;
+        let cancelled = false;
+        Image.getSize(image_url, (w, h) => {
+            if (!cancelled) setImageDimensions({ w, h });
+        }, () => {
+            if (!cancelled) setImageDimensions(null);
+        });
+        return () => { cancelled = true; };
+    }, [image_url]);
+
+    const MAX_IMAGE_HEIGHT = 500;
+    const displayHeight = imageDimensions && imgContainerWidth > 0
+        ? Math.min(imgContainerWidth * imageDimensions.h / imageDimensions.w, MAX_IMAGE_HEIGHT)
+        : null;
 
     //TODO: fetch save post status and update
     const handleSavePost = async () => {
@@ -93,7 +112,6 @@ export default function PostPage() {
     const {
         title,
         description,
-        image_url,
         more_details,
         requirements,
         member_limit,
@@ -213,7 +231,15 @@ export default function PostPage() {
 
                     {/* Image */}
                     {image_url ? (
-                        <Image source={{ uri: image_url }} className="w-full" style={{ height: 240 }} resizeMode="cover" />
+                        <View
+                            onLayout={(e) => setImgContainerWidth(e.nativeEvent.layout.width)}
+                        >
+                            <Image source={{ uri: image_url }} style={{
+                                width: '100%',
+                                height: displayHeight ?? undefined,
+                                aspectRatio: displayHeight ? undefined : 16 / 9,
+                            }} resizeMode="cover" />
+                        </View>
                     ) : null}
                 </View>
 
@@ -323,4 +349,3 @@ export default function PostPage() {
         </SafeAreaView >
     );
 }
-
