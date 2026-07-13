@@ -51,11 +51,11 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
 
     return (
         <Pressable onPress={() => router.push(`/community/${communityId}`)}>
-            <View className="w-full border-b-2 border-gray-300 overflow-hidden shadow-sm">
+            <View className="w-full border-b border-gray-100 overflow-hidden shadow-sm">
                 <View className="flex-row items-center w-full gap-4 px-4 pt-4 pb-2">
 
                     <View
-                        className="rounded-full w-16 h-16 items-center justify-center border-2 border-gray-300"
+                        className="rounded-full w-16 h-16 items-center justify-center border-2 border-pink-700"
                         style={{ backgroundColor: getColor(communityName) }}
                     >
                         <Text className="text-white text-l font-semibold"
