@@ -12,6 +12,8 @@ import { PostContext } from "@/context/postContext";
 import { CommunityContext } from "@/context/communityContext";
 import ThemedPost from "@/components/themedComponents/themedPost";
 import { Star } from "lucide-react-native";
+import LoadingState from "@/components/helpers/loadingState";
+import EmptyState from "@/components/helpers/emptyState";
 
 // 1.flatlist mapped as linked to backend data, currently hardcoded for UI purposes
 // 2.link each card to the community page, and add a button to leave the community (or remove from saved)
@@ -22,10 +24,10 @@ export default function Saved() {
     const [savedPosts, setSavedPosts] = useState([]);
     const [followedCommunities, setFollowedCommunities] = useState([]);
     const [allCommunities, setAllCommunities] = useState(null);
+    const [loadingSaved, setLoadingSaved] = useState(true);
 
     const { fetchSavedPosts } = useContext(PostContext);
     const { fetchCommunities, fetchFollowedCommunities } = useContext(CommunityContext);
-
 
     const loadData = useCallback(async () => {
         try {
@@ -39,8 +41,9 @@ export default function Saved() {
             setFollowedCommunities(followed.map(f => f.communities));
             setAllCommunities(all);
         } catch (error) {
-            console.log('Error: saved', error.message);
             Alert.alert('Error', 'Failed to load data')
+        } finally {
+            setLoadingSaved(false)
         }
     }, [fetchSavedPosts, fetchFollowedCommunities, fetchCommunities]);
 
@@ -52,6 +55,14 @@ export default function Saved() {
 
     const [tab, setTab] = useState(0);
     const tabs = ['Communities', 'Posts'];
+
+    if (loadingSaved) {
+        return (
+            <SafeAreaView className="flex-1 bg-gray-100 justify-center items-center">
+                <LoadingState message="Loading saved items..." />
+            </SafeAreaView>
+        )
+    }
 
     return (
         <SafeAreaView className="flex-1" edges={['top']}>
@@ -191,10 +202,7 @@ export default function Saved() {
                                             <ThemedCommunity key={community.id} data={community} isFollowed={true} onFollowChange={loadData} />
                                         ))
                                 ) : (
-                                    <View className="items-center justify-center pb-4 px-8">
-                                        <Text className="text-gray-700 font-bold text-lg mt-4 text-center">No communities yet</Text>
-                                        <Text className="text-lg">Follow a community to display it here! 🌐</Text>
-                                    </View>
+                                    <EmptyState icon="🌐" title="No communities yet" subtitle="Follow a community to display it here!" />
                                 )
                             }
 
@@ -221,10 +229,7 @@ export default function Saved() {
                                         <ThemedPost key={post.id} data={post} />
                                     ))
                             ) : (
-                                <View className="items-center justify-center py-8 px-8">
-                                    <Text className="text-gray-700 font-bold text-lg mt-4 text-center">No saved posts yet</Text>
-                                    <Text className="text-lg">Save a post to display it here! 🔖</Text>
-                                </View>
+                                <EmptyState icon="🔖" title="No saved posts yet" subtitle="Save a post to display it here!" />
                             )}
                         </View>
 

@@ -41,8 +41,6 @@ export default function RootLayout() {
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
             const { type, postId } = response.notification.request.content.data;
 
-            console.log(`User tapped a notification of type ${type} for post ${postId}`);
-
             if (postId) {
                 router.push(`/post/${postId}`);
             }

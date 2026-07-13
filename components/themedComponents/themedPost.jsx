@@ -6,8 +6,6 @@ import { CommunityContext } from "@/context/communityContext";
 import { UserContext } from "@/context/userContext";
 import { EyeOff } from "lucide-react-native";
 
-//TODO: Link to actual post
-//TODO: add custom Error for fetchUserDetails and fetchCommunityById
 export default function ThemedPost({ data }) {
 
     const [author, setAuthor] = useState(null);
@@ -26,7 +24,8 @@ export default function ThemedPost({ data }) {
                 setAuthor(author);
                 setCommunity(community);
             } catch (error) {
-                throw error;
+                setAuthor(null);
+                setCommunity(null);
             }
         }
         loadData();
@@ -40,8 +39,6 @@ export default function ThemedPost({ data }) {
     const { username, avatar } = author || {};
     const { name: communityName, } = community || {};
     const isAnonymous = data.is_anonymous;
-
-    // console.log("Post data:", data);
 
     return (
         <Pressable onPress={() => router.push(`post/${data.id}`)}>

@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { PenBoxIcon } from 'lucide-react-native'
 import JoinRequestModal from "@/components/helpers/joinRequestModal";
 import { EyeOff } from "lucide-react-native";
+import LoadingState from "@/components/helpers/loadingState";
 
 
 //1. add edit button for author?
@@ -27,25 +28,31 @@ export default function PostPage() {
     const [loading, setLoading] = useState(false);
     const [joinStatus, setJoinStatus] = useState(null);
     const [showJoinModal, setShowJoinModal] = useState(false);
+    const [pageLoading, setPageLoading] = useState(true);
 
     const isAuthor = user?.id === post?.author_id;
     const saved = savedPostIds.has(postId);
 
     useEffect(() => {
         const getData = async () => {
-            const postData = await fetchPostById(postId);
-            setPost(postData);
+            try {
+                const postData = await fetchPostById(postId);
+                setPost(postData);
 
-            const [communityData, authorData, statusData] = await Promise.all([
-                fetchCommunityById(postData.community_id),
-                fetchUserDetails(postData.author_id),
-                requestStatus(postId),
-            ])
+                const [communityData, authorData, statusData] = await Promise.all([
+                    fetchCommunityById(postData.community_id),
+                    fetchUserDetails(postData.author_id),
+                    requestStatus(postId),
+                ])
 
-            setCommunity(communityData);
-            setAuthor(authorData);
-            setJoinStatus(statusData?.status ?? null);
-            // console.log(communityData.id)
+                setCommunity(communityData);
+                setAuthor(authorData);
+                setJoinStatus(statusData?.status ?? null);
+            } catch (error) {
+                Alert.alert('Error', 'Failed to load post');
+            } finally {
+                setPageLoading(false);
+            }
         }
         getData();
     }, [])
@@ -67,10 +74,8 @@ export default function PostPage() {
             await requestJoin(postId, message);
             const status = await requestStatus(postId);
             const resolvedStatus = status?.status ?? null;
-            // console.log('joinStatus:', resolvedStatus);
             setJoinStatus(resolvedStatus);
         } catch (error) {
-            // console.log(error.message)
             Alert.alert('Error', 'Failed to send join request');
         }
     }
@@ -99,6 +104,14 @@ export default function PostPage() {
     const { username: authorName, avatar } = author || {};
     const { name: communityName, category, tags } = community || {};
     const isAnonymous = is_anonymous;
+
+    if (pageLoading) {
+        return (
+            <SafeAreaView className="flex-1 bg-gray-100 justify-center items-center">
+                <LoadingState message="Loading Post..." />
+            </SafeAreaView>
+        )
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-gray-100">

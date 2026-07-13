@@ -2,7 +2,6 @@ import { View, Text, Pressable, TouchableOpacity, ActivityIndicator, Alert, } fr
 import { useContext, useEffect, useState } from "react";
 import { router } from "expo-router";
 
-import { LinearGradient } from "@/components/ui/linear-gradient";
 import { CommunityContext } from "@/context/communityContext";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -50,12 +49,6 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
         setFollowed(isFollowed);
     }, [isFollowed])
 
-
-    //TODO: add onPress to link to actual community Page
-    //TODO: maybe follow button as children? so i can reuse this component
-
-    // console.log(data);
-
     return (
         <Pressable onPress={() => router.push(`/community/${communityId}`)}>
             <View className="w-full border-b-2 border-gray-300 overflow-hidden shadow-sm">
@@ -85,7 +78,6 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
                             ellipsizeMode="tail"
                         >
                             {data?.category ?? "General"}
-                            {/* • {data?.tags?.length ?? 0} tags */}
                         </Text>
                     </View>
 
@@ -109,29 +101,6 @@ export default function ThemedCommunity({ data, isFollowed = false, onFollowChan
                             <Text className="text-sm text-gray-500">{followed ? 'following' : 'follow'}</Text>
                         </TouchableOpacity>
                     </View>
-
-                    {/* <TouchableOpacity */}
-                    {/*     onPress={followed ? handleUnfollow : handleFollow} */}
-                    {/*     disabled={loading} */}
-                    {/*     activeOpacity={0.7} */}
-                    {/*     style={{ opacity: loading ? 0.7 : 1 }} */}
-                    {/* > */}
-                    {/*     <LinearGradient */}
-                    {/*         className={`py-2 px-2 rounded-3xl justify-center items-center`} */}
-                    {/*         colors={['#F97316', '#EC4899']} */}
-                    {/*         start={[0, 1]} */}
-                    {/*         end={[1, 0]} */}
-                    {/*     > */}
-                    {/*         {loading ? ( */}
-                    {/*             <ActivityIndicator color="#fff" /> */}
-                    {/*         ) : ( */}
-                    {/*             <Text className="text-white font-semibold text-lg" */}
-                    {/*             > */}
-                    {/*                 {followed ? '− Unfollow' : '+ Follow'} */}
-                    {/*             </Text> */}
-                    {/*         )} */}
-                    {/*     </LinearGradient> */}
-                    {/* </TouchableOpacity> */}
 
                 </View>
             </View>

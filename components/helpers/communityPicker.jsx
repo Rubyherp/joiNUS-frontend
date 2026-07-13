@@ -40,12 +40,6 @@ export default function CommunityPicker({ onSelect }) {
         fetchFollowedCommunities();
     }, [communities]);
 
-    // useEffect(() => {
-    //     if (communities.length > 0) {
-    //         console.log('Communities fetched:', communities);
-    //     }
-    // }, [communities]);
-
     const flattenCommunities = communities.map(item => item.communities ? item.communities : item);
 
     const handleClose = () => setShowActionsheet(false);
@@ -54,7 +48,6 @@ export default function CommunityPicker({ onSelect }) {
         setSelected(community);
         onSelect(community);
         handleClose();
-        // console.log(community)
     }
 
     const Item = useCallback(({ item }) => (

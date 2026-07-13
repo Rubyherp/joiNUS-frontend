@@ -12,7 +12,6 @@ export default function DeadlinePicker({ onSelect, existingDate }) {
         if (existingDate) {
             setShowPicker(true);
             setDate(existingDate ? new Date(existingDate) : null)
-            console.log('Existing Date:', existingDate)
         }
     }, [existingDate])
 

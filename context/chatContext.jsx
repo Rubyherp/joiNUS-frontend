@@ -26,10 +26,6 @@ export function ChatProvider({ children }) {
             headers: { 'Authorization': `Bearer ${token}` }
         })
 
-        // const raw = await response.text();
-        // console.log('RAW RESPONSE:', raw);
-        // const data = JSON.parse(raw);
-
         const data = await response.json();
 
         if (!response.ok) {

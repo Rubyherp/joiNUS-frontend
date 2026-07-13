@@ -49,7 +49,6 @@ export default function Profile() {
             const fetched = await fetchPostsByUserId(userId);
             setPosts(fetched ?? []);
         } catch (error) {
-            console.log('Error: Profile', error.message);
             Alert.alert('Error', error.message || 'Failed to load Posts');
         }
     }
@@ -61,18 +60,15 @@ export default function Profile() {
         }
 
         if (selectedSetting === 'EditProfile') {
-            console.log('edit profile');
             router.push(`/profileSetup`);
             setSelectedSetting(null);
         }
 
         if (selectedSetting === 'ChangePassword') {
-            console.log('change password');
             setSelectedSetting(null);
         }
 
         if (selectedSetting === 'Logout') {
-            console.log('logout');
             logout();
             router.push(`/login`);
             setSelectedSetting(null);

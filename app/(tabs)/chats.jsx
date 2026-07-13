@@ -13,6 +13,7 @@ import { MessageCircleCheck } from "lucide-react-native";
 import { Colors } from "@/assets/colors/Colors";
 import { UserContext } from "@/context/userContext";
 import ThemedUserCard from "@/components/themedComponents/themedUserCard";
+import EmptyState from "@/components/helpers/emptyState";
 
 // 1, map each user as link to individual chat page, currently hardcoded for UI purposes
 // 2. position absolute the search icon for user in the platform
@@ -64,10 +65,9 @@ export default function Chats() {
             setLoading(true);
             try {
                 const data = await fetchUserByUsername(userQuery);
-                console.log('Fetched Users: ', data);
                 setUsers(data);
             } catch (error) {
-                console.error(err);
+                console.error(error);
                 setUsers([]);
             } finally {
                 setLoading(false);
@@ -216,11 +216,7 @@ export default function Chats() {
                             data={filtered}
                             keyExtractor={(item) => item.room_id}
                             ListEmptyComponent={
-                                <View className="items-center mt-20">
-                                    <Text className="text-3xl mb-2">💬</Text>
-                                    <Text className="font-semibold text-sm text-gray-600">No Conversations</Text>
-                                    <Text className="text-xs mt-1 text-gray-400">Chat with other Users</Text>
-                                </View>
+                                <EmptyState icon="💬" title="No Conversations" subtitle="Chat with other Users" />
                             }
                             renderItem={({ item }) => (
                                 <ThemedChatCard item={item} />
@@ -234,11 +230,7 @@ export default function Chats() {
                                 data={filtered}
                                 keyExtractor={(item) => item.room_id}
                                 ListEmptyComponent={
-                                    <View className="items-center mt-20">
-                                        <Text className="text-3xl mb-2">💬</Text>
-                                        <Text className="font-semibold text-sm text-gray-600">No Recent Conversations</Text>
-                                        <Text className="text-xs mt-1 text-gray-400">Connect and chat with new Users!</Text>
-                                    </View>
+                                    <EmptyState icon="💬" title="No Recent Conversations" subtitle="Connect and chat with new Users!" />
                                 }
                                 renderItem={({ item }) => (
                                     <ThemedChatCard item={item} />

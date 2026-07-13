@@ -106,8 +106,6 @@ export function CommunityProvider({ children }) {
             category,
         }
 
-        console.log('Requesting new community with payload:', payload);
-
         const response = await fetch(`${API_URL}/communities/requestNewCommunity`, {
             method: 'POST',
             headers: {

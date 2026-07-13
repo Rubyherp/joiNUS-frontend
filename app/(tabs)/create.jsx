@@ -166,7 +166,6 @@ export default function Create() {
         }
 
         try {
-            console.log('Requesting new community with:', { communityName, communityDescription, communityCategory });
             await requestNewCommunity({
                 name: communityName,
                 description: communityDescription,
@@ -179,10 +178,6 @@ export default function Create() {
             resetState();
         }
     }
-
-    useEffect(() => {
-        console.log('Anonymous mode:', isAnonymous);
-    }, [isAnonymous])
 
     return (
         <SafeAreaView className="flex-1" edges={['top']}>

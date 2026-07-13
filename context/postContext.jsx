@@ -22,7 +22,6 @@ export function PostProvider({ children }) {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
-            console.log('Fetched posts:', data);
 
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to fetch posts');
@@ -241,8 +240,6 @@ export function PostProvider({ children }) {
     }
 
     async function deletePostById(postId) {
-        console.log('Deleting post:', postId);
-        console.log('DELETE URL:', `${API_URL}/posts/delete/${postId}`);
         const response = await fetch(`${API_URL}/posts/delete/${postId}`, {
             method: 'DELETE',
             headers: {
@@ -250,8 +247,6 @@ export function PostProvider({ children }) {
             }
         });
         const text = await response.text();
-        console.log('Delete response status:', response.status);
-        console.log('Delete response body:', text);
 
         let data;
         try {

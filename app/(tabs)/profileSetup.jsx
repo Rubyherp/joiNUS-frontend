@@ -40,7 +40,6 @@ export default function ProfileSetup() {
             }
 
         } catch (error) {
-            console.log('Error: ProfileSetup', error.message);
             Alert.alert('Error', 'Failed to load data');
         }
     }

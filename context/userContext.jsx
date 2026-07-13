@@ -31,7 +31,6 @@ export function UserProvider({ children }) {
 
                 const storedToken = await AsyncStorage.getItem('token');
                 const storedUser = await AsyncStorage.getItem('user');
-                console.log('Restored token:', storedToken ? 'found' : 'not found');
 
                 if (!storedToken) {
                     return;
@@ -104,7 +103,6 @@ export function UserProvider({ children }) {
                 throw new Error(data.error || 'Login failed');
             }
 
-            console.log('User', data.user);
             setUser(data.user);
             setToken(data.token);
             await AsyncStorage.setItem('token', data.token);
@@ -163,7 +161,6 @@ export function UserProvider({ children }) {
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to fetch User Profile');
             }
-            console.log(data);
             setProfile(data);
             return data;
         } catch (error) {
@@ -183,7 +180,6 @@ export function UserProvider({ children }) {
             return;
         }
 
-        console.log('Image Picker: ', result);
         const image = result.assets[0];
         const formData = new FormData();
         formData.append("avatar", {

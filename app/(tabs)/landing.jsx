@@ -10,6 +10,7 @@ import ThemedPost from "@/components/themedComponents/themedPost";
 import { PostContext } from "@/context/postContext";
 import { Home } from "lucide-react-native";
 import { useFocusEffect } from "expo-router";
+import EmptyState from "@/components/helpers/emptyState";
 
 //1. filter logic for search query
 //2. limit number of posts loaded on landing page, add pagination or infinite scroll (prob infinite)
@@ -101,7 +102,7 @@ export default function Landing() {
             setPosts(prev => replace ? newPosts : [...prev, ...newPosts]);
             setPostCount(postNum);
         } catch (error) {
-            console.log("Failed to load posts", error);
+            Alert.alert('Error', 'Failed to load posts')
         } finally {
             setLoadingMorePost(false);
             setInitialLoading(false);
@@ -155,7 +156,7 @@ export default function Landing() {
             setPosts(result);
             setHasMorePosts(result.length < 50 ? false : true);
         } catch (error) {
-            console.log("Search failed: ", error);
+            Alert.alert('Error', 'Search failed')
         } finally {
             setInitialLoading(false);
         }
@@ -202,9 +203,7 @@ export default function Landing() {
                 keyboardShouldPersistTaps="handled"
 
                 ListEmptyComponent={
-                    <Text className="text-center text-gray-500 mt-10">
-                        {isSearching ? "No posts found" : "No posts yet"}
-                    </Text>
+                    <EmptyState icon="📭" title={isSearching ? "No posts found" : "No posts yet"} />
                 }
             />
         </SafeAreaView >

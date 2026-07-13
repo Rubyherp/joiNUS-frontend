@@ -69,7 +69,6 @@ export default function Create() {
             setSelectedCommunityId(community_id)
             setIsAnonymous(is_anonymous)
 
-            console.log('Post Set')
             setLoading(false);
         }
 
@@ -145,7 +144,6 @@ export default function Create() {
                 imageUrl = await uploadPostImage(formData);
 
             } catch (error) {
-                console.log('Upload error:', error.message);
                 setLoading(false);
                 Alert.alert('Error', error.message || 'Failed to upload image');
                 return;
@@ -227,13 +225,6 @@ export default function Create() {
                             showsVerticalScrollIndicator={false}
                             contentContainerStyle={{ paddingBottom: 24 }}
                         >
-
-                            {/* To remove cuz user shouldn't change the community */}
-                            {/* community picker */}
-                            {/* <View className="flex-shrink-1 max-w-[50%]"> */}
-                            {/*     <CommunityPicker onSelect={c => setSelectedCommunity(c)} /> */}
-                            {/*     <Spacer height={10} /> */}
-                            {/* </View> */}
 
                             {/* title */}
                             <ThemedSectionCard>

@@ -46,7 +46,6 @@ export default function UserProfile() {
             setPosts(postsData ?? []);
             setUser(userData);
         } catch (error) {
-            console.log('Error: userProfile', error.message);
             Alert.alert('Error', error.message || 'Failed to load data');
         }
     }
