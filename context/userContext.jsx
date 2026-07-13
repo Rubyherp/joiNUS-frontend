@@ -1,7 +1,9 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import EmptyPasswordError from "@/customError/emptyPasswordError";
 import EmailError from "@/customError/emailError";
 import * as ImagePicker from "expo-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 export const UserContext = createContext();
 
@@ -22,6 +24,35 @@ export function UserProvider({ children }) {
     const [token, setToken] = useState(null);
     const [showProfileSetup, setShowProfileSetup] = useState(false);
     const [profile, setProfile] = useState(null);
+
+    useEffect(() => {
+        const restoreSession = async () => {
+            try {
+
+                const storedToken = await AsyncStorage.getItem('token');
+                const storedUser = await AsyncStorage.getItem('user');
+                console.log('Restored token:', storedToken ? 'found' : 'not found');
+
+                if (!storedToken) {
+                    return;
+                }
+
+                setToken(storedToken);
+                if (storedUser) {
+                    setUser(JSON.parse(storedUser));
+                }
+
+                await fetchProfile(storedToken);
+            } catch (error) {
+
+                setToken(null);
+                setUser(null);
+                setProfile(null);
+                await AsyncStorage.multiRemove(['token', 'user']);
+            }
+        };
+        restoreSession();
+    }, []);
 
     async function register(details = initialState) {
         const { email, password } = details;
@@ -76,6 +107,8 @@ export function UserProvider({ children }) {
             console.log('User', data.user);
             setUser(data.user);
             setToken(data.token);
+            await AsyncStorage.setItem('token', data.token);
+            await AsyncStorage.setItem('user', JSON.stringify(data.user));
 
             if (!data.hasProfile) {
                 setShowProfileSetup(true);
@@ -90,8 +123,11 @@ export function UserProvider({ children }) {
 
     }
 
-    const logout = () => {
+    const logout = async () => {
         setToken(null);
+        setUser(null);
+        setProfile(null);
+        await AsyncStorage.multiRemove(['token', 'user']);
     }
 
     // rename to profileSave

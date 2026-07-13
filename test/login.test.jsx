@@ -18,10 +18,9 @@ jest.mock('expo-router', () => ({
 jest.spyOn(Alert, 'alert').mockImplementation(() => { });
 
 //Helper to render fake context
-const renderLogin = (loginFn) => {
+const renderLogin = (loginFn, overrides = {}) => {
     return render(
-        // replace register function in UserContext with mock function
-        <UserContext.Provider value={{ login: loginFn }}>
+        <UserContext.Provider value={{ login: loginFn, token: null, user: null, ...overrides }}>
             <Login />
         </UserContext.Provider>
     );
@@ -48,14 +47,14 @@ describe("Login Screen", () => {
         });
     });
 
-    it("redirects to /profile when hasProfile is true", async () => {
+    it("redirects to /landing when hasProfile is true", async () => {
         const mockLogin = jest.fn().mockResolvedValue({ hasProfile: true });
         const { getByText } = renderLogin(mockLogin);
 
         fireEvent.press(getByText("Log In"));
 
         await waitFor(() => {
-            expect(mockReplace).toHaveBeenCalledWith('/profile');
+            expect(mockReplace).toHaveBeenCalledWith('/landing');
         });
     });
 
@@ -124,6 +123,14 @@ describe("Login Screen", () => {
                     textAlignVertical: "center",
                 });
         })
+    })
+
+    it("redirects to /landing on mount when session is restored", async () => {
+        renderLogin(jest.fn(), { token: "abc", user: { id: "1" } });
+
+        await waitFor(() => {
+            expect(mockReplace).toHaveBeenCalledWith('/landing');
+        });
     })
 })
 
