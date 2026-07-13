@@ -36,12 +36,12 @@ export function UserProvider({ children }) {
                     return;
                 }
 
+                await fetchProfile(storedToken);
+
                 setToken(storedToken);
                 if (storedUser) {
                     setUser(JSON.parse(storedUser));
                 }
-
-                await fetchProfile(storedToken);
             } catch (error) {
 
                 setToken(null);
