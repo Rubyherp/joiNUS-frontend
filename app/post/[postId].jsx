@@ -184,10 +184,13 @@ export default function PostPage() {
                             <Text className="text-sm text-gray-500 flex-1" numberOfLines={1}>
                                 {isAnonymous ? 'Hidden' : authorName}
                             </Text>
+
                         </Pressable>
 
-                        <Text className="text-xs text-gray-400">{formatDate(created_at)}</Text>
                     </View>
+
+                    {/* date */}
+                    <Text className="text-sm font-semibold text-slate-600 px-4">{formatDate(created_at)}</Text>
 
                     {/* Title */}
                     <Text className="text-xl font-bold text-gray-900 px-4 pb-2 leading-7">{title}</Text>
