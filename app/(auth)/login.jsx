@@ -1,6 +1,5 @@
-//TODO: Maybe add forget password or smt?
-
 import { View, Text, Image, TouchableOpacity, ActivityIndicator, Alert, useColorScheme, KeyboardAvoidingView, Platform } from "react-native";
+import { useEffect } from "react";
 import { TouchableWithoutFeedback } from "react-native";
 import LogoLight from '../../assets/images/logo-white.png';
 import LogoDark from '../../assets/images/logo-gold.png';
@@ -25,7 +24,7 @@ export default function Login() {
     const BWColor = theme === 'dark' ? 'white' : 'black';
     const inputBGColor = theme == 'dark' ? 'bg-sky-900' : 'bg-white';
 
-    const { login } = useContext(UserContext);
+    const { login, user, token } = useContext(UserContext);
     const [loginDetail, setLoginDetail] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -33,6 +32,13 @@ export default function Login() {
     const [passwordError, setPasswordError] = useState(null);
 
     //TODO: use gluestack alert instead of default alert and add error handling for wrong password and email not found
+
+    useEffect(() => {
+        if (token && user) {
+            router.replace('/landing');
+        }
+    }, [token])
+
 
     const handleError = (error) => {
         if (error instanceof EmailError) {
@@ -52,7 +58,7 @@ export default function Login() {
             if (!data.hasProfile) {
                 router.replace('/profileSetup');
             } else {
-                router.replace('/profile');
+                router.replace('/landing');
             }
         } catch (error) {
             Alert.alert(error.message);
