@@ -55,6 +55,7 @@
   "private": true,
   "jest": {
     "preset": "jest-expo",
+    "setupFiles": ["./jest.setup.js"],
     "testEnvironment": "node",
     "transformIgnorePatterns": [
       "node_modules/(?!(@gluestack-ui|nativewind|react-native|@react-native|@react-navigation|@expo|expo|expo-router|expo-linear-gradient|expo-linking|expo-modules-core|expo-constants|expo-asset|expo-file-system|expo-font|expo-image-picker|expo-document-picker|react-native-css-interop|react-native-reanimated|react-native-worklets|@legendapp)/)"
