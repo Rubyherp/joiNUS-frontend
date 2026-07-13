@@ -69,7 +69,6 @@ export default function Create() {
             setSelectedCommunityId(community_id)
             setIsAnonymous(is_anonymous)
 
-            console.log('Post Set')
             setLoading(false);
         }
 
@@ -145,7 +144,6 @@ export default function Create() {
                 imageUrl = await uploadPostImage(formData);
 
             } catch (error) {
-                console.log('Upload error:', error.message);
                 setLoading(false);
                 Alert.alert('Error', error.message || 'Failed to upload image');
                 return;
@@ -228,13 +226,6 @@ export default function Create() {
                             contentContainerStyle={{ paddingBottom: 24 }}
                         >
 
-                            {/* To remove cuz user shouldn't change the community */}
-                            {/* community picker */}
-                            {/* <View className="flex-shrink-1 max-w-[50%]"> */}
-                            {/*     <CommunityPicker onSelect={c => setSelectedCommunity(c)} /> */}
-                            {/*     <Spacer height={10} /> */}
-                            {/* </View> */}
-
                             {/* title */}
                             <ThemedSectionCard>
                                 <ThemedLabel icon={Sparkles} label="Title" />
@@ -271,12 +262,26 @@ export default function Create() {
                             {/* image upload */}
                             <ThemedSectionCard>
                                 <ThemedLabel icon={ImageIcon} label="Image" optional />
+
+                                {/* Thumbnail preview */}
                                 {selectedImage && (
-                                    <Image
-                                        source={{ uri: typeof selectedImage === 'string' ? selectedImage : selectedImage.uri }}
-                                        className="w-full h-40"
-                                        resizeMode="cover"
-                                    />
+                                    <View className="mb-2 border rounded-2xl overflow-hidden">
+                                        <Image
+                                            source={{ uri: typeof selectedImage === 'string' ? selectedImage : selectedImage.uri }}
+                                            style={typeof selectedImage === 'object'
+                                                ? {
+                                                    width: '100%',
+                                                    aspectRatio: selectedImage.width / selectedImage.height,
+                                                    maxHeight: 400,
+                                                }
+                                                : {
+                                                    width: '100%',
+                                                    height: 400,
+                                                }
+                                            }
+                                            resizeMode="cover"
+                                        />
+                                    </View>
                                 )}
 
                                 <Button onPress={() => setShowImageUpload(true)}>
@@ -306,16 +311,33 @@ export default function Create() {
                                             </View>
                                         </View>
 
-                                        <Box className="my-[18px] items-center justify-center rounded-xl bg-background-50 border border-dashed border-outline-300 h-[130px] w-full">
-                                            <Icon
-                                                as={UploadCloud}
-                                                className="h-[62px] w-[62px] stroke-background-200"
-                                            />
-                                            <Text className="text-white">
-                                                {selectedImage
-                                                    ? "✓ Image Selected"
-                                                    : "No files selected"}
-                                            </Text>
+                                        <Box className="my-[18px] items-center justify-center bg-background-50 border border-dashed border-outline-300 w-full overflow-hidden rounded-2xl">
+                                            {selectedImage ? (
+                                                <Image
+                                                    source={{ uri: typeof selectedImage === 'string' ? selectedImage : selectedImage.uri }}
+                                                    style={typeof selectedImage === 'object'
+                                                        ? {
+                                                            width: '100%',
+                                                            aspectRatio: selectedImage.width / selectedImage.height,
+                                                            maxHeight: 400,
+                                                        }
+                                                        : {
+                                                            width: '100%',
+                                                            height: 400,
+                                                        }
+                                                    }
+                                                    resizeMode="cover"
+                                                />
+                                            ) : (
+
+                                                <View className="flex-row items-center justify-center gap-3 py-6">
+                                                    <Icon
+                                                        as={UploadCloud}
+                                                        className="h-[62px] w-[62px] stroke-background-200"
+                                                    />
+                                                    <Text className="text-white"> No files selected </Text>
+                                                </View>
+                                            )}
                                         </Box>
 
                                         <ButtonGroup className="w-full">

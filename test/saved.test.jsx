@@ -80,11 +80,14 @@ describe("Saved Screen", () => {
     it("shows empty state when there are no followed communities", async () => {
         const { findByText } = renderSaved({ communityOverrides: { fetchFollowedCommunities: jest.fn().mockResolvedValue([]) } });
 
-        expect(await findByText('No communities yet')).toBeTruthy();
+        expect(await findByText("You're not following any communities yet")).toBeTruthy();
     });
 
     it("switches to Posts tab and shows saved posts", async () => {
-        const { getByText, findByTestId } = renderSaved();
+        const { getByText, findByTestId, findByText } = renderSaved();
+
+        // Wait for loading to complete
+        await findByText('Following');
 
         fireEvent.press(getByText('Posts'));
 
@@ -93,6 +96,9 @@ describe("Saved Screen", () => {
 
     it("shows empty state on Posts tab when there are no saved posts", async () => {
         const { getByText, findByText } = renderSaved({ postOverrides: { fetchSavedPosts: jest.fn().mockResolvedValue([]) } });
+
+        // Wait for loading to complete
+        await findByText('Following');
 
         fireEvent.press(getByText('Posts'));
 

@@ -6,7 +6,7 @@ export default function ThemedUserCard({ item }) {
     return (
 
         <TouchableOpacity
-            className="flex-row items-center py-3 gap-3 border-b border-gray-400"
+            className="flex-row items-center py-3 gap-3 border-b border-gray-100 px-4"
             onPress={() => router.push({
                 pathname: `/dm/${item.id}`,
                 params: { username: item.username }
@@ -19,8 +19,8 @@ export default function ThemedUserCard({ item }) {
                 <Image
                     source={{ uri: item.avatar }}
                     style={{
-                        width: 40,
-                        height: 40,
+                        width: 50,
+                        height: 50,
                         borderWidth: 1,
                         borderColor: 'pink',
                         borderRadius: 100,
@@ -28,7 +28,7 @@ export default function ThemedUserCard({ item }) {
                     className="flex-shrink-0"
                 />
             ) : (
-                <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
+                <View style={{ width: 50, height: 50, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
             )}
 
 

@@ -30,8 +30,6 @@ export async function registerForPushNotifications(authToken) {
         });
 
         const token = tokenData.data;
-        console.log('Push notification token:', token);
-
         await fetch(`${API_URL}/posts/push-token`, {
             method: 'POST',
             headers: {

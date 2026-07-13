@@ -12,7 +12,6 @@ export default function DeadlinePicker({ onSelect, existingDate }) {
         if (existingDate) {
             setShowPicker(true);
             setDate(existingDate ? new Date(existingDate) : null)
-            console.log('Existing Date:', existingDate)
         }
     }, [existingDate])
 
@@ -59,6 +58,7 @@ export default function DeadlinePicker({ onSelect, existingDate }) {
                 <Pressable
                     onPress={() => {
                         setDate(null);
+                        setShowPicker(false);
                         onSelect(null);
                     }}
                     className="flex justify-center items-center text-center bg-red-500 border border-red-500 rounded-full mt-4"

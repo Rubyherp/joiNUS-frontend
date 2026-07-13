@@ -28,19 +28,17 @@ export function SocketProvider({ children }) {
         // listseners
         // on connection event
         socketRef.current.on('connect', () => {
-            console.log('Socket connected');
             setConnected(true);
         });
 
         // on disconnection event
         socketRef.current.on('disconnect', () => {
-            console.log('Socket disconnected');
             setConnected(false);
         });
 
         // on connection error event
         socketRef.current.on('connect_error', (error) => {
-            console.log('Socket error:', error.message);
+            console.error('Socket error:', error.message);
         });
 
         // cleanup on unmount

@@ -7,6 +7,7 @@ import { PostContext } from "@/context/postContext";
 import ThemedRequestCard from '@/components/themedComponents/themedRequestCard';
 import Logo from "../../../assets/images/logo-white.png";
 import { Handshake } from "lucide-react-native";
+import LoadingState from '@/components/helpers/loadingState';
 
 //1. fetch pending req and accepted req
 //2. map each req to their req card
@@ -20,6 +21,7 @@ export default function Requests() {
     const [post, setPost] = useState(null);
     const [pendingRequests, setPendingRequests] = useState([]);
     const [acceptedRequests, setAcceptedRequests] = useState([]);
+    const [loadingRequests, setLoadingRequests] = useState(true);
 
     const { fetchPostById, fetchPendingRequests, fetchAcceptedRequests } = useContext(PostContext);
 
@@ -39,6 +41,8 @@ export default function Requests() {
 
         } catch (error) {
             Alert.alert("Error", "Failed to load data");
+        } finally {
+            setLoadingRequests(false);
         }
     }
 
@@ -47,6 +51,14 @@ export default function Requests() {
     }, [])
 
     const { title } = post || {};
+
+    if (loadingRequests) {
+        return (
+            <SafeAreaView className="flex-1 bg-gray-100 justify-center items-center">
+                <LoadingState message="Loading requests..." />
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView className='flex-1'>

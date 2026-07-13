@@ -7,6 +7,7 @@ import { CommunityContext } from "@/context/communityContext";
 import { PostContext } from "@/context/postContext";
 import { Ionicons } from '@expo/vector-icons';
 import ThemedPost from "@/components/themedComponents/themedPost";
+import LoadingState from "@/components/helpers/loadingState";
 
 export default function CommunityPage() {
     const { communityId } = useLocalSearchParams();
@@ -17,6 +18,7 @@ export default function CommunityPage() {
     const [posts, setPosts] = useState([]);
     const [followed, setFollowed] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [loadingCommunity, setLoadingCommunity] = useState(true);
 
     useEffect(() => {
         const getData = async () => {
@@ -31,6 +33,8 @@ export default function CommunityPage() {
                 setFollowed(communityData?.community_follows.length > 0)
             } catch (error) {
                 Alert.alert('Error', 'Failed to load community');
+            } finally {
+                setLoadingCommunity(false);
             }
         }
         getData();
@@ -59,6 +63,14 @@ export default function CommunityPage() {
     };
 
     const { name, description, category, tags, created_at, created_by } = community || {};
+
+    if (loadingCommunity) {
+        return (
+            <SafeAreaView className="flex-1 bg-gray-100 justify-center items-center">
+                <LoadingState message="Loading community..." />
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-gray-100">

@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useContext, useCallback, useEffect } from "react";
 import { useFocusEffect } from "expo-router";
@@ -13,6 +13,7 @@ import { MessageCircleCheck } from "lucide-react-native";
 import { Colors } from "@/assets/colors/Colors";
 import { UserContext } from "@/context/userContext";
 import ThemedUserCard from "@/components/themedComponents/themedUserCard";
+import EmptyState from "@/components/helpers/emptyState";
 
 // 1, map each user as link to individual chat page, currently hardcoded for UI purposes
 // 2. position absolute the search icon for user in the platform
@@ -64,10 +65,9 @@ export default function Chats() {
             setLoading(true);
             try {
                 const data = await fetchUserByUsername(userQuery);
-                console.log('Fetched Users: ', data);
                 setUsers(data);
             } catch (error) {
-                console.error(err);
+                console.error(error);
                 setUsers([]);
             } finally {
                 setLoading(false);
@@ -81,50 +81,53 @@ export default function Chats() {
     const filtered = conversations.filter(c => c.profile?.username?.toLowerCase().includes(query.toLowerCase()));
 
     return (
-        <SafeAreaView className="flex-1 px-4">
-            <TouchableWithoutFeedback className="flex-1">
-                <View className="flex-1">
+        <SafeAreaView className="flex-1" edges={['top']} style={{ backgroundColor: Colors.light.uiBackground }}>
 
-                    {/* header */}
-                    <View className="flex-row items-center gap-3">
-                        <MessageCircleCheck size={48} color="#f97316" />
-                        <View className="flex-row items-center justify-between flex-1">
-                            <View className="flex">
-                                <Text className="text-2xl font-extrabold text-gray-800">Messages</Text>
-                                <Text className="text-base font-semibold text-gray-500 mt-1">Your Conversations</Text>
-                            </View>
-                            <Image source={Logo}
-                                className="h-20 w-20"
-                                resizeMode="contain"
-                            />
+            {/* header */}
+            <View className="px-4">
+                <View className="flex-row items-center gap-3">
+                    <MessageCircleCheck size={48} color="#f97316" />
+                    <View className="flex-row items-center justify-between flex-1">
+                        <View className="flex">
+                            <Text className="text-2xl font-extrabold text-gray-800">Messages</Text>
+                            <Text className="text-base font-semibold text-gray-500 mt-1">Your Conversations</Text>
                         </View>
+                        <Image source={Logo}
+                            className="h-20 w-20"
+                            resizeMode="contain"
+                        />
                     </View>
+                </View>
+            </View>
 
-                    <View className="flex-row p-1 pb-4 rounded-xl" style={{ backgroundColor: Colors.light.uiBackground }}>
-                        {tabs.map((label, i) => (
-                            <TouchableOpacity
-                                key={i}
-                                onPress={() => setTab(i)}
-                                className="flex-1 items-center py-2 rounded-lg border-gray-400"
-                                style={tab === i
-                                    ? { backgroundColor: "#fff", shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 4, shadowOffset: { width: 0, height: 1 }, elevation: 2 }
-                                    : {}
-                                }
+            {/* tab bar & search card */}
+            <View className="rounded-2xl mx-4 mt-4 overflow-hidden">
+
+                <View className="flex-row p-1 pb-4 rounded-xl" style={{ backgroundColor: Colors.light.uiBackground }}>
+                    {tabs.map((label, i) => (
+                        <TouchableOpacity
+                            key={i}
+                            onPress={() => setTab(i)}
+                            className="flex-1 items-center py-2 rounded-lg border-gray-400"
+                            style={tab === i
+                                ? { backgroundColor: "#fff", shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 4, shadowOffset: { width: 0, height: 1 }, elevation: 2 }
+                                : {}
+                            }
+                        >
+                            <Text
+                                className="text-xs font-bold"
+                                style={{ color: tab === i ? Colors.light.title : Colors.light.text }}
                             >
-                                <Text
-                                    className="text-xs font-bold"
-                                    style={{ color: tab === i ? Colors.light.title : Colors.light.text }}
-                                >
-                                    {label}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
+                                {label}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
 
-                    {/* searchbar */}
-                    {tab === 0 ?
-
-                        (
+                {/* searchbar */}
+                {tab === 0 ?
+                    (
+                        <View className="w-full">
                             <View className="w-full h-14 justify-center">
                                 <LinearGradient
                                     className={`p-[2px] rounded-3xl`}
@@ -134,9 +137,9 @@ export default function Chats() {
                                 >
                                     <View className="bg-white rounded-3xl h-12 justify-center">
                                         {query === "" && (
-                                            <View className="absolute left-4 z-10 gap-8 flex-row items-center pointer-events-none">
+                                            <View className="absolute left-4 z-10 gap-4 flex-row items-center pointer-events-none">
                                                 <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
-                                                <Text className="text-black/40 text-xl">Search your Chats</Text>
+                                                <Text className="text-black/40 text-lg">Search your Chats</Text>
                                             </View>
                                         )}
 
@@ -158,7 +161,9 @@ export default function Chats() {
                                     </View>
                                 </LinearGradient>
                             </View>
-                        ) : (
+                        </View>
+                    ) : (
+                        <View className="w-full">
                             <View className="w-full h-14 justify-center">
                                 <LinearGradient
                                     className={`p-[2px] rounded-3xl`}
@@ -168,9 +173,9 @@ export default function Chats() {
                                 >
                                     <View className="bg-white rounded-3xl h-12 justify-center">
                                         {userQuery === "" && (
-                                            <View className="absolute left-4 z-10 gap-8 flex-row items-center pointer-events-none">
+                                            <View className="absolute left-4 z-10 gap-4 flex-row items-center pointer-events-none">
                                                 <Image source={Logo} className="w-12 h-12" resizeMode="contain" />
-                                                <Text className="text-black/40 text-xl">Search Users</Text>
+                                                <Text className="text-black/40 text-lg">Search Users</Text>
                                             </View>
                                         )}
 
@@ -192,77 +197,79 @@ export default function Chats() {
                                     </View>
                                 </LinearGradient>
                             </View>
-
-                        )}
-
-                    <Spacer height={20} />
-                    {
-                        tab === 0 ? (
-                            <Text className="text-gray-700 text-xl font-bold">💬 Chats</Text>
-                        ) : !userQuery ? (
-                            <Text className="text-gray-700 text-xl font-bold">🔄 Recent Conversations</Text>
-                        ) : (
-                            <Text className="text-gray-700 text-xl font-bold">✨ New Conversations</Text>
-                        )
-                    }
-
-                    {loading ? (
-                        <View className="flex-1 items-center justify-center">
-                            <ActivityIndicator />
                         </View>
-                    ) : tab === 0 ? (
+                    )}
+            </View>
 
-                        <FlatList
-                            data={filtered}
-                            keyExtractor={(item) => item.room_id}
-                            ListEmptyComponent={
-                                <View className="items-center mt-20">
-                                    <Text className="text-3xl mb-2">💬</Text>
-                                    <Text className="font-semibold text-sm text-gray-600">No Conversations</Text>
-                                    <Text className="text-xs mt-1 text-gray-400">Chat with other Users</Text>
-                                </View>
-                            }
-                            renderItem={({ item }) => (
-                                <ThemedChatCard item={item} />
-                            )}
-                        />
+            <Spacer height={16} />
 
-                    ) : (
-
-                        !userQuery ? (
+            {/* content */}
+            {
+                tab === 0 ? (
+                    <View className="bg-white rounded-2xl shadow-sm mx-4 flex-1 overflow-hidden mb-4">
+                        <View className="px-4 pt-4 pb-2">
+                            <Text className="text-base font-semibold text-gray-700">💬 Chats</Text>
+                            <Text className="text-sm text-gray-400 mt-1">Your recent conversations</Text>
+                        </View>
+                        {loading ? (
+                            <View className="flex-1 items-center justify-center">
+                                <ActivityIndicator />
+                            </View>
+                        ) : (
                             <FlatList
                                 data={filtered}
                                 keyExtractor={(item) => item.room_id}
                                 ListEmptyComponent={
-                                    <View className="items-center mt-20">
-                                        <Text className="text-3xl mb-2">💬</Text>
-                                        <Text className="font-semibold text-sm text-gray-600">No Recent Conversations</Text>
-                                        <Text className="text-xs mt-1 text-gray-400">Connect and chat with new Users!</Text>
+                                    <View className="px-4 pb-6">
+                                        <EmptyState icon="💬" title="No Conversations" subtitle="Chat with other Users" />
                                     </View>
                                 }
                                 renderItem={({ item }) => (
                                     <ThemedChatCard item={item} />
                                 )}
                             />
-                        ) : (
+                        )}
+                    </View>
+                ) : !userQuery ? (
+                    <View className="bg-white rounded-2xl shadow-sm mx-4 flex-1 overflow-hidden mb-4">
+                        <View className="px-4 pt-4 pb-2">
+                            <Text className="text-base font-semibold text-gray-700">🔄 Recent Conversations</Text>
+                            <Text className="text-sm text-gray-400 mt-1">Connect and chat with new users</Text>
+                        </View>
+                        <FlatList
+                            data={filtered}
+                            keyExtractor={(item) => item.room_id}
+                            ListEmptyComponent={
+                                <View className="px-4 pb-6">
+                                    <EmptyState icon="💬" title="No Recent Conversations" subtitle="Connect and chat with new Users!" />
+                                </View>
+                            }
+                            renderItem={({ item }) => (
+                                <ThemedChatCard item={item} />
+                            )}
+                        />
+                    </View>
+                ) : loading ? (
+                    <View className="flex-1 items-center justify-center">
+                        <ActivityIndicator color={"black"} />
+                    </View>
+                ) : (
+                    <View className="bg-white rounded-2xl shadow-sm mx-4 flex-1 overflow-hidden mb-4">
+                        <View className="px-4 pt-4 pb-2">
+                            <Text className="text-base font-semibold text-gray-700">✨ New Conversations</Text>
+                            <Text className="text-sm text-gray-400 mt-1">Find and connect with people</Text>
+                        </View>
+                        <FlatList
+                            data={users}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <ThemedUserCard item={item} />
+                            )}
+                        />
+                    </View>
+                )
+            }
 
-                            loading ? (
-                                <ActivityIndicator color={"black"} />
-                            ) : (
-                                <FlatList
-                                    data={users}
-                                    keyExtractor={(item) => item.id}
-                                    renderItem={({ item }) => (
-                                        <ThemedUserCard item={item} />
-                                    )}
-                                />
-                            )
-                        )
-                    )}
-
-                </View>
-            </TouchableWithoutFeedback>
         </SafeAreaView >
     )
-
 }

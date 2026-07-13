@@ -22,7 +22,7 @@ export default function ThemedChatCard({ item }) {
     return (
 
         <TouchableOpacity
-            className="flex-row items-center py-3 gap-3 border-b border-gray-400"
+            className="flex-row items-center py-3 px-4 gap-3 border-b border-gray-100"
             onPress={() => router.push({
                 pathname: `/dm/${item.other_user_id}`,
                 params: { username: item.profile?.username }
@@ -35,8 +35,8 @@ export default function ThemedChatCard({ item }) {
                 <Image
                     source={{ uri: item.profile.avatar }}
                     style={{
-                        width: 40,
-                        height: 40,
+                        width: 50,
+                        height: 50,
                         borderWidth: 1,
                         borderColor: 'pink',
                         borderRadius: 100,
@@ -44,7 +44,7 @@ export default function ThemedChatCard({ item }) {
                     className="flex-shrink-0"
                 />
             ) : (
-                <View style={{ width: 30, height: 30, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
+                <View style={{ width: 40, height: 40, borderRadius: 100, backgroundColor: '#e5e7eb' }} />
             )}
 
 

@@ -77,8 +77,6 @@ export default function DMChat() {
 
     const handleAttachment = (type) => {
         //TODO: create a function to handle the attachment based on the type (Image, Document, etc.)
-        console.log(`Attachment type selected: ${type}`);
-
         if (type == 'Image') {
             handleImageSelection();
         } else if (type == 'Document') {
@@ -116,7 +114,6 @@ export default function DMChat() {
 
         const doc = result.assets[0];
         setAttachment(doc)
-        console.log('Selected document:', doc);
     }
 
     const renderItem = useCallback(({ item }) => {
