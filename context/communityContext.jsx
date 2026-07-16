@@ -21,7 +21,7 @@ export function CommunityProvider({ children }) {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to fetch communities');
+                throw new Error(data.error?.message || 'Failed to fetch communities');
             }
             setCommunities(data);
             return data;
@@ -41,7 +41,7 @@ export function CommunityProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to fetch community details');
+            throw new Error(data.error?.message || 'Failed to fetch community details');
         }
 
         return data;
@@ -57,7 +57,7 @@ export function CommunityProvider({ children }) {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to fetch following Communities');
+                throw new Error(data.error?.message || 'Failed to fetch following Communities');
             }
 
             setCommunities(data);
@@ -78,7 +78,7 @@ export function CommunityProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to follow Community');
+            throw new Error(data.error?.message || 'Failed to follow Community');
         }
 
         return data;
@@ -93,7 +93,7 @@ export function CommunityProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to unfollow Community');
+            throw new Error(data.error?.message || 'Failed to unfollow Community');
         }
 
         return data;
@@ -118,7 +118,7 @@ export function CommunityProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to send request for a new community');
+            throw new Error(data.error?.message || 'Failed to send request for a new community');
         }
 
         return data;

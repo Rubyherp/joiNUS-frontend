@@ -15,7 +15,7 @@ export function ChatProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to fetch Chat History');
+            throw new Error(data.error?.message || 'Failed to fetch Chat History');
         }
 
         return data;
@@ -29,7 +29,7 @@ export function ChatProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to load conversations');
+            throw new Error(data.error?.message || 'Failed to load conversations');
         }
 
         return data;
@@ -53,7 +53,7 @@ export function ChatProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to upload attachment');
+            throw new Error(data.error?.message || 'Failed to upload attachment');
         }
 
         return data;
