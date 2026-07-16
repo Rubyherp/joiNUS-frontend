@@ -72,7 +72,7 @@ export function UserProvider({ children }) {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Registration failed');
+                throw new Error(data.error?.message || 'Registration failed');
             }
             return data;
         } catch (error) {
@@ -100,7 +100,7 @@ export function UserProvider({ children }) {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
+                throw new Error(data.error?.message || 'Login failed');
             }
 
             setUser(data.user);
@@ -142,7 +142,7 @@ export function UserProvider({ children }) {
 
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error || 'Profile creation failed')
+                throw new Error(data.error?.message || 'Profile creation failed')
             }
             await fetchProfile();
             setShowProfileSetup(false);
@@ -159,7 +159,7 @@ export function UserProvider({ children }) {
             })
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to fetch User Profile');
+                throw new Error(data.error?.message || 'Failed to fetch User Profile');
             }
             setProfile(data);
             return data;
@@ -199,7 +199,7 @@ export function UserProvider({ children }) {
 
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error || "Failed to change Avatar");
+                throw new Error(data.error?.message || "Failed to change Avatar");
             }
             const newProfile = await fetchProfile();
             return newProfile;
@@ -217,7 +217,7 @@ export function UserProvider({ children }) {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || "Failed to fetch User Details");
+                throw new Error(data.error?.message || "Failed to fetch User Details");
             }
             return data;
         } catch (error) {
@@ -234,7 +234,7 @@ export function UserProvider({ children }) {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || "Failed to fetch User by Username");
+                throw new Error(data.error?.message || "Failed to fetch User by Username");
             }
 
             return data;

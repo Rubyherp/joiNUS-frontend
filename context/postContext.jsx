@@ -24,7 +24,7 @@ export function PostProvider({ children }) {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to fetch posts');
+                throw new Error(data.error?.message || 'Failed to fetch posts');
             }
             return data;
         } catch (error) {
@@ -45,7 +45,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to create Post");
+            throw new Error(data.error?.message || "Failed to create Post");
         }
 
         return data;
@@ -63,7 +63,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to upload Image");
+            throw new Error(data.error?.message || "Failed to upload Image");
         }
 
         return data.imageUrl;
@@ -77,7 +77,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to fetch Post");
+            throw new Error(data.error?.message || "Failed to fetch Post");
         }
 
         return data;
@@ -91,7 +91,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to fetch Post");
+            throw new Error(data.error?.message || "Failed to fetch Post");
         }
 
         return data;
@@ -105,7 +105,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to fetch saved Post");
+            throw new Error(data.error?.message || "Failed to fetch saved Post");
         }
 
         return data;
@@ -130,7 +130,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to save Post");
+            throw new Error(data.error?.message || "Failed to save Post");
         }
 
         setSavedPostIds(prev => new Set(prev).add(postId))
@@ -146,7 +146,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to unsave Post");
+            throw new Error(data.error?.message || "Failed to unsave Post");
         }
 
         setSavedPostIds(prev => {
@@ -170,7 +170,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to send join request");
+            throw new Error(data.error?.message || "Failed to send join request");
         }
 
         return data;
@@ -184,7 +184,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to fetch request status");
+            throw new Error(data.error?.message || "Failed to fetch request status");
         }
 
         return data;
@@ -198,7 +198,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to fetch pending requests ");
+            throw new Error(data.error?.message || "Failed to fetch pending requests ");
         }
 
         return data;
@@ -212,7 +212,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "Failed to fetch accepted requests ");
+            throw new Error(data.error?.message || "Failed to fetch accepted requests ");
         }
 
         return data;
@@ -233,7 +233,7 @@ export function PostProvider({ children }) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || `Failed to ${status == "accepted" ? "accept" : "reject"} request`);
+            throw new Error(data.error?.message || `Failed to ${status == "accepted" ? "accept" : "reject"} request`);
         }
 
         return data;
@@ -256,7 +256,7 @@ export function PostProvider({ children }) {
         }
 
         if (!response.ok) {
-            throw new Error(data.error || 'Failed to delete Post');
+throw new Error(data.error?.message || 'Failed to delete Post');
         }
 
         return data;
