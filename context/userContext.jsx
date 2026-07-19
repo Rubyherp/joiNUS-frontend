@@ -53,6 +53,24 @@ export function UserProvider({ children }) {
         restoreSession();
     }, []);
 
+    async function sendOtp(email) {
+        try {
+            const response = await fetch(`${API_URL}/send-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.message || 'Failed to send OTP');
+            }
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async function register(details = initialState) {
         const { email, password } = details;
 
@@ -253,6 +271,7 @@ export function UserProvider({ children }) {
                 register,
                 login,
                 logout,
+                sendOtp,
                 showProfileSetup,
                 profileCreation,
                 fetchProfile,
