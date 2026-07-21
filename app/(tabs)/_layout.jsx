@@ -1,6 +1,5 @@
 import { View } from "react-native";
 import { Tabs } from "expo-router";
-
 import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
@@ -73,6 +72,7 @@ export default function TabLayout() {
             />
 
             <Tabs.Screen name="profileSetup" options={{ href: null }} />
+            <Tabs.Screen name="changePassword" options={{ href: null }} />
         </Tabs>
     )
 }

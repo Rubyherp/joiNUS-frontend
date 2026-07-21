@@ -65,6 +65,7 @@ export default function Profile() {
         }
 
         if (selectedSetting === 'ChangePassword') {
+            router.push(`/changePassword`);
             setSelectedSetting(null);
         }
 

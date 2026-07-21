@@ -299,8 +299,31 @@ export function UserProvider({ children }) {
 
     }
 
+    async function changePassword(currentPassword, newPassword) {
+        try {
+            const response = await fetch(`${API_URL}/change-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ currentPassword, newPassword })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.message || 'Failed to change password');
+            }
+
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return (
-        <UserContext.Provider
+            <UserContext.Provider
             value={{
                 user,
                 token,
@@ -310,6 +333,7 @@ export function UserProvider({ children }) {
                 sendOtp,
                 resetPassword,
                 setNewPassword,
+                changePassword,
                 showProfileSetup,
                 profileCreation,
                 fetchProfile,
