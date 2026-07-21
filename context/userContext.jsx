@@ -71,6 +71,42 @@ export function UserProvider({ children }) {
         }
     }
 
+    async function resetPassword(email) {
+        try {
+            const response = await fetch(`${API_URL}/forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.message || 'Failed to send recovery email');
+            }
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async function setNewPassword(email, otp, password) {
+        try {
+            const response = await fetch(`${API_URL}/reset-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, otp, password })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.message || 'Failed to reset password');
+            }
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async function register(details = initialState) {
         const { email, password } = details;
 
@@ -272,6 +308,8 @@ export function UserProvider({ children }) {
                 login,
                 logout,
                 sendOtp,
+                resetPassword,
+                setNewPassword,
                 showProfileSetup,
                 profileCreation,
                 fetchProfile,
