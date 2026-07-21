@@ -53,6 +53,60 @@ export function UserProvider({ children }) {
         restoreSession();
     }, []);
 
+    async function sendOtp(email) {
+        try {
+            const response = await fetch(`${API_URL}/send-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.message || 'Failed to send OTP');
+            }
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async function resetPassword(email) {
+        try {
+            const response = await fetch(`${API_URL}/forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.message || 'Failed to send recovery email');
+            }
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async function setNewPassword(email, otp, password) {
+        try {
+            const response = await fetch(`${API_URL}/reset-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, otp, password })
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.message || 'Failed to reset password');
+            }
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async function register(details = initialState) {
         const { email, password } = details;
 
@@ -245,14 +299,41 @@ export function UserProvider({ children }) {
 
     }
 
+    async function changePassword(currentPassword, newPassword) {
+        try {
+            const response = await fetch(`${API_URL}/change-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ currentPassword, newPassword })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error?.message || 'Failed to change password');
+            }
+
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return (
-        <UserContext.Provider
+            <UserContext.Provider
             value={{
                 user,
                 token,
                 register,
                 login,
                 logout,
+                sendOtp,
+                resetPassword,
+                setNewPassword,
+                changePassword,
                 showProfileSetup,
                 profileCreation,
                 fetchProfile,

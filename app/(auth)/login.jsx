@@ -154,6 +154,13 @@ export default function Login() {
                     </TouchableOpacity>
                     <Spacer height={10} />
 
+                    <TouchableOpacity activeOpacity={0.7} className="w-[80%] items-center">
+                        <Link href={'/forgotPassword'} className={`text-sm font-semibold text-${BWColor} underline`}>
+                            Forgot Password?
+                        </Link>
+                    </TouchableOpacity>
+                    <Spacer height={10} />
+
                     <Text className={`text-${BWColor}`}>
                         Don't have an Account?
                         <Link href={'/register'} className="font-bold text-red-500">
